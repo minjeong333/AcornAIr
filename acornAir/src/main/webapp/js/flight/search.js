@@ -71,6 +71,7 @@ let passengerData = {
 let depAirport = serverData.depAirport;
 let arrAirport = serverData.arrAirport;
 let depDate = serverData.depDate;
+let returnDate = serverData.returnDate;
 let passCnt = serverData.passCnt;
 
 if(depAirport){
@@ -81,12 +82,13 @@ if(arrAirport){
   document.getElementById("txtTo").innerText = arrAirport;
 }
 
-if(depDate){
-  document.getElementById("txtDate").innerText = depDate;
+if(depDate && returnDate){
+  document.getElementById("txtDate").innerText =
+    depDate + " ~ " + returnDate;
 }
 
 if(passCnt){
-  adult = passCnt;
+  passengerData.adult = Number(passCnt);
   document.getElementById("txtPassenger").innerText = "성인 " + passCnt;
 }
 
@@ -110,6 +112,9 @@ function changeCount(type, n) {
 function selectSeat(seatName) {
     const seatDisplay = document.getElementById('txtSeat'); 
     seatDisplay.innerText = seatName;
+	
+	// 브라우저 세션에 좌석 선택 정보 저장
+	    sessionStorage.setItem("selectedSeat", seatName);
     
     // 선택된 버튼 스타일 강조 (옵션)
     const buttons = document.querySelectorAll('.seat-opt-btn');
@@ -128,21 +133,37 @@ function selectSeat(seatName) {
 
 // 바탕 클릭 시 닫기
 document.addEventListener('click', function(e) {
-    if (!e.target.closest('.search-box-container') && !e.target.closest('.airport-search') && !e.target.closest('.passenger-panel')&& !e.target.closest('.seat-panel')) {
+    if (!e.target.closest('.search-box-container') 
+		&& !e.target.closest('.airport-search') 
+		&& !e.target.closest('.passenger-panel') 
+		&& !e.target.closest('.seat-panel')
+		&& !e.target.closest('.calendar')) {
         closeAll();
     }
+});
+
+// 캘린더 안닫히게 
+document.getElementById('panelCalendar').addEventListener('click', function(e) {
+    e.stopPropagation();
 });
 
 // 캘린더 제어 변수
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let tripType = "왕복"; // 기본값
-let startDate = null;
-let endDate = null;
+let startDate = depDate;
+let endDate =  returnDate;
 
 // 캘린더 초기화 함수 (페이지 로드 시 호출)
 function initCalendar() {
     renderCalendar();
+	
+	if(startDate){
+	        document.getElementById("depDateInput").value = startDate;
+	    }
+	    if(endDate){
+	        document.getElementById("returnDateInput").value = endDate;
+	    }
 
     // 왕복/편도 버튼 이벤트 바인딩
     const tripBtns = document.querySelectorAll('.trip-type-btn');
@@ -215,33 +236,52 @@ function renderMonth(year, month, titleId, daysId) {
 }
 
 // 날짜 클릭 처리
+//새로 들어감 
 function handleDateClick(dateStr) {
+
     if (tripType === "편도") {
         startDate = dateStr;
         endDate = null;
         finishSelection();
-    } else {
-        if (!startDate || (startDate && endDate)) {
-            startDate = dateStr;
-            endDate = null;
-        } else if (dateStr < startDate) {
-            startDate = dateStr;
-        } else {
-            endDate = dateStr;
-            finishSelection();
-        }
+        return;
     }
+
+    // 왕복
+    if (!startDate || endDate) {
+        startDate = dateStr;
+        endDate = null;
+    } else if (dateStr < startDate) {
+        startDate = dateStr;
+    } else {
+        endDate = dateStr;
+        finishSelection(); // 여기서만 닫힘
+    }
+
     renderCalendar();
 }
-
-// 선택 완료 시 처리
+//새로 들어감 
 function finishSelection() {
-    const displayTarget = document.getElementById("txtDate"); // 날짜 텍스트가 표시될 곳
-    if (displayTarget) {
-        displayTarget.innerText = endDate ? `${startDate} ~ ${endDate}` : startDate;
+    const displayTarget = document.getElementById("txtDate");
+
+    if (tripType === "편도") {
+        displayTarget.innerText = startDate;
+
+        document.getElementById("depDateInput").value = startDate;
+        document.getElementById("returnDateInput").value = "";
+
+        closeAll();
+        return;
     }
-    // 일정 시간 후 자동으로 닫고 싶다면 closeAll() 호출
-    // setTimeout(closeAll, 500); 
+
+    // 왕복
+    if (endDate) {
+        displayTarget.innerText = `${startDate} ~ ${endDate}`;
+
+        document.getElementById("depDateInput").value = startDate;
+        document.getElementById("returnDateInput").value = endDate;
+
+        closeAll();
+    }
 }
 
 // 스타일 업데이트 (선택된 날짜 표시)
@@ -252,7 +292,9 @@ function updateSelectionStyles() {
         
         if (d === startDate) span.classList.add("start");
         if (d === endDate) span.classList.add("end");
-        if (d > startDate && d < endDate) span.classList.add("range");
+		if (new Date(d) > new Date(startDate) && new Date(d) < new Date(endDate)) {
+		            span.classList.add("range");
+					}
     });
 }
 
@@ -279,30 +321,7 @@ function moveSlider(direction) {
 
 // price-box 부분
 
-function selectPrice(element, price){
 
-    let totalPrice = price;
-
-    // 오는편이면
-    if(pageMode === "return"){
-
-        const goPrice =
-            Number(sessionStorage.getItem("goPrice"));
-
-        totalPrice = goPrice + price;
-    }
-
-    document.getElementById("totalPriceText").innerText =
-        totalPrice.toLocaleString() + "원";
-
-    document.querySelectorAll(".price-box").forEach(box => {
-        box.style.border = "1px solid #e0e0e0";
-        box.style.backgroundColor = "white";
-    });
-
-    element.style.border = "2px solid #001b66";
-    element.style.backgroundColor = "#f8faff";
-}
  
 let selectedGoFlight = null;
 let selectedSeatClass = null;
@@ -316,12 +335,13 @@ function selectFlight(flightId, seatClass, price) {
 
 function selectPrice(element, price) {
 
-    let totalPrice = price;
+	const adultCount = passengerData.adult;
+	let totalPrice = price * adultCount;
 
     // 오는편 화면이면 가는편 금액 + 오는편 금액
     if (typeof pageMode !== "undefined" && pageMode === "return") {
         const goPrice = Number(sessionStorage.getItem("goPrice") || 0);
-        totalPrice = goPrice + price;
+        totalPrice = goPrice + (price * adultCount);
     }
 
     document.getElementById("totalPriceText").innerText =
@@ -344,7 +364,10 @@ function goNext() {
     }
 
     // 가는편 가격 저장
-    sessionStorage.setItem("goPrice", selectedGoPrice);
+	
+	const adultCount = passengerData.adult;
+	const totalGoPrice = selectedGoPrice * adultCount;
+    sessionStorage.setItem("goPrice", totalGoPrice);
 
     location.href =
         contextPath + "/booking?goFlightId=" +
@@ -355,6 +378,17 @@ function goNext() {
 
 // 오는편 화면 들어오자마자 가는편 가격 먼저 표시
 window.addEventListener("load", function () {
+	
+	const savedSeat = sessionStorage.getItem("selectedSeat");
+	    
+	    if (savedSeat) {
+	        const seatDisplay = document.getElementById('txtSeat');
+	        if (seatDisplay) {
+	            // 이모지를 포함한 텍스트로 복원 (디자인에 맞게 조정)
+	            const emoji = savedSeat === "비즈니스석" ? "✨ " : "💺 ";
+	            seatDisplay.innerText = emoji + savedSeat;
+	        }
+	    }
 
     if (typeof pageMode !== "undefined" && pageMode === "return") {
 
@@ -378,6 +412,7 @@ window.addEventListener("DOMContentLoaded", function () {
     const dep = document.getElementById("txtFrom").innerText.trim();
     const arr = document.getElementById("txtTo").innerText.trim();
     const date = document.getElementById("txtDate").innerText.trim();
+	const seat = document.getElementById("txtSeat").innerText.replace('💺 ', '').replace('✨ ', '').trim();
 
     if(dep === "출발지" || dep === ""){
       alert("출발지를 입력하세요");
@@ -399,14 +434,45 @@ window.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("depAirportInput").value = dep;
     document.getElementById("arrAirportInput").value = arr;
-    document.getElementById("depDateInput").value = date;
 
+	document.getElementById("depDateInput").value = startDate || "";
+	document.getElementById("returnDateInput").value = endDate || "";
+	
+	if(startDate){
+	    document.getElementById("depDateInput").value = startDate;
+	}
+	if(endDate){
+	    document.getElementById("returnDateInput").value = endDate;
+	}
+	
+		
     document.getElementById("passCntInput").value =
       passengerData.adult + passengerData.child;
 
     document.getElementById("tripTypeInput").value =
       tripType === "왕복" ? "RT" : "OW";
+	
+	document.getElementById("seatClassInput").value = seat;  
 
   });
 
 });
+
+function goPassenger() {
+    // 1. 항공편 선택 여부 확인
+    if (selectedGoFlight == null) {
+        alert("귀국 항공편을 선택하세요.");
+        return;
+    }
+
+    // 2. 현재 화면의 총액 숫자만 추출
+    const totalAmount = document.getElementById("totalPriceText").innerText.replace(/[^0-9]/g, "");
+
+    // 3. 위에서 만든 hidden form의 input들에 값 세팅
+    document.getElementById("hiddenReturnFlightId").value = selectedGoFlight;
+    document.getElementById("hiddenReturnSeatClass").value = selectedSeatClass;
+    document.getElementById("hiddenTotal").value = totalAmount;
+
+    // 4. 폼 실행 (Servlet의 doPost로 이동)
+    document.getElementById("passengerForm").submit();
+}
