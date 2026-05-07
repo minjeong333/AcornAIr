@@ -1,0 +1,342 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Apple SD Gothic Neo', '맑은 고딕', sans-serif;
+  background: #f4f6f9;
+  color: #222;
+  font-size: 14px;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ── 상단 바 ── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: #001b66;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.back-btn {
+  position: absolute;
+  left: 24px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.back-btn:hover { opacity: 0.8; }
+
+.top-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── 페이지 본문 ── */
+.page-wrap {
+  max-width: 1000px;
+  margin: 76px auto 40px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── 여정 카드 ── */
+.journey-card {
+  background: #fff;
+  border: 1px solid #dde3ef;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ── 여정 헤더 ── */
+.journey-header {
+  background: #001b66;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.journey-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0a2d8a;
+  border-radius: 6px 0 0 6px;
+  padding: 6px 16px 6px 12px;
+  clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+  padding-right: 28px;
+}
+
+.pin { color: #7aaef5; font-size: 16px; }
+
+.journey-num {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.journey-route {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.j-chevron {
+  color: #fff;
+  font-size: 18px;
+}
+
+/* ── 항공편 정보 박스 ── */
+.flight-info-box {
+  padding: 24px 32px 20px;
+  text-align: center;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.flight-code {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.divider { color: #ccc; }
+
+.aircraft-link {
+  color: #0064de;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.flight-class {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.flight-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.city {
+  font-size: 26px;
+  font-weight: 700;
+  color: #001b66;
+  min-width: 100px;
+  text-align: center;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #001b66;
+}
+
+.plane-icon {
+  font-size: 18px;
+  color: #001b66;
+}
+
+.plane-icon.arrive {
+  transform: scaleX(-1);
+  display: inline-block;
+}
+
+.dots {
+  font-size: 18px;
+  color: #99aac8;
+  letter-spacing: 2px;
+}
+
+.mid-dot {
+  font-size: 8px;
+  color: #001b66;
+}
+
+.flight-date {
+  font-size: 13px;
+  color: #555;
+}
+
+/* ── 승객 수하물 행 ── */
+.pax-baggage-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 20px 24px;
+}
+
+.pax-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 160px;
+  padding-right: 20px;
+}
+
+.pax-check {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.pax-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #001b66;
+  margin-bottom: 4px;
+}
+
+.pax-skypass {
+  font-size: 12px;
+  color: #666;
+}
+
+.pax-num {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ── 수하물 박스 ── */
+.baggage-box {
+  flex: 1;
+  border: 1px solid #dde3ef;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.baggage-box-title {
+  font-size: 13px;
+  color: #555;
+  font-weight: 600;
+}
+
+.baggage-box-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.weight-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.weight-badge {
+  background: #001b66;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.times {
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
+}
+
+.baggage-note {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ── 카운트 컨트롤 ── */
+.count-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cnt-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ccd3df;
+  background: #fff;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.cnt-btn:hover { border-color: #0064de; color: #0064de; }
+
+.cnt-num {
+  font-size: 16px;
+  font-weight: 700;
+  color: #001b66;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ── 하단 결제 바 ── */
+.spacer { height: 80px; }
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  padding: 14px 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  z-index: 100;
+}
+
+.total-label { font-size: 13px; color: #555; }
+
+.total-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.total-amount span { font-size: 14px; margin-left: 2px; }
+
+.btn-pay {
+  background: #00a3e0;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 36px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-pay:hover { background: #0090c8; }

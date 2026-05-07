@@ -1,0 +1,211 @@
+/* ── 전역 링크 ── */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── 헤더 고정 ── */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+}
+
+body {
+  padding-top: 120px;
+}
+
+/* ── 상단 메뉴 ── */
+.top-menu {
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.top-links {
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  padding: 0 160px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.top-links span:hover {
+  color: #0064de;
+  cursor: pointer;
+}
+
+.main-nav {
+  height: 78px;
+  display: flex;
+  align-items: center;
+  padding: 0 160px;
+  gap: 45px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+}
+
+.nav-badge {
+  background: #e8f1ff;
+  color: #0064de;
+  font-size: 13px;
+  padding: 5px 9px;
+  border-radius: 50%;
+}
+
+.main-nav ul {
+  display: flex;
+  gap: 35px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 17px;
+}
+
+.main-nav li:hover {
+  color: #0064de;
+  cursor: pointer;
+}
+
+.search-area {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+.search-area input {
+  width: 260px;
+  height: 38px;
+  border: 1px solid #ccd3df;
+  border-radius: 20px;
+  padding: 0 18px;
+}
+
+.search-area button {
+  width: 90px;
+  height: 40px;
+  border: 1px solid #ccd3df;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+}
+
+.search-area button:hover {
+  background: #0064de;
+  color: white;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 35px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  height: 78px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #001b66;
+  font-weight: bold;
+  position: relative;
+}
+
+.nav-item:hover {
+  color: #0064de;
+}
+
+.nav-item:hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: #001b66;
+}
+
+.mega-menu {
+  display: none;
+  position: absolute;
+  top: 78px;
+  left: 0;
+  width: 260px;
+  min-height: 180px;
+  background: white;
+  border: 1px solid #e5e8ef;
+  border-radius: 0 0 14px 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  z-index: 1000;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.nav-item:hover .mega-menu {
+  display: block;
+}
+
+.mega-col {
+  width: 100%;
+}
+
+.mega-col p {
+  margin: 0 0 22px;
+  font-size: 16px;
+  color: #001b66;
+  cursor: pointer;
+}
+
+.mega-col p:hover {
+  color: #0064de;
+  text-decoration: underline;
+}
+
+/* ── 푸터 ── */
+.footer {
+  background: #fff;
+  padding: 60px 40px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.footer-col {
+  flex: 1;
+}
+
+.footer-col h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #001b66;
+}
+
+.footer-col p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #001b66;
+  cursor: pointer;
+}
+
+.footer-col p:hover {
+  text-decoration: underline;
+}
