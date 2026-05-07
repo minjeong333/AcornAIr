@@ -81,4 +81,9 @@ Thumbs.db
 Thumbs.db
 *.log
 *.tmp
-*.bak
+*.bak*.jar
+acornAir/src/main/webapp/css/booking/seatSelect.css
+acornAir/src/main/webapp/js/booking/passenger.js
+acornAir/src/main/webapp/WEB-INF/lib/ojdbc8.jar
+acornAir/src/main/webapp/WEB-INF/views/booking/passenger_info.jsp
+acornAir/src/main/webapp/WEB-INF/views/booking/seatSelect.jsp
