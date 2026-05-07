@@ -36,6 +36,15 @@ public class BookingServlet extends HttpServlet {
         session.setAttribute("goFlightId", goFlightId);
         session.setAttribute("seatClass", seatClass);
         session.setAttribute("goPrice", goPrice);
+        
+        // 임시 추가 - dhy
+        FlightDTO goFlight = new FlightDTO();
+        goFlight.setFlightId(Integer.parseInt(goFlightId));
+        goFlight.setPrice(Integer.parseInt(goPrice));
+        goFlight.setBizPrice(Integer.parseInt(goPrice));
+
+        session.setAttribute("goFlight", goFlight);
+        //
 
         // 검색 조건 꺼내기
         String tripType =
