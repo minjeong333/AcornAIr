@@ -42,13 +42,24 @@ public class PassengerServlet extends HttpServlet {
 	    p.setGender(req.getParameter("gender"));
 	    
 	    //date 형변환
+//	    String birthStr = req.getParameter("birthDate");
+//	    try {
+//	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//	        java.util.Date birthDate = sdf.parse(birthStr);
+//	        p.setBirthDate(birthDate);
+//	    } catch (ParseException e) {
+//	        e.printStackTrace();
+//	    }
 	    String birthStr = req.getParameter("birthDate");
-	    try {
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	        java.util.Date birthDate = sdf.parse(birthStr);
-	        p.setBirthDate(birthDate);
-	    } catch (ParseException e) {
-	        e.printStackTrace();
+
+	    if (birthStr != null && !birthStr.isEmpty()) {
+	        try {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            java.util.Date birthDate = sdf.parse(birthStr);
+	            p.setBirthDate(birthDate);
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
 	    }
 	    
 	    HttpSession session = req.getSession();
@@ -58,7 +69,10 @@ public class PassengerServlet extends HttpServlet {
 	    session.setAttribute("contactPhone", req.getParameter("contactPhone"));
 	    
 	    //승객정보 입력하면 좌석선택으로 넘어가게
-	    resp.sendRedirect(req.getContextPath() + "/SeatServlet");
+	    resp.sendRedirect(
+	    	    req.getContextPath()
+	    	    + "/air/booking/seatSelect"
+	    	);
 	}
 	
 			

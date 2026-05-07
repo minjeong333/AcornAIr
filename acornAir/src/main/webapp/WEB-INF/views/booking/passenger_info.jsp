@@ -129,14 +129,16 @@
 										승객 성 <span class="req">*</span>
 									</div>
 									<input class="form-input" type="text" name="engLastName"
-										value="${loginUser.engLastName}" />   <!-- UserDTO 세션값 적용 -->
+										value="${loginUser.engLastName}" />
+									<!-- UserDTO 세션값 적용 -->
 								</div>
 								<div>
 									<div class="form-label">
 										승객 이름 <span class="req">*</span>
 									</div>
 									<input class="form-input" type="text" name="engFirstName"
-										value="${loginUser.engFirstName}" />  <!-- UserDTO 세션값 적용 -->
+										value="${loginUser.engFirstName}" />
+									<!-- UserDTO 세션값 적용 -->
 								</div>
 							</div>
 
@@ -251,11 +253,13 @@
 			<!-- 부가서비스 신청 -->
 			<div class="extra-section">
 				<h2 class="section-title" style="margin-bottom: 14px;">부가서비스 신청</h2>
-				<div class="extra-card" onclick="openSeatModal()" style="cursor: pointer;">
+				<div class="extra-card" onclick="openSeatModal()"
+					style="cursor: pointer;">
 					<span class="extra-icon">&#128186;</span> <span class="extra-label">좌석
 						배정</span>
 				</div>
-				<div class="extra-card" onclick="openBaggageModal()" style="cursor: pointer;">
+				<div class="extra-card" onclick="openBaggageModal()"
+					style="cursor: pointer;">
 					<span class="extra-icon">&#127890;</span> <span class="extra-label">초과
 						수하물</span>
 				</div>
@@ -308,17 +312,17 @@
 						<tbody>
 							<tr>
 								<td>ICN &#10132; NGO</td>
-								<td>1 개<br />
-								<span class="baggage-sub-text">23kg(50lb), 158cm(62in)</span></td>
-								<td>1 개<br />
-								<span class="baggage-sub-text">10kg(22lb), 115cm(45in)</span></td>
+								<td>1 개<br /> <span class="baggage-sub-text">23kg(50lb),
+										158cm(62in)</span></td>
+								<td>1 개<br /> <span class="baggage-sub-text">10kg(22lb),
+										115cm(45in)</span></td>
 							</tr>
 							<tr>
 								<td>NGO &#10132; ICN</td>
-								<td>1 개<br />
-								<span class="baggage-sub-text">23kg(50lb), 158cm(62in)</span></td>
-								<td>1 개<br />
-								<span class="baggage-sub-text">10kg(22lb), 115cm(45in)</span></td>
+								<td>1 개<br /> <span class="baggage-sub-text">23kg(50lb),
+										158cm(62in)</span></td>
+								<td>1 개<br /> <span class="baggage-sub-text">10kg(22lb),
+										115cm(45in)</span></td>
 							</tr>
 						</tbody>
 					</table>
@@ -528,8 +532,10 @@
 	</div>
 
 	<!-- ===== 좌석 배정 모달 ===== -->
-	<div class="modal-overlay" id="seatModal" onclick="closeSeatModal(event)">
-		<div class="modal-wrap" style="width: 1300px; max-width: 95vw; height: 88vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+	<div class="modal-overlay" id="seatModal"
+		onclick="closeSeatModal(event)">
+		<div class="modal-wrap"
+			style="width: 1300px; max-width: 95vw; height: 88vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
 			<div class="modal-header" style="padding: 20px 24px; flex-shrink: 0;">
 				<div>
 					<div class="modal-title">좌석 배정</div>
@@ -537,13 +543,16 @@
 				</div>
 				<button class="modal-close" onclick="closeSeatModal()">&#10005;</button>
 			</div>
-			<iframe id="seatFrame" src="" style="width: 100%; flex: 1; border: none;"></iframe>
+			<iframe id="seatFrame" src=""
+				style="width: 100%; flex: 1; border: none;"></iframe>
 		</div>
 	</div>
 
 	<!-- ===== 초과 수화물 모달 ===== -->
-	<div class="modal-overlay" id="baggageModal" onclick="closeBaggageModal(event)">
-		<div class="modal-wrap" style="width: 900px; max-width: 95vw; height: 88vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+	<div class="modal-overlay" id="baggageModal"
+		onclick="closeBaggageModal(event)">
+		<div class="modal-wrap"
+			style="width: 900px; max-width: 95vw; height: 88vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
 			<div class="modal-header" style="padding: 20px 24px; flex-shrink: 0;">
 				<div>
 					<div class="modal-title">초과 수화물</div>
@@ -551,7 +560,8 @@
 				</div>
 				<button class="modal-close" onclick="closeBaggageModal()">&#10005;</button>
 			</div>
-			<iframe id="baggageFrame" src="" style="width: 100%; flex: 1; border: none;"></iframe>
+			<iframe id="baggageFrame" src=""
+				style="width: 100%; flex: 1; border: none;"></iframe>
 		</div>
 	</div>
 
@@ -604,20 +614,43 @@
 			document.getElementById(id).classList.add('selected');
 			selectedOpt = id;
 		}
-
-		function doPay() {
+	<%--function doPay() {
 			var confirmed = confirm('결제를 진행하시겠습니까?');
 			if (confirmed) {
 				alert('결제가 완료되었습니다.');
 			}
-		}
+		} --%>
+		function doPay() {
+			var confirmed = confirm('결제를 진행하시겠습니까?');
+			if (!confirmed) return;
 
+			var payMethod = document.querySelector("input[name='payMethod']:checked").value;
+
+			var form = document.createElement("form");
+			form.method = "POST";
+			form.action = "${pageContext.request.contextPath}/air/booking/payment";
+
+			function addHidden(name, value) {
+				var input = document.createElement("input");
+				input.type = "hidden";
+				input.name = name;
+				input.value = value;
+				form.appendChild(input);
+			}
+
+			addHidden("payMethod", payMethod.toUpperCase());
+			addHidden("bags", serverBags);
+			addHidden("total", serverTotal);
+
+			document.body.appendChild(form);
+			form.submit();
+		}
 		// 초기 선택 표시
 		document.getElementById('opt1').classList.add('selected');
 
 		// 좌석 배정 모달
 		function openSeatModal() {
-			document.getElementById('seatFrame').src = '${pageContext.request.contextPath}/SeatServlet';
+			document.getElementById('seatFrame').src = '${pageContext.request.contextPath}/air/booking/seatSelect';
 			document.getElementById('seatModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
 		}
@@ -647,12 +680,17 @@
 		function updateBaggageInfo(bags, total) {
 			serverTotal = total;
 			serverBags = bags;
-			document.getElementById('totalAmount').innerHTML = formatNum(total) + ' <span>원</span>';
-			document.getElementById('sidebarTotal').textContent = formatNum(total) + ' 원';
+			document.getElementById('totalAmount').innerHTML = formatNum(total)
+					+ ' <span>원</span>';
+			document.getElementById('sidebarTotal').textContent = formatNum(total)
+					+ ' 원';
 			if (bags > 0) {
 				document.getElementById('extraBaggageRow').style.display = 'flex';
-				document.getElementById('extraBaggageLabel').textContent = '초과 수하물 ×' + bags;
-				document.getElementById('extraBaggagePrice').textContent = formatNum(bags * BAG_PRICE) + ' 원';
+				document.getElementById('extraBaggageLabel').textContent = '초과 수하물 ×'
+						+ bags;
+				document.getElementById('extraBaggagePrice').textContent = formatNum(bags
+						* BAG_PRICE)
+						+ ' 원';
 			} else {
 				document.getElementById('extraBaggageRow').style.display = 'none';
 			}
