@@ -1,26 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>ACORN AIRRES</title>
 
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/flight/home.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/flight/res.css">
 </head>
 
 <body>
 
 <header class="top-menu">
   <div class="top-links">
-    <a href="${pageContext.request.contextPath}/air/login">
-        로그인/가입
-    </a>
-
-    <a href="${pageContext.request.contextPath}/air/mypage">
-        마이페이지
-    </a>
-</div>
+    <span>로그인/가입</span>
+    <span>마이페이지</span>
+  </div>
 
   <nav class="main-nav">
     <div class="logo">
@@ -59,18 +55,15 @@
 </header>
 
 <div class="container">
+<h1>항공권 예매</h1>
   <div class="card">
-
-    <div class="top-alert">
-      ⚠ 두바이 공항 운항 제한
-    </div>
 
     <div class="tabs">
   		<span class="active" id="ticketTab">항공권 예매</span>
-  		<span id="myTripTab">나의 여행</span>
+  		<span id="myTripTab"></span>
 	</div>
 
-<div id="ticketContent">
+    <div id="ticketContent">
 
   <form action="<%=request.getContextPath()%>/home" method="get" id="flightSearchForm">
 
@@ -80,13 +73,11 @@
     <input type="hidden" name="depDate" id="depDateInput">
     <input type="hidden" name="passCnt" id="passCntInput" value="1">
     <input type="hidden" name="seatClass" id="seatClassInput" value="Y">
-	<input type="hidden" name="tripType" id="tripTypeInput">
 	<input type="hidden" name="returnDate" id="returnDateInput">
     <div class="trip-type">
       <button type="button" class="active">왕복</button>
       <button type="button">편도</button>
     </div>
-
 
     <div class="form-row">
 
@@ -119,20 +110,16 @@
 
       <button class="search-btn">항공 검색</button>
     </div>
-    </form>
-	</div>
-	
+</form>
+</div>
 	<!-- 나의 여행 -->
 	<div class="mytrip-content" id="myTripContent">
   <div class="mytrip-row">
 
-    <div class="mytrip-field">
-      <label>예약번호 또는 항공권번호</label>
-      <input type="text" placeholder="예) A1B2C3 또는 1801234567890">
-    </div>
+    
 
     <div class="mytrip-field">
-      <label>출발일</label>
+     
       <div class="mytrip-date" id="myTripDateBox">
  		 <span id="myTripDateText">날짜 선택</span>
 	  </div>
@@ -152,7 +139,6 @@
 
   </div>
 </div>
-
 
     <!-- 출발지/도착지 검색 -->
     <div class="airport-search" id="airportSearch">
@@ -276,7 +262,7 @@
 
   			<div class="seat-options">
    				 <button class="seat-option active" data-seat="일반석">💺 일반석</button>
-    			 <button class="seat-option" data-seat="비즈니스석">💺 비즈니스석</button>
+    			 <button class="seat-option" data-seat="일등석">💺 일등석</button>
   			</div>
 		</div>
   </div>
@@ -284,78 +270,6 @@
 
 
 
-<!-- 인기여행지 -->
-<section class="popular-section">
-  <h2>인기 여행지</h2>
-  <p>ACORN AIR와 함께하는 특별한 여행</p>
-
-  <div class="trip-card-wrap">
-
-    <div class="trip-card">
-      <div class="trip-img img-newyork">
-        <div>
-          <h3>뉴욕</h3>
-          <span>미국</span>
-        </div>
-      </div>
-      <div class="trip-info">
-        <span>왕복 항공권</span>
-        <div>
-          <small>부터</small>
-          <strong>₩950,000</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="trip-card">
-      <div class="trip-img img-sf">
-        <div>
-          <h3>샌프란시스코</h3>
-          <span>미국</span>
-        </div>
-      </div>
-      <div class="trip-info">
-        <span>왕복 항공권</span>
-        <div>
-          <small>부터</small>
-          <strong>₩880,000</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="trip-card">
-      <div class="trip-img img-london">
-        <div>
-          <h3>런던</h3>
-          <span>영국</span>
-        </div>
-      </div>
-      <div class="trip-info">
-        <span>왕복 항공권</span>
-        <div>
-          <small>부터</small>
-          <strong>₩1,150,000</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="trip-card">
-      <div class="trip-img img-paris">
-        <div>
-          <h3>파리</h3>
-          <span>프랑스</span>
-        </div>
-      </div>
-      <div class="trip-info">
-        <span>왕복 항공권</span>
-        <div>
-          <small>부터</small>
-          <strong>₩1,080,000</strong>
-        </div>
-      </div>
-    </div>
-
-  </div>
 </section>
 
 <footer class="footer">
@@ -856,13 +770,13 @@ document.addEventListener("click", function() {
   closeAllPanels();
 });
 
-
 const flightSearchForm = document.getElementById("flightSearchForm");
 
 const tripTypeInput = document.getElementById("tripTypeInput");
 const depAirportInput = document.getElementById("depAirportInput");
 const arrAirportInput = document.getElementById("arrAirportInput");
 const depDateInput = document.getElementById("depDateInput");
+const returnDateInput = document.getElementById("returnDateInput");
 const passCntInput = document.getElementById("passCntInput");
 const seatClassInput = document.getElementById("seatClassInput");
 
@@ -870,12 +784,6 @@ flightSearchForm.addEventListener("submit", function(e) {
 
   const depAirport = fromBox.querySelector("strong").innerText.trim();
   const arrAirport = toBox.querySelector("strong").innerText.trim();
-
-  if (depAirport === "" || depAirport === "To") {
-    alert("출발지를 입력하세요.");
-    e.preventDefault();
-    return;
-  }
 
   if (arrAirport === "" || arrAirport === "To") {
     alert("도착지를 입력하세요.");
@@ -885,6 +793,12 @@ flightSearchForm.addEventListener("submit", function(e) {
 
   if (!startDate) {
     alert("출발일을 선택하세요.");
+    e.preventDefault();
+    return;
+  }
+
+  if (tripType === "왕복" && !endDate) {
+    alert("오는 날을 선택하세요.");
     e.preventDefault();
     return;
   }
@@ -902,7 +816,6 @@ flightSearchForm.addEventListener("submit", function(e) {
     seatClassInput.value = "C";
   }
 });
-
 
 updateTripButtons("왕복");
 renderCalendar();
