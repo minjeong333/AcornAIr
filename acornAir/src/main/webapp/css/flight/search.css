@@ -1,0 +1,787 @@
+@charset "UTF-8";
+/* 기본 레이아웃 */
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background-color: #f8f9fa;
+	font-family: sans-serif;
+	padding-top: 120px;
+	padding-bottom: 100px;
+	color: #001b66; /*전체 글자색*/
+}
+
+header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	background: white;
+}
+
+.top-menu {
+	background: white;
+	border-bottom: 1px solid #eee;
+}
+
+.top-links {
+	height: 40px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 30px;
+	padding: 0 5%; /* 고정 px 대신 % 사용 */
+	font-size: 14px;
+	border-bottom: 1px solid #eee;
+}
+
+a {
+	text-decoration: none; /* 밑줄 제거 */
+	color: inherit; /* 부모 요소의 글자색 상속*/
+}
+
+.top-links span:hover {
+	color: #0064de;
+	cursor: pointer;
+}
+
+.main-nav {
+	height: 78px;
+	display: flex;
+	align-items: center;
+	padding: 0 160px;
+	gap: 30px;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 22px;
+}
+
+.circle {
+	background: #e8f1ff;
+	color: #0064de;
+	font-size: 13px;
+	padding: 5px 9px;
+	border-radius: 50%;
+}
+
+.main-nav ul {
+	display: flex;
+	gap: 35px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: 17px;
+}
+
+.main-nav li:hover {
+	color: #0064de;
+	cursor: pointer;
+}
+
+.search-area {
+	margin-left: auto;
+	display: flex;
+	gap: 12px;
+}
+
+.search-area input {
+	width: 260px;
+	height: 38px;
+	border: 1px solid #ccd3df;
+	border-radius: 20px;
+	padding: 0 18px;
+}
+
+.search-area button {
+	width: 90px;
+	height: 40px;
+	border: 1px solid #ccd3df;
+	border-radius: 20px;
+	background: white;
+	cursor: pointer;
+}
+
+.search-area button:hover {
+	background: #0064de;
+	color: white;
+}
+
+.nav-menu {
+	display: flex;
+	gap: 35px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-item {
+	height: 78px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	color: #001b66;
+	font-weight: bold;
+	position: relative;
+}
+
+.nav-item:hover {
+	color: #0064de;
+}
+
+.nav-item:hover::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 3px;
+	background: #001b66;
+}
+
+/* 드롭다운 */
+.mega-menu {
+	display: none;
+	position: absolute;
+	top: 78px;
+	left: 0;
+	width: 260px;
+	min-height: 180px;
+	background: white;
+	border: 1px solid #e5e8ef;
+	border-radius: 0 0 14px 14px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+	z-index: 1000;
+	padding: 24px;
+	box-sizing: border-box;
+}
+
+.nav-item:hover .mega-menu {
+	display: block;
+}
+
+.mega-col {
+	width: 100%;
+}
+
+.mega-col p {
+	margin: 0 0 22px;
+	font-size: 16px;
+	color: #001b66;
+	cursor: pointer;
+}
+
+.mega-col p:hover {
+	color: #0064de;
+	text-decoration: underline;
+}
+
+/*검색박스 전체*/
+.container {
+	max-width: 1024px;
+	margin: 0 auto;
+	padding: 0 20px;
+	position: relative;
+}
+
+/* 배경 그라데이션 바 */
+.search-bg-bar {
+	position: absolute;
+	top: -20px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100vw; /* 화면 끝까지 꽉 차게 */
+	height: 80px; /* 그라데이션 바의 높이 */
+	background: linear-gradient(90deg, #bfe8ff, #f5c6de);
+	z-index: 0; /* 가장 뒤로 */
+}
+
+/* 컨테이너 안의 검색 박스 디자인 */
+.search-box-container {
+	position: relative;
+	z-index: 2; /* 배경바보다 위에 오도록 */
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	background: white;
+	padding: 15px 25px;
+	border-radius: 16px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+	/* 중요: 배경 바 위에 겹치도록 마진 조정 */
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+
+.input-group {
+	flex: 1;
+	min-width: 100px; /* 최소 너비 확보 */
+	border: 1px solid #e0e0e0;
+	padding: 8px 15px;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.input-group:hover {
+	border-color: #001b66;
+	background: #fcfdfe;
+}
+
+.input-group small {
+	display: block;
+	color: #888;
+	font-size: 8px;
+	margin-bottom: 4px;
+}
+
+.input-group strong {
+	font-size: 12px;
+	color: #001b66;
+}
+
+/* 패널 공통 스타일 */
+.airport-search, .calendar, .passenger-panel, .seat-panel {
+	display: none;
+	position: absolute;
+	background: white;
+	border-radius: 16px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+	z-index: 1100;
+	padding: 20px;
+	top: 100px; /* 검색 박스 바로 아래에 위치하도록 설정 */
+}
+
+/* 개별 패널 넓이 */
+.airport-search {
+	width: 380px;
+	left: 20px;
+}
+
+.calendar {
+	width: 650px; /* 캘린더 전체 너비가 두 달을 담기에 충분한지 확인 */
+	left: 50%; /* 화면 중앙 정렬을 위한 설정 */
+	transform: translateX(-50%);
+}
+
+.passenger-panel {
+	width: 320px;
+	right: 20px;
+	left: auto;
+}
+
+.seat-panel {
+	width: 250px;
+	right: 20px;
+	left: auto;
+}
+
+/*캘린더 패널*/
+.calendar {
+	min-height: auto;
+}
+
+.month {
+	width: 260px; /* 너비를 고정하여 두 달이 한 줄에 들어오게 함 */
+}
+
+.month-wrap {
+	display: flex; /* 가로 정렬을 위해 flex 유지 */
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center; /* 중앙 정렬 */
+	gap: 20px; /* 두 달 사이의 간격 */
+	padding: 0 20px 35px;
+}
+
+.month-arrow {
+	display: block; /* 화살표가 보이도록 수정 */
+	border: none;
+	background: white;
+	font-size: 35px;
+	color: #001b66;
+	cursor: pointer;
+	margin-top: 100px;
+}
+
+.month h3 {
+	text-align: center;
+	font-size: 18px;
+	margin-bottom: 20px;
+}
+
+.days span.start, .days span.end {
+	background: #001b66 !important;
+	color: white !important;
+	border-radius: 8px;
+}
+/* 새롭게 추가*/
+.days span.range {
+	background: #e8f1ff; /* 시작일과 종료일 사이의 색상 */
+	border-radius: 0;
+}
+
+.week, .days {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	text-align: center;
+}
+
+.week span {
+	font-size: 10px;
+	margin-bottom: 20px;
+}
+
+.days span {
+	height: 38px;
+	line-height: 38px;
+	font-size: 12px;
+	border-radius: 8px;
+}
+
+.days span:hover:not(:empty):not(.disabled) {
+	background: #e1f3fc;
+	cursor: pointer;
+}
+
+.days .sun {
+	color: red;
+}
+
+.days .disabled {
+	color: #bbb;
+	pointer-events: none;
+}
+
+.days .selected {
+	background: #001b66 !important;
+	color: white !important;
+	font-weight: bold;
+}
+
+.calendar-footer {
+	border-top: 1px solid #ddd;
+	padding: 10px 10px;
+	font-size: 10px;
+	color: #333;
+}
+/*캘린더 끝*/
+
+/* 항공검색 */
+.search-btn {
+	background: #0064de;
+	color: white;
+	border: none;
+	padding: 0 30x;
+	border-radius: 12px;
+	cursor: pointer;
+	font: 12px;
+}
+
+.search-btn:hover {
+	background: #004bb5;
+}
+
+/* 닫기 버튼 등 */
+.panel-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.panel-header strong {
+	font-size: 22px;
+	color: #001b66;
+}
+
+.close-btn {
+	border: none;
+	background: none;
+	font-size: 28px;
+	cursor: pointer;
+	color: #001b66;
+}
+
+/* 슬라이더/카드 스타일 */
+.date-slider-wrap {
+	position: relative; /* 화살표 버튼의 기준점 */
+	width: 100%;
+	margin-bottom: 40px;
+}
+
+.date-slider-viewport {
+	flex: 1;
+	overflow: hidden;
+	border: 1px solid #e0e0e0;
+	border-radius: 12px;
+	background: white;
+	margin: 20px 0;
+}
+
+.date-slider-track {
+	display: flex;
+	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.date-item {
+	min-width: 20%;
+	flex-shrink: 0;
+	text-align: center;
+	padding: 20px 0;
+	border-right: 1px solid #f0f0f0;
+	cursor: pointer;
+}
+
+.date-item:hover {
+	color: #00256c;
+	font-weight: bold;
+}
+
+/* 화살표 버튼 스타일*/
+.slider-btn {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%); /* 세로 중앙 정렬 */
+	z-index: 10;
+	background: transparent;
+	border: none; /* 테두리 없이 깔끔하게 */
+	width: 30px;
+	height: 90%; /* 슬라이더 높이에 맞춤 */
+	cursor: pointer;
+	color: #e0e0e0;
+	font-size: 1rem;
+	transition: background 0.2s;
+}
+
+.prev-btn {
+	left: 1px;
+	border-radius: 12px 0 0 12px;
+}
+
+.next-btn {
+	right: 1px;
+	border-radius: 0 12px 12px 0;
+}
+
+.slider-btn:hover {
+	background: #f8f9fa;
+}
+
+/*여정 내용*/
+.flight-card {
+	display: flex;
+	background: white;
+	border: 1px solid #e0e0e0;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+	overflow: hidden;
+	padding: 25px;
+	align-items: center;
+}
+
+.time {
+	flex: 1; /* 시간 영역 */
+	padding: 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 15px; /*시간과 화살표 사이 간격*/
+	border-right: 1px solid #e0e0e0;
+}
+
+
+.airport-time{
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
+}
+.airport-time small{
+	margin-top:8px;
+	color:#666;
+	text-align:center;
+}
+.arrow{
+	font-size:28px;
+	color:#999;
+}
+/*시간 텍스트 스타일 (07:55 SYD 등) */
+.time span {
+	font-size: 1.1rem;
+	font-weight: bold;
+	color: #00256c;
+	text-align: center;
+	line-height: 1.4;
+}
+
+/*중간 화살표 및 소요 시간 스타일 */
+.time span:nth-child(2) {
+	font-size: 0.85rem;
+	color: #666;
+	font-weight: normal;
+	white-space: nowrap; /* 줄바꿈 방지 */
+}
+
+.duration {
+	font-size: 0.9rem;
+	color: #666;
+	font-weight: normal;
+}
+
+.price-box {
+	flex: 1; /* 요금 영역 1 */
+	padding: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-right: 1px solid #e0e0e0;
+	cursor: pointer;
+	transition: all 0.2s ease; /* 부드럽게 */
+}
+
+.price-box:last-child {
+	border-right: none;
+}
+
+.price-box:hover {
+	background-color: #fcfcfc;
+}
+
+.price-box:active {
+	transform: scale(0.98); /* 클릭 시 살짝 눌리는 느낌 */
+}
+
+.price-box .type {
+	font-size: 0.8rem;
+	color: #666;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.price-box .price {
+	font-size: 1.1rem;
+	font-weight: bold;
+	color: #00256c;
+}
+
+/*바닥 금액표시줄*/
+.bottom-bar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: white;
+	border-top: 1px solid #ddd;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 15px 10%;
+	box-sizing: border-box;
+	gap: 30px;
+	z-index: 1000;
+}
+
+.btn-next {
+	background: #4db3e6;
+	color: white;
+	border: none;
+	padding: 12px 50px;
+	border-radius: 30px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.main-nav ul, .main-nav li, .nav-menu, .nav-item {
+	white-space: nowrap;
+}
+
+/*큰화면*/
+@media ( max-width : 1200px) {
+	.top-links, .main-nav {
+		padding-left: 40px;
+		padding-right: 40px;
+	}
+	.container {
+		padding: 50px 20px;
+	}
+}
+
+/* 태블릿 */
+@media ( max-width : 900px) {
+	.top-links {
+		padding-left: 20px;
+		padding-right: 20px;
+		gap: 18px;
+	}
+	.main-nav {
+		height: auto;
+		padding: 18px 20px;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+	.main-nav ul {
+		gap: 22px;
+		font-size: 15px;
+	}
+	.search-area {
+		width: 100%;
+		margin-left: 0;
+	}
+	.search-area input {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.container {
+		padding: 35px 15px;
+	}
+	.search-bg-bar {
+		display: none;
+	}
+	.calendar {
+		min-height: auto;
+	}
+	.month-wrap {
+		flex-direction: column;
+		gap: 28px;
+	}
+	.month {
+		width: 100%;
+	}
+	.month-arrow {
+		display: none;
+	}
+	.passenger-counts {
+		flex-direction: column;
+		gap: 26px;
+	}
+	.passenger-item {
+		width: 100%;
+	}
+	.passenger-info {
+		max-height: 240px;
+		overflow-y: auto;
+	}
+}
+
+/* 모바일 */
+@media ( max-width : 600px) {
+	.top-links {
+		display: none;
+	}
+	.main-nav {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.logo {
+		font-size: 19px;
+	}
+	.main-nav ul {
+		gap: 18px;
+		font-size: 14px;
+	}
+	.search-area {
+		flex-direction: column;
+	}
+	.search-area button {
+		width: 100%;
+	}
+	.container {
+		padding: 24px 10px;
+	}
+	.search-bg-bar {
+		display: none;
+	}
+	.airport-search, .calendar, .passenger-panel, .seat-panel {
+		width: 100% !important;
+		left: 0 !important;
+		padding: 22px;
+	}
+	.calendar-header, .calendar-option-row, .month-wrap, .calendar-footer {
+		padding-left: 18px;
+		padding-right: 18px;
+	}
+	.calendar-option-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 14px;
+	}
+	.calendar-trip button {
+		padding: 12px 24px;
+	}
+	.days span {
+		height: 40px;
+		line-height: 40px;
+		font-size: 15px;
+	}
+	.flight-card {
+		display: flex !important;
+		flex-direction: column !important; /* 세로 배치 강제 */
+		height: auto !important;
+	}
+	.time {
+		width: 100% !important;
+		flex: none !important; /* 기존 flex 비율 해제 */
+		border-right: none !important;
+		border-bottom: 1px solid #e0e0e0;
+		padding: 30px 20px;
+	}
+	.price-box {
+		width: 100% !important;
+		flex: none !important; /* 기존 flex 비율 해제 */
+		display: flex !important;
+		flex-direction: row !important; /* 가격과 타입을 가로로 나란히 */
+		justify-content: space-between !important;
+		align-items: center;
+		padding: 20px 30px;
+		border-right: none !important;
+		border-bottom: 1px solid #f0f0f0;
+	}
+	.price-box:last-child {
+		border-bottom: none !important;
+	}
+
+	/* 패널들을 화면 중앙 모달 방식으로 변경 */
+	.airport-search, .calendar, .passenger-panel, .seat-panel {
+		position: fixed !important;
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		width: 90% !important;
+		max-height: 80vh;
+		overflow-y: auto;
+	}
+
+	/* 헤더 높이 이탈 방지 */
+	header {
+		position: relative;
+	} /* 모바일에서 fixed가 불편하면 relative로 */
+	body {
+		padding-top: 0;
+	}
+	.main-nav {
+		height: auto;
+		padding: 10px 30px;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.nav-menu {
+		display: none;
+	} /* 모바일에서는 메뉴를 숨기거나 햄버거 메뉴로 대체 */
+	.search-area {
+		width: 100%;
+	}
+	.search-area input {
+		width: 100%;
+	}
+	.input-group {
+		flex: 1 1 100%; /* 모바일에서는 한 줄에 하나씩 */
+	}
+}

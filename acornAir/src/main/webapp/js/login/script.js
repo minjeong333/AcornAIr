@@ -106,23 +106,10 @@ document.addEventListener("DOMContentLoaded", function() {
             if (userId === "") {
                 msg.innerText = "아이디를 입력해주세요.";
                 msg.style.color = "red";
-                return;
+            } else {
+                msg.innerText = "사용 가능한 아이디입니다.";
+                msg.style.color = "green";
             }
-            fetch("/air/checkId?userId=" + encodeURIComponent(userId))
-                .then(function(res) { return res.json(); })
-                .then(function(data) {
-                    if (data.available) {
-                        msg.innerText = "사용 가능한 아이디입니다.";
-                        msg.style.color = "green";
-                    } else {
-                        msg.innerText = "이미 사용 중인 아이디입니다.";
-                        msg.style.color = "red";
-                    }
-                })
-                .catch(function() {
-                    msg.innerText = "확인 중 오류가 발생했습니다.";
-                    msg.style.color = "red";
-                });
         };
     }
 
@@ -194,16 +181,6 @@ function toggleTerms(boxId, headerEl) {
 // webapp/js/script.js 내부
 const finishBtn = document.getElementById('finishBtn');
 
-if (finishBtn) {
-    finishBtn.onclick = function(e) {
-        // (기존 유효성 검사 로직 생략...)
-
-        alert("가입이 성공적으로 완료되었습니다!");
-
-        // 파일 구조상 login.jsp가 webapp 바로 아래에 있으므로 파일명만 적습니다.
-        window.location.href = "login.jsp";
-    };
-}
 
 
 window.onload = function() {
@@ -231,16 +208,11 @@ window.onload = function() {
             } else {
                 // 모두 동의 시 가입 성공 메시지 출력
                 alert("가입이 성공적으로 완료되었습니다!");
-
+                
                 // [4] 로그인 페이지(login.jsp)로 이동
                 // 파일 구조상 동일 폴더(webapp)에 있으므로 파일명만 적으면 됩니다.
-                window.location.href = "login.jsp";
+                window.location.href = contextPath + "/air/login";
             }
         };
     }
 };
-// register_3.jsp 하단 script 태그 내부 혹은 script.js에 추가
-document.getElementById('finishBtn').addEventListener('click', function(e) {
-    // 유효성 검사가 통과되었다고 가정할 때 강제 제출
-    document.getElementById('joinForm').submit();
-});
