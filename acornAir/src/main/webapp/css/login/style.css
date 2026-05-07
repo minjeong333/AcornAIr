@@ -1,0 +1,414 @@
+/* [기본 설정] */
+body {
+    margin: 0;
+    background: #f4f6f9;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.wrapper {
+    display: flex;
+    width: 1000px;
+    margin: 50px auto;
+}
+
+/* [좌측 사이드바] */
+.sidebar {
+    width: 220px;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    opacity: 0.4;
+}
+
+.step-item.active {
+    opacity: 1;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e0e6ef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.step-item.active .circle {
+    background: #2f3c7e;
+    color: white;
+}
+
+/* [오른쪽 콘텐츠 카드] */
+.content {
+    flex: 1;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    min-height: 500px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* [단계 제어] */
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+/* [폼 요소 스타일] */
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.desc {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.password-guide ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.password-guide li {
+    margin-bottom: 4px;
+    color: #888;
+    font-size: 12px;
+}
+
+/* [버튼 스타일] */
+.button-area {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+button {
+    min-width: 100px;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.next {
+    background: #2f8dfb;
+    color: white;
+}
+
+.prev {
+    background: #ddd;
+    color: #333;
+}
+
+.check-btn {
+    width: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 15px;
+}
+
+/* [🔥 약관 동의 섹션 - 가로 정렬 최적화] */
+.all-agree-box {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    margin-bottom: 25px;
+}
+
+.all-agree-box label {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+
+
+.agree-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.agree-item {
+    width: 100%;
+}
+
+/* 체크박스와 제목을 한 줄로 */
+.agree-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.agree-header label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px; /* 제목 글씨 크기 */
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+/* 약관 내용 박스를 가로로 넓게 */
+.agree-content {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 15px;
+    font-size: 14px; /* 내용 글씨 크기 (제목과 동일하게 세팅) */
+    color: #555;
+    overflow-y: auto;
+    line-height: 1.6;
+    border-radius: 4px;
+    box-sizing: border-box;
+    white-space: pre-line;
+}
+
+
+/* 약관 항목 헤더 (체크박스 + 제목) */
+.agree-header {
+    display: flex;
+    align-items: center; /* 체크박스와 글자 높이 맞춤 */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.agree-header label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 체크박스와 글자 사이 간격 */
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    /* 🔥 글자가 아래로 꺾이지 않게 설정 */
+    white-space: nowrap; 
+}
+
+/* 체크박스 자체 크기 조절 (선택사항) */
+.agree-header input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+}
+/* 펼쳐지는 약관 내용 상자 (기본적으로 숨김) */
+.terms-content {
+    display: none; 
+    background: #f9f9f9;
+    padding: 15px;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.6;
+    border-radius: 6px;
+    margin: 5px 0 15px 0;
+    white-space: pre-line;
+    border: 1px solid #eee;
+}
+
+/* 화살표 회전 애니메이션 */
+.arrow { 
+    display: inline-block;
+    font-size: 16px; 
+    color: #ccc; 
+    transition: transform 0.3s; 
+}
+.arrow.open { 
+    transform: rotate(90deg); /* 클릭 시 아래쪽 방향으로 회전 */
+}
+
+/* 클릭 가능한 행 스타일 */
+.agree-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    cursor: pointer; /* 마우스 커서를 손가락 모양으로 */
+}
+
+/* 공통 스타일 */
+.step-guide {
+	font-size: 14px;
+	color: #666;
+	margin-bottom: 20px;
+}
+
+.input-label {
+	display: block;
+	font-size: 13px;
+	font-weight: bold;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.field-desc {
+	font-size: 12px;
+	color: #888;
+	margin-bottom: 5px;
+}
+
+.password-guide {
+	margin-bottom: 15px;
+}
+
+.password-guide ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.password-guide li {
+	font-size: 12px;
+	color: #ff4d4f !important;
+	margin-bottom: 4px;
+	line-height: 1.4;
+}
+
+.password-guide li.is-valid {
+	color: #28a745 !important;
+	font-weight: bold !important;
+}
+
+.styled-select {
+	width: 100%;
+	height: 45px;
+	padding: 0 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+	font-size: 14px;
+	color: #333;
+}
+
+.blue-btn {
+	background-color: #0064de !important;
+	color: white !important;
+	border: none !important;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+.form-row {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.button-area button {
+	padding: 10px 30px;
+	border-radius: 25px;
+	cursor: pointer;
+	border: 1px solid #ccc;
+	font-weight: bold;
+}
+
+/* 약관 레이아웃 */
+.terms-container {
+	border-top: 2px solid #333;
+	margin-top: 10px;
+}
+
+.terms-row {
+	padding: 5px 0;
+	border-bottom: 1px solid #eee;
+}
+
+.terms-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.terms-header input {
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+}
+
+.terms-header label {
+	font-weight: bold;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.terms-box-wrapper {
+	display: none;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.terms-box {
+	width: 100%;
+	height: 120px;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	padding: 15px;
+	font-size: 12px;
+	color: #666;
+	overflow-y: scroll;
+	line-height: 1.7;
+	white-space: pre-line;
+	box-sizing: border-box;
+}
+
+.arrow-btn {
+	color: #ccc;
+	cursor: pointer;
+	transition: transform 0.3s;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.arrow-btn.active {
+	transform: rotate(90deg);
+	color: #0064de;
+}

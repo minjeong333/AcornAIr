@@ -1,0 +1,99 @@
+/* 기본 초기화 */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', sans-serif; }
+body { background-color: #f2f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+.login-wrapper { width: 100%; max-width: 1000px; padding: 20px; }
+
+.login-container {
+    display: flex;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    overflow: hidden;
+    min-height: 600px;
+}
+
+/* 왼쪽 섹션 */
+.info-section {
+    flex: 1;
+    padding: 60px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-section h1 { font-size: 32px; line-height: 1.4; color: #333; margin-bottom: 20px; }
+.info-section p { font-size: 16px; color: #666; line-height: 1.6; margin-bottom: 40px; }
+
+.btn-join {
+    width: 180px;
+    padding: 12px 0;
+    border: 1px solid #333;
+    background: #fff;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-join:hover { background: #333; color: #fff; }
+
+.info-footer { margin-top: auto; font-size: 13px; }
+.info-footer a { color: #888; text-decoration: none; }
+
+/* 오른쪽 섹션 */
+.form-section {
+    flex: 1;
+    padding: 60px;
+    background-color: #fff;
+    border-left: 1px solid #eee;
+}
+
+.tab-menu { display: flex; border-bottom: 1px solid #eee; margin-bottom: 30px; }
+.tab-item {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: none;
+    font-size: 15px;
+    color: #999;
+    cursor: pointer;
+    text-align: center;
+}
+.tab-item.active {
+    color: #333;
+    font-weight: bold;
+    border-bottom: 2px solid #333;
+}
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-size: 12px; color: #333; margin-bottom: 8px; font-weight: bold; }
+.input-group input {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+    outline: none;
+}
+.input-group input:focus { border-bottom: 2px solid #0064de; }
+
+.form-options { margin-bottom: 30px; font-size: 14px; color: #666; }
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background-color: #0064de;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.form-footer { text-align: center; font-size: 13px; color: #888; margin-bottom: 40px; }
+.form-footer a { color: #888; text-decoration: none; }
+.divider { margin: 0 10px; color: #eee; }
+
