@@ -3,19 +3,17 @@
 
 <!--<!DOCTYPE html>
 <html>
-<head>-->
+<head>
+<title>My Page Modal</title>-->
 
 <meta charset="UTF-8">
-
-<!--<title>My Page Modal</title>-->
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mypage/mypage.css">
 <script src="${pageContext.request.contextPath}/js/mypage/mypage.js" defer></script>
 
 <!--</head>
 <body>-->
-<!-- 메인페이지랑 붙이면 삭제 
-<button onclick="openMyPage()">마이페이지 열기</button>-->
+<!-- 확인용<button onclick="openMyPage()">마이페이지 열기</button>-->
 
 <div id="mypage-modal" class="modal-overlay">
     <div class="modal-content">
@@ -37,15 +35,15 @@
                     </div>
                     <div class="card res-card">
                         <div class="res-icon">✈️ 예약내역</div>
-                        <p><a href="#">예약조회 및 취소</a></p>                     
-                        <!-- <span>e-ticket 확인증</span> -->
+                        <p><a href="${pageContext.request.contextPath}/reservation/list">예약조회 및 취소</a></p>
+                        <!-- <a href="#">예약조회 및 취소</a></p> -->    
                     </div>
                 </div>
 
                 <div class="flex-col">
                     <div class="card">
                        	<div class="mem-info">회원정보</div>
-                       	<!-- 영문 성 + 이름 결합 (대문자 변환 등은 서버나 JS에서 처리 권장) -->                       	
+                       	<!-- 영문 성 + 이름 결합-->                       	
                         <div class="row"><span>영문명</span><strong>${user.engLastName} ${user.engFirstName}</strong></div>
                         <div class="row"><span>이메일</span><strong>${user.userEmail}</strong></div>
                     </div>
