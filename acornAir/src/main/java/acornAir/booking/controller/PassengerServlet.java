@@ -57,8 +57,7 @@ public class PassengerServlet extends HttpServlet {
 	    session.setAttribute("passengers", passengers);
 	    session.setAttribute("contactPhone", req.getParameter("contactPhone"));
 	    
-	    //승객정보 입력하면 좌석선택으로 넘어가게
-	    resp.sendRedirect(req.getContextPath() + "/SeatServlet");
+	    resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
 	}
 	
 			

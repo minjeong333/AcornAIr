@@ -33,6 +33,50 @@ public class FlightDAO {
 		return con;
 	}
 
+	public FlightDTO getById(int flightId) {
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		FlightDTO dto = null;
+
+		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO, "
+				+ "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
+				+ "A1.AIRPORT_NAME AS DEP_NAME, A2.AIRPORT_NAME AS ARR_NAME, "
+				+ "Y.DEP_TIME, Y.ARR_TIME, Y.PRICE AS Y_PRICE, C.PRICE AS C_PRICE "
+				+ "FROM TB_FLIGHT Y "
+				+ "JOIN TB_FLIGHT C ON Y.FLIGHT_NO = C.FLIGHT_NO AND Y.DEP_TIME = C.DEP_TIME AND C.SEAT_CLASS = 'C' "
+				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
+				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE "
+				+ "WHERE Y.SEAT_CLASS = 'Y' AND Y.FLIGHT_ID = ?";
+
+		try {
+			con = dbcon();
+			pst = con.prepareStatement(sql);
+			pst.setInt(1, flightId);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				dto = new FlightDTO();
+				dto.setFlightId(rs.getInt(1));
+				dto.setFlightNo(rs.getString(2));
+				dto.setDepAirport(rs.getString(3));
+				dto.setArrAirport(rs.getString(4));
+				dto.setDepAirportName(rs.getString(5));
+				dto.setArrAirportName(rs.getString(6));
+				dto.setDepTime(rs.getDate(7));
+				dto.setArrTime(rs.getDate(8));
+				dto.setPrice(rs.getInt(9));
+				dto.setBizPrice(rs.getInt(10));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { if (rs != null) rs.close(); } catch (Exception e) {}
+			try { if (pst != null) pst.close(); } catch (Exception e) {}
+			try { if (con != null) con.close(); } catch (Exception e) {}
+		}
+		return dto;
+	}
+
 	public ArrayList<FlightDTO> search(String depAirport, String arrAirport, String depDate, int passCnt) {
 
 		Connection con = null;

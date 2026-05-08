@@ -218,11 +218,11 @@
       });
       var total = BASE_PRICE + extraBags * BAG_PRICE;
 
-      // 부모 페이지(passenger_info.jsp)에 가격 정보 전달
+      // 부모 페이지(passenger_info.jsp)에 수화물 금액만 전달 (합산은 parent에서 처리)
       if (window.parent && window.parent.updateBaggageInfo) {
-        window.parent.updateBaggageInfo(extraBags, total);
+        window.parent.updateBaggageInfo(extraBags, extraBags * BAG_PRICE);
       }
-      // 모달 닫기 (좌석모달 또는 수화물모달 둘 다 처리)
+      // 모달 닫기
       if (window.parent && window.parent.closeSeatModal) {
         window.parent.closeSeatModal();
       }

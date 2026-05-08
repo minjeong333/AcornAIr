@@ -410,3 +410,13 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
 });
+
+function goPassenger() {
+    if (selectedGoFlight == null) {
+        alert("귀국 항공편을 선택하세요.");
+        return;
+    }
+
+    location.href = contextPath + "/booking?goFlightId=" +
+        selectedGoFlight + "&seatClass=" + selectedSeatClass;
+}
