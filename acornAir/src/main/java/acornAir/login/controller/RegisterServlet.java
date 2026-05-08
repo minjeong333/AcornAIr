@@ -54,10 +54,13 @@ public class RegisterServlet extends HttpServlet {
         int result = dao.insertUser(user, userPw);
 
         if (result > 0) {
-            resp.sendRedirect(req.getContextPath() + "/WEB-INF/views/login/success.jsp");
-        } else {
+            resp.sendRedirect(req.getContextPath() + "/air/login");
+        }else {
             req.setAttribute("errorMsg", "회원가입에 실패했습니다. 다시 시도해주세요.");
             req.getRequestDispatcher("/WEB-INF/views/login/register.jsp").forward(req, resp);
         }
+        
+   
+        
     }
 }

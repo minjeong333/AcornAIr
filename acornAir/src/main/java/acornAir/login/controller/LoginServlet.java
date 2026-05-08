@@ -30,9 +30,17 @@ public class LoginServlet extends HttpServlet {
         String userId = req.getParameter("userId");
         String userPw = req.getParameter("userPw");
         String saveId = req.getParameter("saveId");
+        
+        //to-do
+        System.out.println("로그인 아이디 = " + userId);
+        System.out.println("로그인 비번 = " + userPw);
+       
 
         UserDAO dao = new UserDAO();
         UserDTO loginUser = dao.login(userId, userPw);
+        
+        //to-do
+        System.out.println("loginUser = " + loginUser);
 
         if (loginUser != null) {
             HttpSession session = req.getSession();

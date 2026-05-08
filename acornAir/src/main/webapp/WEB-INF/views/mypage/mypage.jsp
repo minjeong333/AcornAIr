@@ -9,12 +9,13 @@
 <script src="${pageContext.request.contextPath}/js/mypage/mypage.js" defer></script>
 </head>
 <body>
-<!-- 메인페이지랑 붙이면 삭제 -->
+<!-- 메일페이지랑 붙이면 삭제 -->
 <button onclick="openMyPage()">마이페이지 열기</button>
 
 <div id="mypage-modal" class="modal-overlay">
     <div class="modal-content">
         <button class="close-modal" onclick="closeMyPage()">✕</button>
+
         <div class="mypage-wrapper">
             <div class="user-info-section">
                 <h1>ACORN</h1>
@@ -26,35 +27,32 @@
             <div class="mypage-flex-container">
                 <div class="flex-col">
                     <div class="card bg-blue">
-                        <div class="row"><span>회원ID</span><strong>${user.userId}</strong></div>
-                        <!-- 국문 성 + 이름 결합 -->
-                        <div class="row"><span>회원명</span><strong>${user.korLastName}${user.korFirstName}</strong></div>
+                        <div class="row"><span>회원명</span><strong> ACORN </strong></div>
+                        <div class="row"><span>회원번호</span><strong>1128 2838 1764</strong></div>
                     </div>
                     <div class="card res-card">
                         <div class="res-icon">✈️ 예약내역</div>
-                        <p><a href="#">예약조회 및 취소</a></p>                     
-                        <!-- <span>e-ticket 확인증</span> -->
+                        <p>예약여정</p>
+                        <span>출발일-도착일</span>
                     </div>
                 </div>
 
                 <div class="flex-col">
                     <div class="card">
-                       	<div class="mem-info">회원정보</div>
-                       	<!-- 영문 성 + 이름 결합 (대문자 변환 등은 서버나 JS에서 처리 권장) -->                       	
-                        <div class="row"><span>영문명</span><strong>${user.engLastName} ${user.engFirstName}</strong></div>
-                        <div class="row"><span>이메일</span><strong>${user.userEmail}</strong></div>
+                        <div class="row"><span>회원등급</span><strong>일반</strong></div>
+                        <div class="row"><span>마일리지</span><strong>10,000</strong></div>
                     </div>
                     <div class="card">
-	                    <!-- 연락처: 국가코드와 번호 결합 -->
-                        <div class="row"><span>전화번호</span><strong>(+${user.phoneCountry}) ${user.userPhone}</strong></div>
-                        <!-- 생년월일이나 국가 정보 등 추가 활용 가능 -->
-                        <div class="row"><span>생년월일</span><strong>${user.birthDate}</strong></div>                        
+                        <div class="row"><span>이메일</span><strong>abc@acorn.com</strong></div>
+                        <div class="row"><span>비밀번호</span><strong>****</strong></div>
+                        <div class="row"><span>비밀번호변경</span><strong>&gt;</strong></div>
                     </div>
                 </div>
             </div>
             
             <div class="modal-footer-links">
-                <a href="${pageContext.request.contextPath}/air/logout" onclick="return confirm('로그아웃 하시겠습니까?');">로그아웃</a>
+                <a href="#">회원정보 수정</a>
+                <a href="#">로그아웃</a>
             </div>
         </div>
     </div>
