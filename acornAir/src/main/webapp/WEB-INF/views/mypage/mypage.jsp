@@ -1,23 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+
+<!--<!DOCTYPE html>
 <html>
-<head>
+<head>-->
+
 <meta charset="UTF-8">
-<title>My Page Modal</title>
+
+<!--<title>My Page Modal</title>-->
+
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mypage/mypage.css">
 <script src="${pageContext.request.contextPath}/js/mypage/mypage.js" defer></script>
-</head>
-<body>
-<!-- 메인페이지랑 붙이면 삭제 -->
-<button onclick="openMyPage()">마이페이지 열기</button>
+
+<!--</head>
+<body>-->
+<!-- 메인페이지랑 붙이면 삭제 
+<button onclick="openMyPage()">마이페이지 열기</button>-->
 
 <div id="mypage-modal" class="modal-overlay">
     <div class="modal-content">
         <button class="close-modal" onclick="closeMyPage()">✕</button>
         <div class="mypage-wrapper">
             <div class="user-info-section">
-                <h1>ACORN</h1>
+                <h1><div class="row"><strong>${user.korLastName}${user.korFirstName}</strong></div></h1>
                 <div class="logo-card">
                     <div class="skypass-text">ACORNAIR ✈️</div>
                 </div>
@@ -59,5 +64,6 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+
+<!-- </body>
+</html>  -->

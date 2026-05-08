@@ -17,9 +17,9 @@
         로그인/가입
     </a>
 
-    <a href="${pageContext.request.contextPath}/air/mypage">
-        마이페이지
-    </a>
+    <span onclick="loadMyPage()" style="cursor:pointer;">마이페이지</span>
+    <div id="mypage-container"></div>
+    
 </div>
 
   <nav class="main-nav">
@@ -904,9 +904,78 @@ flightSearchForm.addEventListener("submit", function(e) {
 });
 
 
+
 updateTripButtons("왕복");
 renderCalendar();
 updatePassengerUI();
+
+
+//mypage ajax관련 코드
+/*
+ /function loadMyPage() {
+    // 1. Context Path
+    
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 1));
+    const url = contextPath + '/air/mypage';
+
+    console.log("요청하는 실제 주소:", url); // 주소가 잘 만들어졌는지 개발자도구(F12) 콘솔에서 확인용
+
+    // 2. 수정된 url로 fetch 요청
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('페이지를 찾을 수 없습니다 (404)');
+            return response.text();
+        })
+        .then(html => {
+            const container = document.getElementById('mypage-container');
+            if (container) {
+                container.innerHTML = html;
+                openMyPage();
+            }
+        })
+        .catch(error => {
+            console.error('마이페이지 로딩 실패:', error);
+            alert("서블릿 주소가 맞지 않거나 서버 에러가 발생했습니다.");
+        });
+}
+*/
+
+function loadMyPage() {
+
+    fetch('/acornAir/air/mypage')
+        .then(res => res.text())
+        .then(data => {
+
+            // 로그인 안 된 경우
+            if(data.trim() === "LOGIN_REQUIRED") {
+
+                location.href = '/acornAir/air/login';
+                return;
+            }
+
+            // 로그인 상태
+            document.getElementById('mypage-container').innerHTML = data;
+
+            openMyPage();
+        })
+        .catch(err => console.log("에러 발생:", err));
+}
+
+function openMyPage() {
+    const modal = document.getElementById('mypage-modal');
+    if(modal) modal.style.display = 'block';
+}
+
+function closeMyPage() {
+    const modal = document.getElementById('mypage-modal');
+    if(modal) {
+        modal.style.display = 'none';
+        // (선택사항) 닫을 때 HTML을 비워주면 메모리 관리에 좋습니다.
+        document.getElementById('mypage-container').innerHTML = '';
+    }
+}
+
+
 </script>
 </body>
 </html>
