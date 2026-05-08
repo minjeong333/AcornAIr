@@ -5,11 +5,15 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import acornAir.login.dto.UserDTO;
 import acornAir.reservation.dao.ReservationDAO;
 import acornAir.reservation.dto.ReservationDTO;
+ 
 
 @WebServlet("/reservation/list")
 public class ReservationListServlet extends HttpServlet {

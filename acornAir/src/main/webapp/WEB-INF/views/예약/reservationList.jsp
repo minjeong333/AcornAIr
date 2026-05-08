@@ -396,7 +396,9 @@ ArrayList<ReservationDTO> list =
 
             <div class="detail-box">
                 <span class="label">추가 수하물</span>
+ 
                 <span class="value"><%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "개" : "없음"%></span>
+ 
             </div>
 
             <div class="detail-box total-price">

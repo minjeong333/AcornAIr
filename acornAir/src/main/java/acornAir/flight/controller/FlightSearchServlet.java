@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import acornAir.flight.dao.FlightDAO;
 import acornAir.flight.dto.FlightDTO;
+import 예약.ReservationDAO;
 
 @WebServlet("/home")
 public class FlightSearchServlet extends HttpServlet {
@@ -84,7 +85,9 @@ public class FlightSearchServlet extends HttpServlet {
 	    String lastName = req.getParameter("lastName");
 	    String firstName = req.getParameter("firstName");
 
-	    acornAir.reservation.dao.ReservationDAO dao = new acornAir.reservation.dao.ReservationDAO();
+ 
+	    ReservationDAO dao = new ReservationDAO();
+ 
 
 	    boolean result = dao.checkReservation(
 	            bookingId,
