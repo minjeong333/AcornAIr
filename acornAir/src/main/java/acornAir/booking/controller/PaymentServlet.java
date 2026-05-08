@@ -52,13 +52,17 @@ public class PaymentServlet extends HttpServlet {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 		BookingDTO bookingDTO = (BookingDTO) session.getAttribute("bookingDTO");
 
+//		if (loginUser == null) {
+//			loginUser = new UserDTO();
+//			loginUser.setUserId("test01");
+//			loginUser.setUserPhone("01012345678");
+//			loginUser.setPhoneCountry("+82");
+//
+//			session.setAttribute("loginUser", loginUser);
+//		}
 		if (loginUser == null) {
-			loginUser = new UserDTO();
-			loginUser.setUserId("test01");
-			loginUser.setUserPhone("01012345678");
-			loginUser.setPhoneCountry("+82");
-
-			session.setAttribute("loginUser", loginUser);
+			resp.sendRedirect(req.getContextPath() + "/air/login");
+			return;
 		}
 
 		if (bookingDTO == null) {
