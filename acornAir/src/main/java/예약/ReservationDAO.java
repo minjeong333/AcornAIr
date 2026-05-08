@@ -9,175 +9,250 @@ import java.util.ArrayList;
 
 public class ReservationDAO {
 
-	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@localhost:1521:testdb";
-	String user = "scott";
-	String password = "tiger";
+    String driver = "oracle.jdbc.driver.OracleDriver";
+    String url = "jdbc:oracle:thin:@localhost:1521:testdb";
+    String user = "scott";
+    String password = "tiger";
 
-	// lib -> ojdbc8.jar enrl
-	public Connection dbcon() {
-		Connection con = null;
+    public Connection dbcon() {
+        Connection con = null;
 
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return con;
-	}
+        try {
+            Class.forName(driver);
+            con = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	public ArrayList<ReservationDTO> selectReservationList(String userId) {
+        return con;
+    }
 
-		ArrayList<ReservationDTO> list = new ArrayList<>();
+    public ArrayList<ReservationDTO> selectReservationList(String userId) {
 
-		Connection con = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
+        ArrayList<ReservationDTO> list = new ArrayList<>();
 
-		try {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
-			con = dbcon();
+        try {
+            con = dbcon();
 
-			String sql = """
+            String sql = """
+                SELECT
+                    B.BOOKING_ID,
+                    B.BOOK_STATUS,
+                    U.KOR_LAST_NAME || U.KOR_FIRST_NAME AS USER_NAME,
 
-					        		    SELECT
-					        		        B.BOOKING_ID,
-											B.BOOK_STATUS,
-					        		        U.KOR_LAST_NAME || U.KOR_FIRST_NAME AS USER_NAME,
+                    GF.DEP_AIRPORT AS GO_DEP,
+                    GF.ARR_AIRPORT AS GO_ARR,
+                    TO_CHAR(GF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS GO_DATE,
 
-					        		        GF.DEP_AIRPORT AS GO_DEP,
-					        		        GF.ARR_AIRPORT AS GO_ARR,
-					        		        TO_CHAR(GF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS GO_DATE,
+                    BF.DEP_AIRPORT AS BACK_DEP,
+                    BF.ARR_AIRPORT AS BACK_ARR,
+                    TO_CHAR(BF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS BACK_DATE,
 
-					        		        BF.DEP_AIRPORT AS BACK_DEP,
-					        		        BF.ARR_AIRPORT AS BACK_ARR,
-					        		        TO_CHAR(BF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS BACK_DATE,
+                    COUNT(DISTINCT P.PASSENGER_ID) AS PASSENGER_COUNT,
 
-					        		        COUNT(P.PASSENGER_ID) AS PASSENGER_COUNT,
+                    CASE
+                        WHEN GF.SEAT_CLASS = 'Y' THEN '일반석'
+                        WHEN GF.SEAT_CLASS = 'C' THEN '비즈니스석'
+                    END AS SEAT_CLASS,
 
-					        		        CASE
-					        		            WHEN GF.SEAT_CLASS = 'Y' THEN '일반석'
-					        		            WHEN GF.SEAT_CLASS = 'C' THEN '비즈니스석'
-					        		        END AS SEAT_CLASS,
+                    B.TOTAL_PRICE,
+                    S.SEAT_NO,
+                    BG.EXTRA_BAGGAGE
 
-					        		        B.TOTAL_PRICE,
+                FROM TB_BOOKING B
 
-											
-					        		        S.SEAT_NO,
+                JOIN TB_USER U
+                ON B.USER_ID = U.USER_ID
 
-					        		        BG.EXTRA_BAGGAGE
+                JOIN TB_FLIGHT GF
+                ON B.GO_FLIGHT_ID = GF.FLIGHT_ID
 
-					        		    FROM TB_BOOKING B
+                LEFT JOIN TB_FLIGHT BF
+                ON B.BACK_FLIGHT_ID = BF.FLIGHT_ID
 
-					        		    JOIN TB_USER U
-					        		    ON B.USER_ID = U.USER_ID
+                LEFT JOIN TB_SEAT S
+                ON B.BOOKING_ID = S.BOOKING_ID
 
-					        		    JOIN TB_FLIGHT GF
-					        		    ON B.GO_FLIGHT_ID = GF.FLIGHT_ID
+                LEFT JOIN TB_BAGGAGE BG
+                ON B.BOOKING_ID = BG.BOOKING_ID
 
-					        		    LEFT JOIN TB_FLIGHT BF
-					        		    ON B.BACK_FLIGHT_ID = BF.FLIGHT_ID
+                LEFT JOIN TB_PASSENGER P
+                ON B.BOOKING_ID = P.BOOKING_ID
 
-					        		    LEFT JOIN TB_SEAT S
-					        		    ON B.BOOKING_ID = S.BOOKING_ID
+                WHERE B.USER_ID = ?
 
-					        		    LEFT JOIN TB_BAGGAGE BG
-					        		    ON B.BOOKING_ID = BG.BOOKING_ID
+                GROUP BY
+                    B.BOOKING_ID,
+                    B.BOOK_STATUS,
+                    U.KOR_LAST_NAME,
+                    U.KOR_FIRST_NAME,
+                    GF.DEP_AIRPORT,
+                    GF.ARR_AIRPORT,
+                    GF.DEP_TIME,
+                    BF.DEP_AIRPORT,
+                    BF.ARR_AIRPORT,
+                    BF.DEP_TIME,
+                    GF.SEAT_CLASS,
+                    B.TOTAL_PRICE,
+                    S.SEAT_NO,
+                    BG.EXTRA_BAGGAGE,
+                    B.BOOK_DATE
 
-					        		    LEFT JOIN TB_PASSENGER P
-					        		    ON B.BOOKING_ID = P.BOOKING_ID
+                ORDER BY B.BOOK_DATE DESC
+            """;
 
-					        		    WHERE B.USER_ID = ?
+            pst = con.prepareStatement(sql);
+            pst.setString(1, userId);
 
-					        		    GROUP BY
-					        		        B.BOOKING_ID,
-					        		        U.KOR_LAST_NAME,
-					        		        U.KOR_FIRST_NAME,
-					        		        GF.DEP_AIRPORT,
-					        		        GF.ARR_AIRPORT,
-					        		        GF.DEP_TIME,
-					        		        BF.DEP_AIRPORT,
-					        		        BF.ARR_AIRPORT,
-					        		        BF.DEP_TIME,
-					        		        GF.SEAT_CLASS,
-					        		        B.TOTAL_PRICE,
-					        		        S.SEAT_NO,
-					        		        BG.EXTRA_BAGGAGE
+            rs = pst.executeQuery();
 
-					        		    ORDER BY B.BOOK_DATE DESC
+            while (rs.next()) {
+                ReservationDTO dto = new ReservationDTO();
 
-					        		""";
+                dto.setBookingId(rs.getInt("BOOKING_ID"));
+                dto.setBookStatus(rs.getString("BOOK_STATUS"));
+                dto.setUserName(rs.getString("USER_NAME"));
 
-			pst = con.prepareStatement(sql);
+                dto.setGoDep(rs.getString("GO_DEP"));
+                dto.setGoArr(rs.getString("GO_ARR"));
+                dto.setGoDate(rs.getString("GO_DATE"));
 
-			pst.setString(1, userId);
+                dto.setBackDep(rs.getString("BACK_DEP"));
+                dto.setBackArr(rs.getString("BACK_ARR"));
+                dto.setBackDate(rs.getString("BACK_DATE"));
 
-			rs = pst.executeQuery();
+                dto.setPassengerCount(rs.getInt("PASSENGER_COUNT"));
+                dto.setSeatClass(rs.getString("SEAT_CLASS"));
+                dto.setSeatNo(rs.getString("SEAT_NO"));
+                dto.setBaggageKg(rs.getInt("EXTRA_BAGGAGE"));
+                dto.setTotalPrice(rs.getInt("TOTAL_PRICE"));
 
-			while (rs.next()) {
+                list.add(dto);
+            }
 
-				ReservationDTO dto = new ReservationDTO();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-				dto.setBookingId(rs.getInt("BOOKING_ID"));
-				dto.setBookStatus(rs.getString("BOOK_STATUS"));
-				dto.setUserName(rs.getString("USER_NAME"));
+        return list;
+    }
 
-				dto.setGoDep(rs.getString("GO_DEP"));
-				dto.setGoArr(rs.getString("GO_ARR"));
-				dto.setGoDate(rs.getString("GO_DATE"));
+    public boolean checkReservation(String bookingId, String depDate, String lastName, String firstName) {
 
-				dto.setBackDep(rs.getString("BACK_DEP"));
-				dto.setBackArr(rs.getString("BACK_ARR"));
-				dto.setBackDate(rs.getString("BACK_DATE"));
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
-				dto.setPassengerCount(rs.getInt("PASSENGER_COUNT"));
+        try {
+            con = dbcon();
 
-				dto.setSeatClass(rs.getString("SEAT_CLASS"));
+            String sql = """
+                SELECT COUNT(*)
+                FROM TB_BOOKING B
 
-				dto.setSeatNo(rs.getString("SEAT_NO"));
+                JOIN TB_USER U
+                ON B.USER_ID = U.USER_ID
 
-				dto.setBaggageKg(rs.getInt("EXTRA_BAGGAGE"));
+                JOIN TB_FLIGHT F
+                ON B.GO_FLIGHT_ID = F.FLIGHT_ID
 
-				dto.setTotalPrice(rs.getInt("TOTAL_PRICE"));
+                WHERE B.BOOKING_ID = ?
+                AND TRUNC(F.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD')
+                AND U.KOR_LAST_NAME = ?
+                AND U.KOR_FIRST_NAME = ?
+            """;
 
-				list.add(dto);
-			}
+            pst = con.prepareStatement(sql);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            pst.setInt(1, Integer.parseInt(bookingId));
+            pst.setString(2, depDate);
+            pst.setString(3, lastName);
+            pst.setString(4, firstName);
 
-		return list;
-	}
-	
-	
-	
-	public void cancelReservation(int bookingId) {
+            rs = pst.executeQuery();
 
-	    Connection con = null;
-	    PreparedStatement pst = null;
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
 
-	    try {
-	        con = dbcon();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-	        String sql = """
-	            UPDATE TB_BOOKING
-	            SET BOOK_STATUS = 'N'
-	            WHERE BOOKING_ID = ?
-	        """;
+        return false;
+    }
 
-	        pst = con.prepareStatement(sql);
-	        pst.setInt(1, bookingId);
+    public void cancelReservation(int bookingId) {
 
-	        pst.executeUpdate();
+        Connection con = null;
+        PreparedStatement pst1 = null;
+        PreparedStatement pst2 = null;
+        PreparedStatement pst3 = null;
+        PreparedStatement pst4 = null;
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
+        try {
+            con = dbcon();
+            con.setAutoCommit(false);
+
+            pst1 = con.prepareStatement("DELETE FROM TB_BAGGAGE WHERE BOOKING_ID = ?");
+            pst1.setInt(1, bookingId);
+            pst1.executeUpdate();
+
+            pst2 = con.prepareStatement("DELETE FROM TB_SEAT WHERE BOOKING_ID = ?");
+            pst2.setInt(1, bookingId);
+            pst2.executeUpdate();
+
+            pst3 = con.prepareStatement("DELETE FROM TB_PASSENGER WHERE BOOKING_ID = ?");
+            pst3.setInt(1, bookingId);
+            pst3.executeUpdate();
+
+            pst4 = con.prepareStatement("DELETE FROM TB_BOOKING WHERE BOOKING_ID = ?");
+            pst4.setInt(1, bookingId);
+            pst4.executeUpdate();
+
+            con.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            try {
+                if (con != null) con.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        } finally {
+            try {
+                if (pst1 != null) pst1.close();
+                if (pst2 != null) pst2.close();
+                if (pst3 != null) pst3.close();
+                if (pst4 != null) pst4.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

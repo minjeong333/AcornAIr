@@ -24,6 +24,7 @@ UserDTO loginUser =
         로그인/가입
     </a>
 
+ 
 <% } else { %>
 
     <a href="#">
@@ -39,6 +40,7 @@ UserDTO loginUser =
     <a href="${pageContext.request.contextPath}/air/mypage">
         마이페이지
     </a>
+ 
 </div>
 
   <nav class="main-nav">
@@ -142,34 +144,59 @@ UserDTO loginUser =
 	</div>
 	
 	<!-- 나의 여행 -->
-	<div class="mytrip-content" id="myTripContent">
-  <div class="mytrip-row">
+<div class="mytrip-content" id="myTripContent">
+
+<form id="myTripForm"
+      action="${pageContext.request.contextPath}/home"
+      method="post">
+
+<input type="hidden" name="mode" value="mytrip">
+
+<div class="mytrip-row">
 
     <div class="mytrip-field">
       <label>예약번호 또는 항공권번호</label>
-      <input type="text" placeholder="예) A1B2C3 또는 1801234567890">
+
+      <input type="text"
+             name="bookingId"
+             placeholder="예) 5001">
     </div>
 
     <div class="mytrip-field">
       <label>출발일</label>
+
+      <input type="hidden"
+             name="depDate"
+             id="myTripDepDate">
+
       <div class="mytrip-date" id="myTripDateBox">
- 		 <span id="myTripDateText">날짜 선택</span>
-	  </div>
+        <span id="myTripDateText">날짜 선택</span>
+      </div>
     </div>
 
     <div class="mytrip-field small">
       <label>성</label>
-      <input type="text">
+
+      <input type="text"
+             name="lastName">
     </div>
 
     <div class="mytrip-field small">
       <label>이름</label>
-      <input type="text">
+
+      <input type="text"
+             name="firstName">
     </div>
 
-    <button class="mytrip-btn">조회</button>
+    <button type="submit"
+            class="mytrip-btn">
+        조회
+    </button>
 
-  </div>
+</div>
+
+</form>
+
 </div>
 
 
@@ -697,12 +724,24 @@ calendar.addEventListener("click", function(e) {
   const selected = e.target.dataset.date;
 
   if (currentDateTarget === "mytrip") {
-    clearDateSelection();
-    e.target.classList.add("selected");
-    myTripDateText.innerText = selected;
-    calendar.style.display = "none";
-    return;
-  }
+
+	  clearDateSelection();
+
+	  e.target.classList.add("selected");
+
+	  myTripDateText.innerText = selected;
+
+	  const myTripDepDate =
+	      document.getElementById("myTripDepDate");
+
+	  if(myTripDepDate){
+	      myTripDepDate.value = selected;
+	  }
+
+	  calendar.style.display = "none";
+
+	  return;
+	}
 
   if (tripType === "편도") {
     startDate = selected;
@@ -930,13 +969,55 @@ updatePassengerUI();
 
 
 //mypage ajax관련 코드
+ 
+/*
+ /function loadMyPage() {
+    // 1. Context Path
+    
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 1));
+    const url = contextPath + '/air/mypage';
+
+    console.log("요청하는 실제 주소:", url); // 주소가 잘 만들어졌는지 개발자도구(F12) 콘솔에서 확인용
+
+    // 2. 수정된 url로 fetch 요청
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('페이지를 찾을 수 없습니다 (404)');
+            return response.text();
+        })
+        .then(html => {
+            const container = document.getElementById('mypage-container');
+            if (container) {
+                container.innerHTML = html;
+                openMyPage();
+            }
+        })
+        .catch(error => {
+            console.error('마이페이지 로딩 실패:', error);
+            alert("서블릿 주소가 맞지 않거나 서버 에러가 발생했습니다.");
+        });
+}
+*/
 
 function loadMyPage() {
+
     fetch('/acornAir/air/mypage')
         .then(res => res.text())
-        .then(html => {
-            document.getElementById('mypage-container').innerHTML = html;
-            openMyPage(); // 모달 띄우기
+        .then(data => {
+
+            // 로그인 안 된 경우
+            if(data.trim() === "LOGIN_REQUIRED") {
+
+                location.href = '/acornAir/air/login';
+                return;
+            }
+
+            // 로그인 상태
+            document.getElementById('mypage-container').innerHTML = data;
+
+            openMyPage();
+ 
+ 
         })
         .catch(err => console.log("에러 발생:", err));
 }

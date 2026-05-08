@@ -27,6 +27,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
+        
         String userId = req.getParameter("userId");
         String userPw = req.getParameter("userPw");
         String saveId = req.getParameter("saveId");
