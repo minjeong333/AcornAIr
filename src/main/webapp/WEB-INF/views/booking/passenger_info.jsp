@@ -5,13 +5,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-FlightDTO goFlight  = (FlightDTO) session.getAttribute("goFlight");
+FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
 String seatClass = (String) session.getAttribute("seatClass");
-String tripType  = (String) session.getAttribute("tripType");
+String tripType = (String) session.getAttribute("tripType");
 int passCnt = session.getAttribute("passCnt") != null ? (Integer) session.getAttribute("passCnt") : 1;
 
-String seatLabel  = "C".equals(seatClass) ? "비즈니스석" : "일반석";
+String seatLabel = "C".equals(seatClass) ? "비즈니스석" : "일반석";
 boolean isRoundTrip = "RT".equals(tripType);
 
 SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy년 M월 dd일 (E)", new Locale("ko"));
@@ -20,10 +20,10 @@ SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm");
 // 운임 계산
 int farePrice = 0;
 if (goFlight != null) {
-    farePrice += "C".equals(seatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
+	farePrice += "C".equals(seatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
 }
 if (backFlight != null) {
-    farePrice += "C".equals(seatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
+	farePrice += "C".equals(seatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
 }
 farePrice *= passCnt;
 
@@ -76,7 +76,9 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			</div>
 
 			<!-- 가는 편 -->
-			<% if (goFlight != null) { %>
+			<%
+			if (goFlight != null) {
+			%>
 			<div class="flight-card">
 				<div>
 					<div class="flight-label">가는 편</div>
@@ -85,8 +87,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				<div>
 					<div class="flight-route">
 						<span><%=goFlight.getDepAirport()%> <%=goFlight.getDepAirportName()%></span>
-						<span class="arrow">→</span>
-						<span><%=goFlight.getArrAirport()%> <%=goFlight.getArrAirportName()%></span>
+						<span class="arrow">→</span> <span><%=goFlight.getArrAirport()%>
+							<%=goFlight.getArrAirportName()%></span>
 					</div>
 					<div class="flight-detail">
 						<span><%=dateFmt.format(goFlight.getDepTime())%> <%=timeFmt.format(goFlight.getDepTime())%>~<%=timeFmt.format(goFlight.getArrTime())%></span>
@@ -95,10 +97,14 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				</div>
 				<button class="btn-detail">상세 보기</button>
 			</div>
-			<% } %>
+			<%
+			}
+			%>
 
 			<!-- 오는 편 (왕복일 때만) -->
-			<% if (isRoundTrip && backFlight != null) { %>
+			<%
+			if (isRoundTrip && backFlight != null) {
+			%>
 			<div class="flight-card">
 				<div>
 					<div class="flight-label">오는 편</div>
@@ -107,8 +113,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				<div>
 					<div class="flight-route">
 						<span><%=backFlight.getDepAirport()%> <%=backFlight.getDepAirportName()%></span>
-						<span class="arrow">→</span>
-						<span><%=backFlight.getArrAirport()%> <%=backFlight.getArrAirportName()%></span>
+						<span class="arrow">→</span> <span><%=backFlight.getArrAirport()%>
+							<%=backFlight.getArrAirportName()%></span>
 					</div>
 					<div class="flight-detail">
 						<span><%=dateFmt.format(backFlight.getDepTime())%> <%=timeFmt.format(backFlight.getDepTime())%>~<%=timeFmt.format(backFlight.getArrTime())%></span>
@@ -117,7 +123,9 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				</div>
 				<button class="btn-detail">상세 보기</button>
 			</div>
-			<% } %>
+			<%
+			}
+			%>
 
 			<!-- 승객 정보 -->
 			<div class="passenger-section">
@@ -234,16 +242,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 								</div>
 								<div class="country-row">
 									<button class="btn-country">국가번호</button>
-									<input class="form-input" type="text" value="${loginUser.phoneCountry}"
-										style="max-width: 60px;" />
+									<input class="form-input" type="text"
+										value="${loginUser.phoneCountry}" style="max-width: 60px;" />
 								</div>
 							</div>
 							<div>
 								<div class="form-label">
 									휴대전화 번호 <span class="req">*</span>
 								</div>
-								<input class="form-input" type="text" value="${loginUser.userPhone}"
-									style="color: #0066cc;" />
+								<input class="form-input" type="text"
+									value="${loginUser.userPhone}" style="color: #0066cc;" />
 							</div>
 						</div>
 
@@ -280,7 +288,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 						<!-- 확인 버튼 -->
 						<div class="btn-confirm-wrap">
-							<button class="btn-confirm" id="btn-contact-confirm" type="button">확인</button>
+							<button class="btn-confirm" id="btn-contact-confirm"
+								type="button">확인</button>
 						</div>
 
 					</div>
@@ -389,10 +398,12 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<span>운임</span> <span><%=String.format("%,d", farePrice)%> 원</span>
 				</div>
 				<div class="price-row">
-					<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%> 원</span>
+					<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+						원</span>
 				</div>
 				<div class="price-row">
-					<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%> 원</span>
+					<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
+						원</span>
 				</div>
 				<div id="extraBaggageRow" class="price-row" style="display: none;">
 					<span id="extraBaggageLabel">초과 수하물</span> <span
@@ -400,7 +411,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				</div>
 				<hr class="price-divider" />
 				<div class="price-total">
-					<span>총액</span> <span class="amount" id="sidebarTotal"><%=String.format("%,d", baseTotal)%> 원</span>
+					<span>총액</span> <span class="amount" id="sidebarTotal"><%=String.format("%,d", baseTotal)%>
+						원</span>
 				</div>
 				<a href="#" class="link-refund">↺ 변경 및 환불 규정</a>
 			</div>
@@ -421,17 +433,22 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		function formatNum(n) {
 			return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 		}
-		var BAG_PRICE = 40000;
-		var serverTotal = <%=baseTotal%>;
-		var serverBags = '${bags}' === '' ? 0 : parseInt('${bags}');
 
-		(function() {
-			if (serverTotal !== 367000 || serverBags > 0) {
-				document.getElementById('totalAmount').innerHTML = formatNum(serverTotal)
-						+ ' <span>원</span>';
-				document.getElementById('sidebarTotal').textContent = formatNum(serverTotal)
-						+ ' 원';
-			}
+		var BASE_PRICE =
+	<%=baseTotal%>
+		;
+		var BAG_PRICE = 40000;
+
+		var serverBags = '${bags}' === '' ? 0 : parseInt('${bags}');
+		var serverTotal = BASE_PRICE + (serverBags * BAG_PRICE);
+
+		function applyPriceView() {
+			document.getElementById('totalAmount').innerHTML = formatNum(serverTotal)
+					+ ' <span>원</span>';
+
+			document.getElementById('sidebarTotal').textContent = formatNum(serverTotal)
+					+ ' 원';
+
 			if (serverBags > 0) {
 				document.getElementById('extraBaggageRow').style.display = 'flex';
 				document.getElementById('extraBaggageLabel').textContent = '초과 수하물 ×'
@@ -439,10 +456,15 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				document.getElementById('extraBaggagePrice').textContent = formatNum(serverBags
 						* BAG_PRICE)
 						+ ' 원';
+			} else {
+				document.getElementById('extraBaggageRow').style.display = 'none';
 			}
-		})();
+		}
+
+		applyPriceView();
 	</script>
-	<script src="${pageContext.request.contextPath}/js/booking/passenger.js"></script>
+	<script
+		src="${pageContext.request.contextPath}/js/booking/passenger.js"></script>
 
 	<!-- ===== 결제 모달 ===== -->
 	<div class="modal-overlay" id="payModal" onclick="closePayModal(event)">
@@ -468,13 +490,53 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 						<div class="modal-card-title">항공편 정보</div>
 						<div class="modal-flight-row">
 							<div>
-								<div class="modal-route">ICN 서울/인천 → NGO 나고야</div>
-								<div class="modal-flight-detail">2026년 7월 09일 (목) &nbsp;✈
-									KE741&nbsp; 10:35 ~ 12:30</div>
-								<div class="modal-flight-detail">오는 편 &nbsp; NGO → ICN
-									&nbsp;✈ KE742&nbsp; 2026년 7월 10일 (금) 13:40 ~ 15:40</div>
+								<%
+								if (goFlight != null) {
+								%>
+								<div class="modal-route">
+									<%=goFlight.getDepAirport()%>
+									<%=goFlight.getDepAirportName()%>
+									→
+									<%=goFlight.getArrAirport()%>
+									<%=goFlight.getArrAirportName()%>
+								</div>
+								<div class="modal-flight-detail">
+									<%=dateFmt.format(goFlight.getDepTime())%>
+									&nbsp;✈
+									<%=goFlight.getFlightNo()%>
+									&nbsp;
+									<%=timeFmt.format(goFlight.getDepTime())%>
+									~
+									<%=timeFmt.format(goFlight.getArrTime())%>
+								</div>
+								<%
+								}
+								%>
+
+								<%
+								if (isRoundTrip && backFlight != null) {
+								%>
+								<div class="modal-flight-detail">
+									오는 편 &nbsp;
+									<%=backFlight.getDepAirport()%>
+									→
+									<%=backFlight.getArrAirport()%>
+									&nbsp;✈
+									<%=backFlight.getFlightNo()%>
+									&nbsp;
+									<%=dateFmt.format(backFlight.getDepTime())%>
+									<%=timeFmt.format(backFlight.getDepTime())%>
+									~
+									<%=timeFmt.format(backFlight.getArrTime())%>
+								</div>
+								<%
+								}
+								%>
 							</div>
-							<div class="modal-price-right">367,000 원</div>
+							<div class="modal-price-right">
+								<%=String.format("%,d", baseTotal)%>
+								원
+							</div>
 						</div>
 					</div>
 
@@ -482,16 +544,20 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<div class="modal-card">
 						<div class="modal-card-title">항공 운송료</div>
 						<div class="modal-fee-row">
-							<span>운임</span><span>190,000 원</span>
+							<span>운임</span> <span><%=String.format("%,d", farePrice)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>유류할증료</span><span>114,000 원</span>
+							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금, 수수료 및 기타 요금</span><span>63,000 원</span>
+							<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
+								원</span>
 						</div>
 						<div class="modal-fee-total">
-							<span>소계</span><span>367,000 원</span>
+							<span>소계</span> <span><%=String.format("%,d", baseTotal)%>
+								원</span>
 						</div>
 					</div>
 
@@ -540,13 +606,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<div class="modal-summary">
 						<div class="modal-card-title">결제 금액</div>
 						<div class="modal-fee-row">
-							<span>항공권 운임</span><span>190,000 원</span>
+							<span>항공권 운임</span> <span><%=String.format("%,d", farePrice)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>유류할증료</span><span>114,000 원</span>
+							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금 및 수수료</span><span>63,000 원</span>
+							<span>세금 및 수수료</span> <span><%=String.format("%,d", tax)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row" id="summaryBaggageRow"
 							style="display: none;">
@@ -556,10 +625,14 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 						<hr class="modal-divider" />
 						<div class="modal-total-row">
 							<span>총 결제금액</span> <span class="modal-total-amount"
-								id="modalTotalAmt">367,000 원</span>
+								id="modalTotalAmt"> <%=String.format("%,d", baseTotal)%>
+								원
+							</span>
 						</div>
-						<button class="modal-pay-btn" id="modalPayBtn" onclick="doPay()">367,000
-							원 결제하기</button>
+						<button class="modal-pay-btn" id="modalPayBtn" onclick="doPay()">
+							<%=String.format("%,d", baseTotal)%>
+							원 결제하기
+						</button>
 						<p class="modal-disclaimer">결제 시 이용약관 및 개인정보처리방침에 동의하게 됩니다.</p>
 					</div>
 				</div>
@@ -659,9 +732,11 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		} --%>
 		function doPay() {
 			var confirmed = confirm('결제를 진행하시겠습니까?');
-			if (!confirmed) return;
+			if (!confirmed)
+				return;
 
-			var payMethod = document.querySelector("input[name='payMethod']:checked").value;
+			var payMethod = document
+					.querySelector("input[name='payMethod']:checked").value;
 
 			var form = document.createElement("form");
 			form.method = "POST";
@@ -714,22 +789,11 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		}
 
 		// iframe(payment.jsp)에서 호출 — bags: 수화물 개수, bagFee: 수화물 금액만
-		function updateBaggageInfo(bags, bagFee) {
+		function updateBaggageInfo(bags, baggageOnlyPrice) {
 			serverBags = bags;
-			serverTotal = <%=baseTotal%> + bagFee;
-			document.getElementById('totalAmount').innerHTML = formatNum(serverTotal)
-					+ ' <span>원</span>';
-			document.getElementById('sidebarTotal').textContent = formatNum(serverTotal)
-					+ ' 원';
-			if (bags > 0) {
-				document.getElementById('extraBaggageRow').style.display = 'flex';
-				document.getElementById('extraBaggageLabel').textContent = '초과 수하물 ×'
-						+ bags;
-				document.getElementById('extraBaggagePrice').textContent = formatNum(bagFee)
-						+ ' 원';
-			} else {
-				document.getElementById('extraBaggageRow').style.display = 'none';
-			}
+			serverTotal = BASE_PRICE + (serverBags * BAG_PRICE);
+
+			applyPriceView();
 		}
 	</script>
 

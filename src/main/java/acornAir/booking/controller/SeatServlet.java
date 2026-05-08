@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import acornAir.booking.dto.BookingDTO;
 import acornAir.booking.dto.PassengerDTO;
 import acornAir.flight.dto.FlightDTO;
+import acornAir.login.dto.UserDTO;
 
 @WebServlet("/air/booking/seatSelect")
 public class SeatServlet extends HttpServlet {
@@ -90,7 +91,12 @@ public class SeatServlet extends HttpServlet {
 		// bookingDTO 생성
 		BookingDTO bookingDTO = new BookingDTO();
 
-		bookingDTO.setUserId("test01"); // 임시 테스트용
+//		bookingDTO.setUserId("test01"); // 임시 테스트용
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+		if (loginUser != null) {
+			bookingDTO.setUserId(loginUser.getUserId());
+		}
 //		bookingDTO.setTripType((String) session.getAttribute("tripType"));
 		// 임시추가 - dhy
 		String tripType = (String) session.getAttribute("tripType");

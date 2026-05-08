@@ -133,4 +133,55 @@ public class UserDAO {
 
         return count;
     }
+    
+//mypage getUserById 추가
+    
+    public UserDTO getUserById(String userId) {
+        
+    	// 1. SQL 수정: login 활용
+        String sql = "SELECT USER_ID, ENG_LAST_NAME, ENG_FIRST_NAME, "
+                + "KOR_LAST_NAME, KOR_FIRST_NAME, USER_EMAIL, "
+                + "PHONE_COUNTRY, USER_PHONE, BIRTH_DATE, GENDER, COUNTRY "
+                + "FROM TB_USER "
+                + "WHERE USER_ID = ?"; // ID만으로 조회
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        UserDTO user = null;
+
+        try {
+            con = db.dbcon();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, userId); // 파라미터도 ID 하나만 설정
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                user = new UserDTO();
+                // 기존 login 메서드의 Mapping 로직 그대로 사용
+                user.setUserId(rs.getString(1));
+                user.setEngLastName(rs.getString(2));
+                user.setEngFirstName(rs.getString(3));
+                user.setKorLastName(rs.getString(4));
+                user.setKorFirstName(rs.getString(5));
+                user.setUserEmail(rs.getString(6));
+                user.setPhoneCountry(rs.getString(7));
+                user.setUserPhone(rs.getString(8));
+                user.setBirthDate(rs.getDate(9));
+                user.setGender(rs.getString(10));
+                user.setCountry(rs.getString(11));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 로직 (login 메서드와 동일)
+            try { if (rs  != null) rs.close();  } catch (Exception e) {}
+            try { if (pst != null) pst.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+
+        return user;
+    }
+
 }
