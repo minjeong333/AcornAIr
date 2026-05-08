@@ -490,13 +490,53 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 						<div class="modal-card-title">항공편 정보</div>
 						<div class="modal-flight-row">
 							<div>
-								<div class="modal-route">ICN 서울/인천 → NGO 나고야</div>
-								<div class="modal-flight-detail">2026년 7월 09일 (목) &nbsp;✈
-									KE741&nbsp; 10:35 ~ 12:30</div>
-								<div class="modal-flight-detail">오는 편 &nbsp; NGO → ICN
-									&nbsp;✈ KE742&nbsp; 2026년 7월 10일 (금) 13:40 ~ 15:40</div>
+								<%
+								if (goFlight != null) {
+								%>
+								<div class="modal-route">
+									<%=goFlight.getDepAirport()%>
+									<%=goFlight.getDepAirportName()%>
+									→
+									<%=goFlight.getArrAirport()%>
+									<%=goFlight.getArrAirportName()%>
+								</div>
+								<div class="modal-flight-detail">
+									<%=dateFmt.format(goFlight.getDepTime())%>
+									&nbsp;✈
+									<%=goFlight.getFlightNo()%>
+									&nbsp;
+									<%=timeFmt.format(goFlight.getDepTime())%>
+									~
+									<%=timeFmt.format(goFlight.getArrTime())%>
+								</div>
+								<%
+								}
+								%>
+
+								<%
+								if (isRoundTrip && backFlight != null) {
+								%>
+								<div class="modal-flight-detail">
+									오는 편 &nbsp;
+									<%=backFlight.getDepAirport()%>
+									→
+									<%=backFlight.getArrAirport()%>
+									&nbsp;✈
+									<%=backFlight.getFlightNo()%>
+									&nbsp;
+									<%=dateFmt.format(backFlight.getDepTime())%>
+									<%=timeFmt.format(backFlight.getDepTime())%>
+									~
+									<%=timeFmt.format(backFlight.getArrTime())%>
+								</div>
+								<%
+								}
+								%>
 							</div>
-							<div class="modal-price-right">367,000 원</div>
+							<div class="modal-price-right">
+								<%=String.format("%,d", baseTotal)%>
+								원
+							</div>
 						</div>
 					</div>
 
@@ -504,16 +544,20 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<div class="modal-card">
 						<div class="modal-card-title">항공 운송료</div>
 						<div class="modal-fee-row">
-							<span>운임</span><span>190,000 원</span>
+							<span>운임</span> <span><%=String.format("%,d", farePrice)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>유류할증료</span><span>114,000 원</span>
+							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금, 수수료 및 기타 요금</span><span>63,000 원</span>
+							<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
+								원</span>
 						</div>
 						<div class="modal-fee-total">
-							<span>소계</span><span>367,000 원</span>
+							<span>소계</span> <span><%=String.format("%,d", baseTotal)%>
+								원</span>
 						</div>
 					</div>
 
@@ -562,13 +606,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<div class="modal-summary">
 						<div class="modal-card-title">결제 금액</div>
 						<div class="modal-fee-row">
-							<span>항공권 운임</span><span>190,000 원</span>
+							<span>항공권 운임</span> <span><%=String.format("%,d", farePrice)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>유류할증료</span><span>114,000 원</span>
+							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금 및 수수료</span><span>63,000 원</span>
+							<span>세금 및 수수료</span> <span><%=String.format("%,d", tax)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row" id="summaryBaggageRow"
 							style="display: none;">
@@ -578,10 +625,14 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 						<hr class="modal-divider" />
 						<div class="modal-total-row">
 							<span>총 결제금액</span> <span class="modal-total-amount"
-								id="modalTotalAmt">367,000 원</span>
+								id="modalTotalAmt"> <%=String.format("%,d", baseTotal)%>
+								원
+							</span>
 						</div>
-						<button class="modal-pay-btn" id="modalPayBtn" onclick="doPay()">367,000
-							원 결제하기</button>
+						<button class="modal-pay-btn" id="modalPayBtn" onclick="doPay()">
+							<%=String.format("%,d", baseTotal)%>
+							원 결제하기
+						</button>
 						<p class="modal-disclaimer">결제 시 이용약관 및 개인정보처리방침에 동의하게 됩니다.</p>
 					</div>
 				</div>
