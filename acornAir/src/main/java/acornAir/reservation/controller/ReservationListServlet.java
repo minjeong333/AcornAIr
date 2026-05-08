@@ -1,13 +1,19 @@
-package 예약;
+package acornAir.reservation.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import acornAir.login.dto.UserDTO;
+import acornAir.reservation.dao.ReservationDAO;
+import acornAir.reservation.dto.ReservationDTO;
+ 
 
 @WebServlet("/reservation/list")
 public class ReservationListServlet extends HttpServlet {
@@ -16,24 +22,12 @@ public class ReservationListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 //
-    	HttpSession session = req.getSession(false);
-
-    	if (session == null) {
-    	    resp.sendRedirect(req.getContextPath() + "/air/login");
-    	    return;
-    	}
+    	HttpSession session = req.getSession();
 
     	UserDTO loginUser =
     	        (UserDTO) session.getAttribute("loginUser");
 
-    	if (loginUser == null) {
-    	    resp.sendRedirect(req.getContextPath() + "/air/login");
-    	    return;
-    	}
-
     	String userId = loginUser.getUserId();
-
-    	System.out.println("예약조회 로그인아이디 = " + userId);
         ReservationDAO dao = new ReservationDAO();
 
         // 테스트용 아이디

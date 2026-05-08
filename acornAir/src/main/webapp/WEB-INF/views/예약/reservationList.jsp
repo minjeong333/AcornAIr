@@ -1,4 +1,4 @@
-<%@page import="예약.ReservationDTO"%>
+<%@page import="acornAir.reservation.dto.ReservationDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -396,7 +396,9 @@ ArrayList<ReservationDTO> list =
 
             <div class="detail-box">
                 <span class="label">추가 수하물</span>
-                <span class="value"><%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "kg" : "없음"%></span>
+ 
+                <span class="value"><%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "개" : "없음"%></span>
+ 
             </div>
 
             <div class="detail-box total-price">

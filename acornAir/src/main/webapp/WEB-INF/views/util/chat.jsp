@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/util/chat.css">
-<script src="${pageContext.request.contextPath}/js/chat.js" defer></script>
+<script src="${pageContext.request.contextPath}/js/util/chat.js" defer></script>
 </head>
 <body>
 <div class="chat-popup">	

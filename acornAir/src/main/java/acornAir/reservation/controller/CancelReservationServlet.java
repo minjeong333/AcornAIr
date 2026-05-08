@@ -1,10 +1,12 @@
-package 예약;
+package acornAir.reservation.controller;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import acornAir.reservation.dao.ReservationDAO;
 
 @WebServlet("/reservation/cancel")
 public class CancelReservationServlet extends HttpServlet {

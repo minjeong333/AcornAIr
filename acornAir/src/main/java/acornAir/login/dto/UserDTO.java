@@ -16,7 +16,28 @@ public class UserDTO {				// 이 줄은 테이블 컬럼명
     private String gender;          // GENDER
     private String country;         // COUNTRY
     private java.util.Date regDate; // REG_DATE
+    private String userRole;     // USER_ROLE
+    private int reservationCount;
 
+    public int getReservationCount() {
+        return reservationCount;
+    }
+
+    public void setReservationCount(int reservationCount) {
+        this.reservationCount = reservationCount;
+    }
+
+    public String getReservationStatus() {
+        return reservationCount > 0 ? "O" : "X";
+    }
+    
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
 
 	public String getUserId() {
 		return userId;
