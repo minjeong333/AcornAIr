@@ -1,8 +1,6 @@
-
 <%@page import="acornAir.flight.dto.FlightDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 
 <!DOCTYPE html>
@@ -10,32 +8,33 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet"	href="<%=request.getContextPath()%>/css/search.css">
-<%
-String depAirport = (String) session.getAttribute("depAirport");
-String arrAirport = (String) session.getAttribute("arrAirport");
-String depDate = (String) session.getAttribute("depDate");
-Integer passCnt = (Integer) session.getAttribute("passCnt");
-String tripType = (String) session.getAttribute("tripType");
-%>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/util/common.css" />
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/booking/search.css">
+	<%
+	String depAirport = (String) session.getAttribute("depAirport");
+	String arrAirport = (String) session.getAttribute("arrAirport");
+	String depDate = (String) session.getAttribute("depDate");
+	String returnDate = (String) session.getAttribute("returnDate");
+	Integer passCnt = (Integer) session.getAttribute("passCnt");
+	String tripType = (String) session.getAttribute("tripType");
+	%>
 <script>
     var contextPath = "<%=request.getContextPath()%>";
-</script>
-<script>
-
-  const serverData = {
+	const serverData = {
     depAirport: "<%=depAirport != null ? depAirport : ""%>",
     arrAirport: "<%=arrAirport != null ? arrAirport : ""%>",
     depDate: "<%=depDate != null ? depDate : ""%>",
+    returnDate: "<%=returnDate != null ? returnDate : ""%>",
     passCnt: "<%=passCnt != null ? passCnt : 1%>"
-  };
+  	};
 </script>
-<script src="${pageContext.request.contextPath}/js/search.js" defer></script>
+<script src="${pageContext.request.contextPath}/js/flight/search.js" defer></script>
 </head>
 <body>
 	<header class="top-menu">
 		<div class="top-links">
-			<span>로그인/가입</span> <span>마이페이지</span>
+			<a href=""> 로그인/가입 </a> <a
+				href="${pageContext.request.contextPath}/air/mypage"> 마이페이지 </a>
 		</div>
 		<nav class="main-nav">
 			<div class="logo">
@@ -46,16 +45,22 @@ String tripType = (String) session.getAttribute("tripType");
 					<div class="mega-menu">
 						<div class="mega-col">
 							<p>
-								<a href="/prj_2조/res">항공권 예매</a>
+								<a href="/prj_2조/res">항공권 예매</a>  <!--❓ 이거 매핑이 이게 맞나요?  -->
 							</p>
-							<p>예약 조회</p>
+							<p>
+								<a href="/prj_2조/res">예약 조회</a>
+							</p>
 						</div>
 					</div></li>
 				<li class="nav-item"><p>부가서비스 신청</p>
 					<div class="mega-menu">
 						<div class="mega-col">
-							<p>좌석 배정</p>
-							<p>초과 수하물 사전 구매</p>
+							<p>
+								<a href="/prj_2조/res">좌석 배정</a>
+							</p>
+							<p>
+								<a href="/prj_2조/res">초과 수하물 사전 구매</a>
+							</p>
 						</div>
 					</div></li>
 			</ul>
@@ -65,37 +70,47 @@ String tripType = (String) session.getAttribute("tripType");
 			</div>
 		</nav>
 	</header>
-	
 
-		
+
+
 	<div class="container">
 		<!-- 그라데이션 배경 바 추가 -->
 		<div class="search-bg-bar"></div>
 		<!-- ★ 1. 출발지/도착지 등이 포함된 검색 박스 -->
-		<form action="<%=request.getContextPath()%>/home" method="get" id="searchForm">
-		<div class="search-box-container">
-			<div class="input-group" id="btnFrom">
-				<strong id="txtFrom"><%=depAirport != null ? depAirport : "출발지"%></strong> <small>출발지</small>
-			</div>
-			<div class="input-group" id="btnTo">
-				<strong id="txtTo"><%=arrAirport != null ? arrAirport : "도착지"%></strong> <small>도착지</small>
-			</div>
-			<div class="input-group" id="btnDate">
-				<strong id="txtDate"><%=depDate != null ? depDate : "출발일"%></strong> <small>날짜선택</small>
-			</div>
-			<div class="input-group" id="btnPassenger">
-				<strong id="txtPassenger"><%=passCnt != null ? "성인 " + passCnt : "성인 1"%></strong> <small>탑승객</small>
-			</div>
-			<div class="input-group" id="btnSeat">
-				<strong id="txtSeat">💺 일반석</strong> <small>좌석등급</small>
-			</div>
-			<button type="submit" class="search-btn">항공검색</button>
+		<form action="<%=request.getContextPath()%>/home" method="get"
+			id="searchForm">
+			<div class="search-box-container">
+				<div class="input-group" id="btnFrom">
+					<strong id="txtFrom"><%=depAirport != null ? depAirport : "출발지"%></strong>
+					<small>출발지</small>
+				</div>
+				<div class="input-group" id="btnTo">
+					<strong id="txtTo"><%=arrAirport != null ? arrAirport : "도착지"%></strong>
+					<small>도착지</small>
+				</div>
+				<div class="input-group" id="btnDate">
+					<strong id="txtDate"><%=depDate != null ? depDate : "출발일"%></strong>
+					<small>날짜선택</small>
+				</div>
+				<div class="input-group" id="btnPassenger">
+					<strong id="txtPassenger"><%=passCnt != null ? "성인 " + passCnt : "성인 1"%></strong>
+					<small>탑승객</small>
+				</div>
+				<div class="input-group" id="btnSeat">
+					<strong id="txtSeat">💺 일반석</strong> <small>좌석등급</small>
+				</div>
+				<button type="submit" class="search-btn">항공검색</button>
 
 			<input type="hidden" name="depAirport" id="depAirportInput">
 			<input type="hidden" name="arrAirport" id="arrAirportInput">
+
 			<input type="hidden" name="depDate" id="depDateInput">
+			<input type="hidden" name="returnDate" id="returnDateInput">
+
 			<input type="hidden" name="passCnt" id="passCntInput">
 			<input type="hidden" name="tripType" id="tripTypeInput">
+
+			<input type="hidden" name="seatClass" id="seatClassInput" value="일반석">
 		</div>
 
 		</form>
@@ -231,7 +246,7 @@ String tripType = (String) session.getAttribute("tripType");
 		<script>
     		var pageMode = "<%=mode%>";
 		</script>
-		
+
 		<div class="flight-info">
 
 			<span> <%=mode.equals("return") ? "오는편" : "가는편"%>
@@ -254,7 +269,7 @@ String tripType = (String) session.getAttribute("tripType");
 			%>
 
 		</div>
-		
+
 		<!-- 날짜별 가격 슬라이더-->
 		<div class="date-slider-wrap">
 			<button class="slider-btn prev-btn" onclick="moveSlider(-1)">❮</button>
@@ -374,5 +389,12 @@ String tripType = (String) session.getAttribute("tripType");
 		}
 		%>
 	</div>
+	<!-- 실제 데이터 전송을 담당할 숨겨진 폼 -->
+	<form id="passengerForm" action="<%=request.getContextPath()%>/air/booking/passenger" method="post">
+		<input type="hidden" name="returnFlightId" id="hiddenReturnFlightId">
+		<input type="hidden" name="returnSeatClass" id="hiddenReturnSeatClass">
+		<input type="hidden" name="total" id="hiddenTotal">
+	</form>
+	<%@ include file="/WEB-INF/views/util/footer.jsp" %>
 </body>
 </html>
