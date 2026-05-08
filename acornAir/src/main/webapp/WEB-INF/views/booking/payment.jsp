@@ -11,16 +11,16 @@
 	href="${pageContext.request.contextPath}/css/booking/payment.css" />
 </head>
 <body>
-<%
-String errorMsg = (String) request.getAttribute("errorMsg");
-if (errorMsg != null) {
-%>
-    <div style="color:red; font-weight:bold; padding:20px;">
-        <%= errorMsg %>
-    </div>
-<%
-}
-%>
+	<%
+	String errorMsg = (String) request.getAttribute("errorMsg");
+	if (errorMsg != null) {
+	%>
+	<div style="color: red; font-weight: bold; padding: 20px;">
+		<%=errorMsg%>
+	</div>
+	<%
+	}
+	%>
 
 	<!-- 상단 바 -->
 	<div class="top-bar">
@@ -180,16 +180,22 @@ if (errorMsg != null) {
 	<!-- 하단 결제 바 -->
 	<div class="bottom-bar">
 		<span class="total-label">최종 결제 금액</span> <span class="total-amount"
-			id="totalAmount"> ${totalPrice} <span>원</span></span>
+			id="totalAmount">0 <span>원</span></span>
 		<button class="btn-pay" onclick="goToPayment()">다음</button>
 	</div>
 
 	<script>
 		var urlParams = new URLSearchParams(window.location.search);
-		var BASE_PRICE = urlParams.get('baseTotal') ? parseInt(urlParams.get('baseTotal'))
-				: ('${totalPrice}' !== '' ? parseInt('${totalPrice}') : 0);
-		var BAG_PRICE = ('${bagPrice}' !== '' ? parseInt('${bagPrice}') : 40000);
+		var BASE_PRICE = 0;
 
+		if (window.parent && window.parent !== window
+				&& window.parent.BASE_PRICE) {
+			BASE_PRICE = window.parent.BASE_PRICE;
+		} else {
+			BASE_PRICE = Number('${basePrice}') || 0;
+		}
+
+		var BAG_PRICE = Number('${bagPrice}') || 40000;
 		function formatNum(n) {
 			return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 		}
@@ -233,8 +239,10 @@ if (errorMsg != null) {
 			var total = BASE_PRICE + extraBags * BAG_PRICE;
 
 			// iframe 안에서 열린 경우: 부모 passenger_info.jsp에 값 전달 후 모달 닫기
-			if (window.parent && window.parent !== window && window.parent.updateBaggageInfo) {
-				window.parent.updateBaggageInfo(extraBags, extraBags * BAG_PRICE);
+			if (window.parent && window.parent !== window
+					&& window.parent.updateBaggageInfo) {
+				window.parent.updateBaggageInfo(extraBags, extraBags
+						* BAG_PRICE);
 
 				if (window.parent.closeBaggageModal) {
 					window.parent.closeBaggageModal();
@@ -245,6 +253,7 @@ if (errorMsg != null) {
 			// 단독 페이지로 열린 경우: passenger로 복귀
 			location.href = "${pageContext.request.contextPath}/air/booking/passenger";
 		}
+		updateTotal();
 	</script>
 </body>
 </html>
