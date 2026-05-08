@@ -9,9 +9,7 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/login/login.css">
 <script src="${pageContext.request.contextPath}/js/login/script.js"></script>
-<script>
-	const contextPath = "${pageContext.request.contextPath}";
-</script>
+
 </head>
 <body>
 	<div class="login-wrapper">
@@ -34,7 +32,6 @@
 				</div>
 			</div>
 
-
 			<!-- 오른쪽: 로그인 폼 섹션 -->
 			<div class="form-section">
 				<div class="tab-menu">
@@ -46,19 +43,24 @@
 					action="${pageContext.request.contextPath}/air/login" method="post">
 
 					<div class="input-group">
-						<label for="userId">아이디 *</label> <input type="text" id="userId"
-							name="userId" placeholder="아이디">
+
+						<label for="userId"> 아이디 * </label> <input type="text" id="userId"
+							name="userId" placeholder="아이디" required>
+
 					</div>
 
 					<div class="input-group">
-						<label for="userPw">비밀번호 *</label> <input type="password"
-							id="userPw" name="userPw" placeholder="비밀번호">
+
+						<label for="userPw"> 비밀번호 * </label> <input type="password"
+							id="userPw" name="userPw" placeholder="비밀번호" required>
+
 					</div>
 
 					<div class="form-options">
-						<label> <input type="checkbox" name="saveId" value="Y">
-							아이디 저장
+
+						<label> <input type="checkbox"> 아이디 저장
 						</label>
+
 					</div>
 
 					<button type="submit" class="btn-login">로그인</button>

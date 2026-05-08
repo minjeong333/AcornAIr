@@ -1,5 +1,10 @@
+<%@page import="acornAir.login.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+UserDTO loginUser =
+    (UserDTO) session.getAttribute("loginUser");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,9 +18,28 @@
 
 <header class="top-menu">
   <div class="top-links">
-    <span>로그인/가입</span>
-    <span>마이페이지</span>
-  </div>
+    <% if(loginUser == null){ %>
+
+    <a href="${pageContext.request.contextPath}/air/login">
+        로그인/가입
+    </a>
+
+<% } else { %>
+
+    <a href="#">
+    <%= loginUser.getKorFirstName() %>님
+</a>
+
+    <a href="${pageContext.request.contextPath}/air/logout">
+        로그아웃
+    </a>
+
+<% } %>
+
+    <a href="${pageContext.request.contextPath}/air/mypage">
+        마이페이지
+    </a>
+</div>
 
   <nav class="main-nav">
     <div class="logo">
@@ -899,9 +923,39 @@ flightSearchForm.addEventListener("submit", function(e) {
 });
 
 
+
 updateTripButtons("왕복");
 renderCalendar();
 updatePassengerUI();
+
+
+//mypage ajax관련 코드
+
+function loadMyPage() {
+    fetch('/acornAir/air/mypage')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('mypage-container').innerHTML = html;
+            openMyPage(); // 모달 띄우기
+        })
+        .catch(err => console.log("에러 발생:", err));
+}
+
+function openMyPage() {
+    const modal = document.getElementById('mypage-modal');
+    if(modal) modal.style.display = 'block';
+}
+
+function closeMyPage() {
+    const modal = document.getElementById('mypage-modal');
+    if(modal) {
+        modal.style.display = 'none';
+        // (선택사항) 닫을 때 HTML을 비워주면 메모리 관리에 좋습니다.
+        document.getElementById('mypage-container').innerHTML = '';
+    }
+}
+
+
 </script>
 </body>
 </html>
