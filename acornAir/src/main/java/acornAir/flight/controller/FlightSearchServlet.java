@@ -66,4 +66,43 @@ public class FlightSearchServlet extends HttpServlet {
 		req.getRequestDispatcher("/WEB-INF/views/flight/flightList.jsp").forward(req, resp);
 
 	}
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	        throws ServletException, IOException {
+
+	    req.setCharacterEncoding("UTF-8");
+
+	    String mode = req.getParameter("mode");
+
+	    if (!"mytrip".equals(mode)) {
+	        resp.sendRedirect(req.getContextPath() + "/home");
+	        return;
+	    }
+
+	    String bookingId = req.getParameter("bookingId");
+	    String depDate = req.getParameter("depDate");
+	    String lastName = req.getParameter("lastName");
+	    String firstName = req.getParameter("firstName");
+
+	    acornAir.reservation.dao.ReservationDAO dao = new acornAir.reservation.dao.ReservationDAO();
+
+	    boolean result = dao.checkReservation(
+	            bookingId,
+	            depDate,
+	            lastName,
+	            firstName
+	    );
+
+	    if (result) {
+	        resp.sendRedirect(req.getContextPath() + "/reservation/list");
+	    } else {
+	        resp.setContentType("text/html;charset=utf-8");
+	        resp.getWriter().println("""
+	            <script>
+	                alert('입력한 항목이 올바르지 않습니다.');
+	                history.back();
+	            </script>
+	        """);
+	    }
+	}
 }

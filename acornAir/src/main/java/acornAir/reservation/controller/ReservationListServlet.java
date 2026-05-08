@@ -1,4 +1,4 @@
-package 예약;
+package acornAir.reservation.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,17 +7,27 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import acornAir.login.dto.UserDTO;
+import acornAir.reservation.dao.ReservationDAO;
+import acornAir.reservation.dto.ReservationDTO;
+
 @WebServlet("/reservation/list")
 public class ReservationListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+//
+    	HttpSession session = req.getSession();
 
+    	UserDTO loginUser =
+    	        (UserDTO) session.getAttribute("loginUser");
+
+    	String userId = loginUser.getUserId();
         ReservationDAO dao = new ReservationDAO();
 
         // 테스트용 아이디
-        String userId = "test";
+        //String userId = "user01";
 
         ArrayList<ReservationDTO> list =
                 dao.selectReservationList(userId);
