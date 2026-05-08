@@ -7,6 +7,7 @@ function closeMyPage() {
 }
 
 // 배경 클릭 시 닫기 기능 (선택 사항)
+ 
 
 function confirmLogout() {
 	
@@ -16,10 +17,15 @@ function confirmLogout() {
     return false; // 이동 취소
 }
 
+ 
 window.onclick = function(event) {
     const modal = document.getElementById('mypage-modal');
     if (event.target == modal) {
         closeMyPage();
     }
+ 
 }
 //로그아웃 에러창
+ 
+ 
+ 

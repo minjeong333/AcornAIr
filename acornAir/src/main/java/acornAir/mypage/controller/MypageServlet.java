@@ -16,6 +16,7 @@ import acornAir.login.dto.UserDTO;
 public class MypageServlet extends HttpServlet{
 	
 	@Override
+ 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
 	        throws ServletException, IOException {
 
@@ -51,5 +52,6 @@ public class MypageServlet extends HttpServlet{
 	    // 6. 마이페이지 JSP 반환
 	    req.getRequestDispatcher("/WEB-INF/views/mypage/mypage.jsp")
 	       .forward(req, resp);
+ 
 	}
 }

@@ -6,7 +6,8 @@ const contactHeader = document.getElementById('contact-header');
 const contactBody   = document.getElementById('contact-body');
 
 // 성인 1 확인 버튼 클릭
-btnConfirm.addEventListener('click', function () {
+btnConfirm.addEventListener('click', function (e) {
+  e.preventDefault();
   // 성인 1 접힘 + 완료 표시
   passengerBody.style.display = 'none';
   passengerHdr.innerHTML = `
@@ -41,6 +42,11 @@ btnConfirm.addEventListener('click', function () {
 
   // 연락처 정보로 스크롤
   document.getElementById('contact-accordion').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// 연락처 확인 버튼 클릭 → 폼 제출
+document.getElementById('btn-contact-confirm').addEventListener('click', function () {
+  btnConfirm.closest('form').submit();
 });
 
 // 수하물 정보 아코디언 토글

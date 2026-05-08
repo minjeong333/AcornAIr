@@ -1,5 +1,10 @@
+<%@page import="acornAir.login.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+UserDTO loginUser =
+    (UserDTO) session.getAttribute("loginUser");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,13 +18,33 @@
 
 <header class="top-menu">
   <div class="top-links">
+    <% if(loginUser == null){ %>
+
     <a href="${pageContext.request.contextPath}/air/login">
         로그인/가입
     </a>
 
+<<<<<<< HEAD
     <span onclick="loadMyPage()" style="cursor:pointer;">마이페이지</span>
     <div id="mypage-container"></div>
     
+=======
+<% } else { %>
+
+    <a href="#">
+    <%= loginUser.getKorFirstName() %>님
+</a>
+
+    <a href="${pageContext.request.contextPath}/air/logout">
+        로그아웃
+    </a>
+
+<% } %>
+
+    <a href="${pageContext.request.contextPath}/air/mypage">
+        마이페이지
+    </a>
+>>>>>>> main
 </div>
 
   <nav class="main-nav">
@@ -911,6 +936,7 @@ updatePassengerUI();
 
 
 //mypage ajax관련 코드
+ 
 /*
  /function loadMyPage() {
     // 1. Context Path
@@ -957,6 +983,8 @@ function loadMyPage() {
             document.getElementById('mypage-container').innerHTML = data;
 
             openMyPage();
+ 
+ 
         })
         .catch(err => console.log("에러 발생:", err));
 }

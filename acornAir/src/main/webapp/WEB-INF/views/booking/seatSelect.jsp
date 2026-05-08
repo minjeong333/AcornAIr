@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    // 서블릿에서 session에 저장한 값을 꺼냄
-    // tripType: "OW"(편도) / "RT"(왕복)
-    // seatClass: "Y"(일반석) / "C"(비즈니스)
     String tripType = (String) session.getAttribute("tripType");
     String seatClass = (String) session.getAttribute("seatClass");
 
     if (tripType == null) tripType = "OW";
     if (seatClass == null) seatClass = "Y";
 
-    boolean isRoundTrip = tripType.equals("RT"); //와복/편도 로직 분기
+    boolean isRoundTrip = tripType.equals("RT");
     boolean isBusiness  = seatClass.equals("C");
 %>
 <!DOCTYPE html>
@@ -21,10 +18,7 @@
 </head>
 <body>
 
-    <header class="seat-header-top">
-        <button class="back-btn">‹</button>
-        <h2>좌석 배정</h2>
-    </header>
+    <button type="button" class="back-btn" onclick="window.parent.closeSeatModal ? window.parent.closeSeatModal() : history.back()">&#8592; 돌아가기</button>
 
     <div class="flight-wrap">
         <div class="trip-tabs">
@@ -42,14 +36,11 @@
         <div class="seat-area <%= isBusiness ? "business-area" : "" %>">
 
             <% if (isBusiness) { %>
-                <!-- 비즈니스석 헤더 -->
                 <div class="seat-header business">
                     <span></span> <span>A</span> <span></span>
                     <span>B</span><span>C</span> <span></span>
                     <span>D</span> <span></span>
                 </div>
-
-                <!-- 비즈니스석 좌석 생성 (5행) -->
                 <% for (int i = 1; i <= 5; i++) { %>
                 <div class="seat-row business">
                     <span class="row-num"><%=i%></span>
@@ -64,7 +55,6 @@
                 <% } %>
 
             <% } else { %>
-                <!-- 일반석 헤더 -->
                 <div class="seat-header">
                     <span></span>
                     <span>A</span><span>B</span><span>C</span>
@@ -72,8 +62,6 @@
                     <span>D</span><span>E</span><span>F</span>
                     <span></span>
                 </div>
-
-                <!-- 일반석 좌석 생성 (33행) -->
                 <%
                 String[] cols = {"A", "B", "C", "D", "E", "F"};
                 for (int i = 1; i <= 33; i++) {
@@ -89,11 +77,9 @@
                     <span class="row-num"><%=i%></span>
                 </div>
                 <% } %>
-
             <% } %>
         </div>
 
-        <!-- 우측 좌석 정보 패널 -->
         <div class="info-box">
             <h3>좌석정보</h3>
             <img src="<%=request.getContextPath()%>/images/seat.png" alt="좌석 이미지">
@@ -121,20 +107,17 @@
     <button type="button" class="bottom-next-btn" id="bottomNextBtn">다음</button>
 
 <script>
-    const IS_ROUND_TRIP = <%= isRoundTrip %>;   // 왕복 여부 (서버에서 주입)
+    const IS_ROUND_TRIP = <%= isRoundTrip %>;
 
-    const seats           = document.querySelectorAll(".seat");
+    const seats            = document.querySelectorAll(".seat");
     const selectedSeatsBox = document.getElementById("selectedSeats");
-    const tripTabs        = document.querySelectorAll(".trip-tab");
-    const nextBtn         = document.getElementById("nextBtn");
-    const bottomNextBtn   = document.getElementById("bottomNextBtn");
+    const tripTabs         = document.querySelectorAll(".trip-tab");
+    const nextBtn          = document.getElementById("nextBtn");
+    const bottomNextBtn    = document.getElementById("bottomNextBtn");
 
     let currentTrip = "go";
-
-    // 왕복이면 go/back 객체, 편도면 단순 배열
     let selectedSeats = IS_ROUND_TRIP ? { go: [], back: [] } : [];
 
-    /* ── 좌석 클릭 ── */
     seats.forEach(function(seat) {
         seat.addEventListener("click", function() {
             const seatName = seat.dataset.seat;
@@ -155,7 +138,6 @@
         });
     });
 
-    /* ── 탭 클릭 (왕복만 해당) ── */
     tripTabs.forEach(function(tab) {
         tab.addEventListener("click", function() {
             currentTrip = tab.dataset.trip;
@@ -163,7 +145,6 @@
         });
     });
 
-    /* ── 다음/완료 버튼 ── */
     nextBtn.addEventListener("click", nextStep);
     bottomNextBtn.addEventListener("click", nextStep);
 
@@ -176,17 +157,14 @@
         }
 
         if (IS_ROUND_TRIP && currentTrip === "go") {
-            // 왕복 - 가는편 완료 → 오는편으로
             currentTrip = "back";
             changeTrip("back");
             window.scrollTo(0, 0);
         } else {
-            // 편도 완료 or 왕복 오는편 완료 → session에 저장 후 다음 페이지
             saveSeatToSession();
         }
     }
 
-    /* ── 탭 전환 시 좌석 상태 복원 ── */
     function changeTrip(trip) {
         tripTabs.forEach(function(tab) {
             tab.classList.toggle("active", tab.dataset.trip === trip);
@@ -199,7 +177,6 @@
             seat.classList.toggle("active", inList);
         });
 
-        // 오는편일 때 버튼 텍스트 → "완료"
         const label = (!IS_ROUND_TRIP || trip === "back") ? "완료" : "다음";
         nextBtn.innerText = label;
         bottomNextBtn.innerText = label;
@@ -207,7 +184,6 @@
         showSelectedSeats();
     }
 
-    /* ── 선택 좌석 표시 ── */
     function showSelectedSeats() {
         selectedSeatsBox.innerHTML = "";
         const list = IS_ROUND_TRIP ? selectedSeats[currentTrip] : selectedSeats;
@@ -221,7 +197,6 @@
         });
     }
 
-    /* ── 좌석 제거 ── */
     function removeSeat(seatName) {
         if (IS_ROUND_TRIP) {
             selectedSeats[currentTrip] = selectedSeats[currentTrip].filter(function(s) { return s !== seatName; });
@@ -233,7 +208,6 @@
         showSelectedSeats();
     }
 
-    /* ── 좌석 선택 완료 → 서버로 전송 ── */
     function saveSeatToSession() {
         const form = document.createElement("form");
         form.method = "POST";
@@ -258,7 +232,6 @@
         form.submit();
     }
 
-    // 초기 실행
     changeTrip(currentTrip);
 </script>
 </body>
