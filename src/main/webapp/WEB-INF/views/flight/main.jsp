@@ -142,34 +142,59 @@ UserDTO loginUser =
 	</div>
 	
 	<!-- 나의 여행 -->
-	<div class="mytrip-content" id="myTripContent">
-  <div class="mytrip-row">
+<div class="mytrip-content" id="myTripContent">
+
+<form id="myTripForm"
+      action="${pageContext.request.contextPath}/home"
+      method="post">
+
+<input type="hidden" name="mode" value="mytrip">
+
+<div class="mytrip-row">
 
     <div class="mytrip-field">
       <label>예약번호 또는 항공권번호</label>
-      <input type="text" placeholder="예) A1B2C3 또는 1801234567890">
+
+      <input type="text"
+             name="bookingId"
+             placeholder="예) 5001">
     </div>
 
     <div class="mytrip-field">
       <label>출발일</label>
+
+      <input type="hidden"
+             name="depDate"
+             id="myTripDepDate">
+
       <div class="mytrip-date" id="myTripDateBox">
- 		 <span id="myTripDateText">날짜 선택</span>
-	  </div>
+        <span id="myTripDateText">날짜 선택</span>
+      </div>
     </div>
 
     <div class="mytrip-field small">
       <label>성</label>
-      <input type="text">
+
+      <input type="text"
+             name="lastName">
     </div>
 
     <div class="mytrip-field small">
       <label>이름</label>
-      <input type="text">
+
+      <input type="text"
+             name="firstName">
     </div>
 
-    <button class="mytrip-btn">조회</button>
+    <button type="submit"
+            class="mytrip-btn">
+        조회
+    </button>
 
-  </div>
+</div>
+
+</form>
+
 </div>
 
 
@@ -697,12 +722,24 @@ calendar.addEventListener("click", function(e) {
   const selected = e.target.dataset.date;
 
   if (currentDateTarget === "mytrip") {
-    clearDateSelection();
-    e.target.classList.add("selected");
-    myTripDateText.innerText = selected;
-    calendar.style.display = "none";
-    return;
-  }
+
+	  clearDateSelection();
+
+	  e.target.classList.add("selected");
+
+	  myTripDateText.innerText = selected;
+
+	  const myTripDepDate =
+	      document.getElementById("myTripDepDate");
+
+	  if(myTripDepDate){
+	      myTripDepDate.value = selected;
+	  }
+
+	  calendar.style.display = "none";
+
+	  return;
+	}
 
   if (tripType === "편도") {
     startDate = selected;

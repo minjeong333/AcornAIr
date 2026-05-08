@@ -328,95 +328,103 @@ a {
 	</header>
 
 	<%
-	ArrayList<ReservationDTO> list = (ArrayList<ReservationDTO>) request.getAttribute("reservationList");
-	%>
-	<div class="reservation-wrap">
+ArrayList<ReservationDTO> list =
+    (ArrayList<ReservationDTO>) request.getAttribute("reservationList");
+%>
 
-		<h1>예약 내역</h1>
+<div class="reservation-wrap">
 
-		<%
-		for (ReservationDTO r : list) {
-		%>
+    <h1>예약 내역</h1>
 
-		<div class="reservation-card">
+    <%
+    if (list == null || list.isEmpty()) {
+    %>
 
-			<div class="reservation-top">
-				<strong>예약번호 : R<%=r.getBookingId()%></strong> <span
-					class="status"> <%="Y".equals(r.getBookStatus()) ? "예약완료" : "예약취소"%>
-				</span>
-			</div>
+        <div class="empty-box">
+            예약 내역이 없습니다.
+        </div>
 
-			<div class="info-row">
-				<strong>이름</strong> <span><%=r.getUserName()%></span>
-			</div>
+    <%
+    } else {
+        for (ReservationDTO r : list) {
+    %>
 
-			<div class="flight-section">
-				<div class="flight-box">
-					<h3>가는편 정보</h3>
-					<p><%=r.getGoDep()%>
-						→
-						<%=r.getGoArr()%></p>
-				</div>
+    <div class="reservation-card">
 
-				<div class="flight-box">
-					<h3>오는편 정보</h3>
-					<p><%=r.getBackDep()%>
-						→
-						<%=r.getBackArr()%></p>
-				</div>
-			</div>
+        <div class="reservation-top">
+            <strong>예약번호 : R<%=r.getBookingId()%></strong>
+            <span class="status">
+                <%="Y".equals(r.getBookStatus()) ? "예약완료" : "예약취소"%>
+            </span>
+        </div>
 
-			<div class="detail-section">
+        <div class="info-row">
+            <strong>이름</strong>
+            <span><%=r.getUserName()%></span>
+        </div>
 
-				<div class="detail-box">
-					<span class="label">탑승객 수</span> <span class="value">성인 <%=r.getPassengerCount()%>명
-					</span>
-				</div>
+        <div class="flight-section">
+            <div class="flight-box">
+                <h3>가는편 정보</h3>
+                <p><%=r.getGoDep()%> → <%=r.getGoArr()%></p>
+                <p><%=r.getGoDate()%></p>
+            </div>
 
-				<div class="detail-box">
-					<span class="label">좌석 등급</span> <span class="value"><%=r.getSeatClass()%></span>
-				</div>
+            <div class="flight-box">
+                <h3>오는편 정보</h3>
+                <p><%=r.getBackDep()%> → <%=r.getBackArr()%></p>
+                <p><%=r.getBackDate()%></p>
+            </div>
+        </div>
 
-				<div class="detail-box">
-					<span class="label">좌석 번호</span> <span class="value"> <%=r.getSeatNo() != null ? r.getSeatNo() : "-"%>
-					</span>
-				</div>
+        <div class="detail-section">
 
-				<div class="detail-box">
-					<span class="label">추가 수하물</span> <span class="value"> <%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "kg" : "없음"%>
-					</span>
-				</div>
+            <div class="detail-box">
+                <span class="label">탑승객 수</span>
+                <span class="value">성인 <%=r.getPassengerCount()%>명</span>
+            </div>
 
-				<div class="detail-box total-price">
-					<span class="label">총 결제 금액</span> <span class="value"> <%=String.format("%,d", r.getTotalPrice())%>원
-					</span>
-				</div>
+            <div class="detail-box">
+                <span class="label">좌석 등급</span>
+                <span class="value"><%=r.getSeatClass()%></span>
+            </div>
 
-			</div>
+            <div class="detail-box">
+                <span class="label">좌석 번호</span>
+                <span class="value"><%=r.getSeatNo() != null ? r.getSeatNo() : "-"%></span>
+            </div>
 
-			<%
-			if ("Y".equals(r.getBookStatus())) {
-			%>
+            <div class="detail-box">
+                <span class="label">추가 수하물</span>
+                <span class="value"><%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "kg" : "없음"%></span>
+            </div>
 
-			<div class="btn-area">
-				<form action="${pageContext.request.contextPath}/reservation/cancel"
-					method="post">
+            <div class="detail-box total-price">
+                <span class="label">총 결제 금액</span>
+                <span class="value"><%=String.format("%,d", r.getTotalPrice())%>원</span>
+            </div>
 
-					<input type="hidden" name="bookingId"
-						value="<%=r.getBookingId()%>">
+        </div>
 
-					<button type="submit" class="cancel-btn">예약 취소</button>
-				</form>
-			</div>
+        <div class="btn-area">
+            <form action="<%=request.getContextPath()%>/reservation/cancel"
+                  method="post">
+                <input type="hidden" name="bookingId"
+                       value="<%=r.getBookingId()%>">
 
-			<%
-			}
-			%>
+                <button type="submit" class="cancel-btn">
+                    예약 취소
+                </button>
+            </form>
+        </div>
 
-		</div>
-		<%
-		}
-		%>
-	</div>
+    </div>
+
+    <%
+        }
+    }
+    %>
+
+</div>
 </body>
 </html>
