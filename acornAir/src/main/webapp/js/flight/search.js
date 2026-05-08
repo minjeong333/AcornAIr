@@ -459,20 +459,11 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 
 function goPassenger() {
-    // 1. 항공편 선택 여부 확인
     if (selectedGoFlight == null) {
         alert("귀국 항공편을 선택하세요.");
         return;
     }
 
-    // 2. 현재 화면의 총액 숫자만 추출
-    const totalAmount = document.getElementById("totalPriceText").innerText.replace(/[^0-9]/g, "");
-
-    // 3. 위에서 만든 hidden form의 input들에 값 세팅
-    document.getElementById("hiddenReturnFlightId").value = selectedGoFlight;
-    document.getElementById("hiddenReturnSeatClass").value = selectedSeatClass;
-    document.getElementById("hiddenTotal").value = totalAmount;
-
-    // 4. 폼 실행 (Servlet의 doPost로 이동)
-    document.getElementById("passengerForm").submit();
+    location.href = contextPath + "/booking?goFlightId=" +
+        selectedGoFlight + "&seatClass=" + selectedSeatClass;
 }

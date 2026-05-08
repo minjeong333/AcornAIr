@@ -185,8 +185,9 @@ if (errorMsg != null) {
 	</div>
 
 	<script>
-		var BASE_PRICE = ('${totalPrice}' !== '' ? parseInt('${totalPrice}')
-				: 0);
+		var urlParams = new URLSearchParams(window.location.search);
+		var BASE_PRICE = urlParams.get('baseTotal') ? parseInt(urlParams.get('baseTotal'))
+				: ('${totalPrice}' !== '' ? parseInt('${totalPrice}') : 0);
 		var BAG_PRICE = ('${bagPrice}' !== '' ? parseInt('${bagPrice}') : 40000);
 
 		function formatNum(n) {
@@ -233,7 +234,7 @@ if (errorMsg != null) {
 
 			// iframe 안에서 열린 경우: 부모 passenger_info.jsp에 값 전달 후 모달 닫기
 			if (window.parent && window.parent !== window && window.parent.updateBaggageInfo) {
-				window.parent.updateBaggageInfo(extraBags, total);
+				window.parent.updateBaggageInfo(extraBags, extraBags * BAG_PRICE);
 
 				if (window.parent.closeBaggageModal) {
 					window.parent.closeBaggageModal();

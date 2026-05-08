@@ -1,7 +1,6 @@
 <%@page import="acornAir.flight.dto.FlightDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 
 <!DOCTYPE html>
@@ -9,18 +8,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/util/common.css" />
-<link rel="stylesheet"
-	href="<%=request.getContextPath()%>/css/flight/search.css">
-<%
-String depAirport = (String) session.getAttribute("depAirport");
-String arrAirport = (String) session.getAttribute("arrAirport");
-String depDate = (String) session.getAttribute("depDate");
-String returnDate = (String) session.getAttribute("returnDate");
-Integer passCnt = (Integer) session.getAttribute("passCnt");
-String tripType = (String) session.getAttribute("tripType");
-%>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/util/common.css" />
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/booking/search.css">
+	<%
+	String depAirport = (String) session.getAttribute("depAirport");
+	String arrAirport = (String) session.getAttribute("arrAirport");
+	String depDate = (String) session.getAttribute("depDate");
+	String returnDate = (String) session.getAttribute("returnDate");
+	Integer passCnt = (Integer) session.getAttribute("passCnt");
+	String tripType = (String) session.getAttribute("tripType");
+	%>
 <script>
     var contextPath = "<%=request.getContextPath()%>";
 	const serverData = {
@@ -31,8 +28,7 @@ String tripType = (String) session.getAttribute("tripType");
     passCnt: "<%=passCnt != null ? passCnt : 1%>"
   	};
 </script>
-<script src="${pageContext.request.contextPath}/js/flight/search.js"
-	defer></script>
+<script src="${pageContext.request.contextPath}/js/flight/search.js" defer></script>
 </head>
 <body>
 	<header class="top-menu">
@@ -49,7 +45,7 @@ String tripType = (String) session.getAttribute("tripType");
 					<div class="mega-menu">
 						<div class="mega-col">
 							<p>
-								<a href="/prj_2조/res">항공권 예매</a>
+								<a href="/prj_2조/res">항공권 예매</a>  <!--❓ 이거 매핑이 이게 맞나요?  -->
 							</p>
 							<p>
 								<a href="/prj_2조/res">예약 조회</a>
@@ -105,16 +101,17 @@ String tripType = (String) session.getAttribute("tripType");
 				</div>
 				<button type="submit" class="search-btn">항공검색</button>
 
-				<input type="hidden" name="depAirport" id="depAirportInput">
-				<input type="hidden" name="arrAirport" id="arrAirportInput">
+			<input type="hidden" name="depAirport" id="depAirportInput">
+			<input type="hidden" name="arrAirport" id="arrAirportInput">
 
+			<input type="hidden" name="depDate" id="depDateInput">
+			<input type="hidden" name="returnDate" id="returnDateInput">
 
-				<input type="hidden" name="depDate" id="depDateInput"> <input
-					type="hidden" name="returnDate" id="returnDateInput"> <input
-					type="hidden" name="passCnt" id="passCntInput"> <input
-					type="hidden" name="tripType" id="tripTypeInput"> <input
-					type="hidden" name="seatClass" id="seatClassInput" value="일반석">
-			</div>
+			<input type="hidden" name="passCnt" id="passCntInput">
+			<input type="hidden" name="tripType" id="tripTypeInput">
+
+			<input type="hidden" name="seatClass" id="seatClassInput" value="일반석">
+		</div>
 
 		</form>
 
@@ -393,13 +390,11 @@ String tripType = (String) session.getAttribute("tripType");
 		%>
 	</div>
 	<!-- 실제 데이터 전송을 담당할 숨겨진 폼 -->
-	<form id="passengerForm"
-		action="<%=request.getContextPath()%>/air/booking/passenger"
-		method="post">
+	<form id="passengerForm" action="<%=request.getContextPath()%>/air/booking/passenger" method="post">
 		<input type="hidden" name="returnFlightId" id="hiddenReturnFlightId">
 		<input type="hidden" name="returnSeatClass" id="hiddenReturnSeatClass">
 		<input type="hidden" name="total" id="hiddenTotal">
 	</form>
-	<%@ include file="/WEB-INF/views/util/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/util/footer.jsp" %>
 </body>
 </html>

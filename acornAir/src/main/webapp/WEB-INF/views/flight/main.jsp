@@ -13,14 +13,9 @@
 
 <header class="top-menu">
   <div class="top-links">
-    <a href="${pageContext.request.contextPath}/air/login">
-        로그인/가입
-    </a>
-
-    <a href="${pageContext.request.contextPath}/air/mypage">
-        마이페이지
-    </a>
-</div>
+    <span>로그인/가입</span>
+    <span>마이페이지</span>
+  </div>
 
   <nav class="main-nav">
     <div class="logo">

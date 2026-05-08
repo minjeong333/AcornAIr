@@ -16,77 +16,70 @@ import acornAir.flight.dto.FlightDTO;
 @WebServlet("/booking")
 public class BookingServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest req,
-                         HttpServletResponse resp)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
+		HttpSession session = req.getSession();
 
-        // 선택한 항공편
-        String goFlightId =
-                req.getParameter("goFlightId");
+		// 선택한 항공편
+		//null체크 안해주면 goFlightId의 값이 null일 때 int로 형변환 시도 시 NumberFormatException 오류 남
+		String goFlightIdParam = req.getParameter("goFlightId");
+		if (goFlightIdParam == null) {
+			resp.sendRedirect(req.getContextPath() + "/home");
+			return;
+		}
+		int goFlightId = Integer.parseInt(goFlightIdParam);
 
-        String seatClass =
-                req.getParameter("seatClass");
+		String seatClass = req.getParameter("seatClass");
 
-        String goPrice = req.getParameter("goPrice");
-        
-        // session 저장
-        session.setAttribute("goFlightId", goFlightId);
-        session.setAttribute("seatClass", seatClass);
-        session.setAttribute("goPrice", goPrice);
-        
-        // 임시 추가 - dhy
-        FlightDTO goFlight = new FlightDTO();
-        goFlight.setFlightId(Integer.parseInt(goFlightId));
-        goFlight.setPrice(Integer.parseInt(goPrice));
-        goFlight.setBizPrice(Integer.parseInt(goPrice));
+		String goPrice = req.getParameter("goPrice");
 
-        session.setAttribute("goFlight", goFlight);
-        //
+		// session 저장
+		session.setAttribute("goFlightId", goFlightId);
+		session.setAttribute("seatClass", seatClass);
+		session.setAttribute("goPrice", goPrice);
 
-        // 검색 조건 꺼내기
-        String tripType =
-                (String)session.getAttribute("tripType");
+		FlightDAO dao = new FlightDAO();
 
-        String depAirport =
-                (String)session.getAttribute("depAirport");
+		// goFlight/backFlight session 저장 (passenger_info.jsp 여정정보 표시용)
+		if (session.getAttribute("goFlight") == null) {
+			FlightDTO goFlight = dao.getById(goFlightId);
+			session.setAttribute("goFlight", goFlight);
+		} else {
+			FlightDTO backFlight = dao.getById(goFlightId);
+			session.setAttribute("backFlight", backFlight);
+		}
 
-        String arrAirport =
-                (String)session.getAttribute("arrAirport");
+		// 검색 조건 꺼내기
+		String tripType = (String) session.getAttribute("tripType");
 
-        String returnDate =
-                (String)session.getAttribute("returnDate");
+		String depAirport = (String) session.getAttribute("depAirport");
 
-        int passCnt =
-                (int)session.getAttribute("passCnt");
+		String arrAirport = (String) session.getAttribute("arrAirport");
 
-        // 왕복
-        if("RT".equals(tripType)) {
+		String returnDate = (String) session.getAttribute("returnDate");
 
-            FlightDAO dao = new FlightDAO();
+		int passCnt = (int) session.getAttribute("passCnt");
 
-            ArrayList<FlightDTO> returnList =
-                    dao.search(
-                            arrAirport,
-                            depAirport,
-                            returnDate,
-                            passCnt
-                    );
+		// backFlight가 설정됐으면 (왕복 오는편 선택 완료) → passenger 페이지로
+		if (session.getAttribute("backFlight") != null) {
+			resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
+			return;
+		}
 
-            req.setAttribute("flightList", returnList);
-            req.setAttribute("mode", "return");
+		// 왕복 → 오는편 목록 표시
+		if ("RT".equals(tripType)) {
 
-            req.getRequestDispatcher(
-                    "/WEB-INF/views/flight/flightList.jsp")
-                    .forward(req, resp);
+			ArrayList<FlightDTO> returnList = dao.search(arrAirport, depAirport, returnDate, passCnt);
 
-        } else {
+			req.setAttribute("flightList", returnList);
+			req.setAttribute("mode", "return");
 
-            req.getRequestDispatcher(
-                    "/WEB-INF/views/booking/passenger.jsp")
-                    .forward(req, resp);
-        }
-    }
+			req.getRequestDispatcher("/WEB-INF/views/flight/flightList.jsp").forward(req, resp);
+
+		} else {
+			// 편도 → passenger 페이지로
+			resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
+		}
+	}
 }
