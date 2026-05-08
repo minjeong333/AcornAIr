@@ -16,12 +16,24 @@ public class ReservationListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 //
-    	HttpSession session = req.getSession();
+    	HttpSession session = req.getSession(false);
+
+    	if (session == null) {
+    	    resp.sendRedirect(req.getContextPath() + "/air/login");
+    	    return;
+    	}
 
     	UserDTO loginUser =
     	        (UserDTO) session.getAttribute("loginUser");
 
+    	if (loginUser == null) {
+    	    resp.sendRedirect(req.getContextPath() + "/air/login");
+    	    return;
+    	}
+
     	String userId = loginUser.getUserId();
+
+    	System.out.println("예약조회 로그인아이디 = " + userId);
         ReservationDAO dao = new ReservationDAO();
 
         // 테스트용 아이디
