@@ -24,11 +24,7 @@ UserDTO loginUser =
         로그인/가입
     </a>
 
-<<<<<<< HEAD
-    <span onclick="loadMyPage()" style="cursor:pointer;">마이페이지</span>
-    <div id="mypage-container"></div>
-    
-=======
+ 
 <% } else { %>
 
     <a href="#">
@@ -44,7 +40,7 @@ UserDTO loginUser =
     <a href="${pageContext.request.contextPath}/air/mypage">
         마이페이지
     </a>
->>>>>>> main
+ 
 </div>
 
   <nav class="main-nav">

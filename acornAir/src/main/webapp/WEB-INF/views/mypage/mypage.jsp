@@ -22,7 +22,7 @@
         <button class="close-modal" onclick="closeMyPage()">✕</button>
         <div class="mypage-wrapper">
             <div class="user-info-section">
-                <h1><div class="row"><span>회원명</span><strong>${user.korLastName}${user.korFirstName}</strong></div></h1>
+                <h1><div class="row"><strong>${user.korLastName}${user.korFirstName}</strong></div></h1>
                 <div class="logo-card">
                     <div class="skypass-text">ACORNAIR ✈️</div>
                 </div>
