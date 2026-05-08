@@ -27,6 +27,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
+        
         String userId = req.getParameter("userId");
         String userPw = req.getParameter("userPw");
         String saveId = req.getParameter("saveId");
@@ -52,7 +53,12 @@ public class LoginServlet extends HttpServlet {
                 resp.addCookie(cookie);
             }
 
-            resp.sendRedirect(req.getContextPath() + "/home");
+//            resp.sendRedirect(req.getContextPath() + "/home");
+            if ("ADMIN".equals(loginUser.getUserRole())) {
+                resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/home");
+            }
 
         } else {
             req.setAttribute("errorMsg", "아이디 또는 비밀번호가 일치하지 않습니다.");

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import acornAir.flight.dao.FlightDAO;
 import acornAir.flight.dto.FlightDTO;
+import 예약.ReservationDAO;
 
 @WebServlet("/home")
 public class FlightSearchServlet extends HttpServlet {
@@ -65,5 +66,46 @@ public class FlightSearchServlet extends HttpServlet {
 		// 결과 페이지 이동
 		req.getRequestDispatcher("/WEB-INF/views/flight/flightList.jsp").forward(req, resp);
 
+	}
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	        throws ServletException, IOException {
+
+	    req.setCharacterEncoding("UTF-8");
+
+	    String mode = req.getParameter("mode");
+
+	    if (!"mytrip".equals(mode)) {
+	        resp.sendRedirect(req.getContextPath() + "/home");
+	        return;
+	    }
+
+	    String bookingId = req.getParameter("bookingId");
+	    String depDate = req.getParameter("depDate");
+	    String lastName = req.getParameter("lastName");
+	    String firstName = req.getParameter("firstName");
+
+ 
+	    ReservationDAO dao = new ReservationDAO();
+ 
+
+	    boolean result = dao.checkReservation(
+	            bookingId,
+	            depDate,
+	            lastName,
+	            firstName
+	    );
+
+	    if (result) {
+	        resp.sendRedirect(req.getContextPath() + "/reservation/list");
+	    } else {
+	        resp.setContentType("text/html;charset=utf-8");
+	        resp.getWriter().println("""
+	            <script>
+	                alert('입력한 항목이 올바르지 않습니다.');
+	                history.back();
+	            </script>
+	        """);
+	    }
 	}
 }

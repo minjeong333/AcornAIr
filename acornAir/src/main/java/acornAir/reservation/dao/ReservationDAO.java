@@ -1,4 +1,4 @@
-package 예약;
+package acornAir.reservation.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import acornAir.reservation.dto.ReservationDTO;
 
 public class ReservationDAO {
 
