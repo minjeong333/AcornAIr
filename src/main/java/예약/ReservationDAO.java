@@ -54,7 +54,7 @@ public class ReservationDAO {
                     BF.ARR_AIRPORT AS BACK_ARR,
                     TO_CHAR(BF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS BACK_DATE,
 
-                    COUNT(P.PASSENGER_ID) AS PASSENGER_COUNT,
+                    COUNT(DISTINCT P.PASSENGER_ID) AS PASSENGER_COUNT,
 
                     CASE
                         WHEN GF.SEAT_CLASS = 'Y' THEN '일반석'
