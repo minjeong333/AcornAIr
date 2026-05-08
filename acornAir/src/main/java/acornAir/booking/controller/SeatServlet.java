@@ -71,7 +71,11 @@ public class SeatServlet extends HttpServlet {
 
 		@SuppressWarnings("unchecked")
 		List<PassengerDTO> passengers = (List<PassengerDTO>) session.getAttribute("passengers");
-		int passCnt = (passengers != null) ? passengers.size() : 1;
+		if (passengers == null || passengers.isEmpty()) {
+			resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
+			return;
+		}
+		int passCnt = passengers.size();
 
 		int unitPrice = 0;
 		if (goFlight != null) {

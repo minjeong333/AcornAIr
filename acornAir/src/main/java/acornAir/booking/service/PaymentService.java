@@ -30,6 +30,9 @@ public class PaymentService {
 			int bookingId = bookingDAO.insertBooking(bookingDTO, con);
 
 			// 2. 승객 등록
+			if (bookingDTO.getPassengers() == null || bookingDTO.getPassengers().isEmpty()) {
+				throw new Exception("승객 정보가 없습니다. 승객 정보를 다시 입력해주세요.");
+			}
 			bookingDAO.insertPassengers(bookingDTO.getPassengers(), bookingId, con);
 
 			// 3. 가는편 좌석 등록
