@@ -1,4 +1,4 @@
-package 예약;
+package acornAir.reservation.dto;
 
 public class ReservationDTO {
 

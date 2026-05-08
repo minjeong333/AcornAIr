@@ -85,7 +85,9 @@ public class FlightSearchServlet extends HttpServlet {
 	    String lastName = req.getParameter("lastName");
 	    String firstName = req.getParameter("firstName");
 
+ 
 	    ReservationDAO dao = new ReservationDAO();
+ 
 
 	    boolean result = dao.checkReservation(
 	            bookingId,
