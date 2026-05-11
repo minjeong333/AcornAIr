@@ -1,10 +1,5 @@
-<%@page import="acornAir.login.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-UserDTO loginUser =
-    (UserDTO) session.getAttribute("loginUser");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,70 +11,7 @@ UserDTO loginUser =
 
 <body>
 
-<header class="top-menu">
-  <div class="top-links">
-    <% if(loginUser == null){ %>
-
-    <a href="${pageContext.request.contextPath}/air/login">
-        로그인/가입
-    </a>
-
- 
-<% } else { %>
-
-    <a href="#">
-    <%= loginUser.getKorFirstName() %>님
-</a>
-
-    <a href="${pageContext.request.contextPath}/air/logout">
-        로그아웃
-    </a>
-
-<% } %>
-
-    <!-- <a href="${pageContext.request.contextPath}/air/mypage">
-
-        마이페이지
-    </a> -->
-        <a href="javascript:void(0);" onclick="loadMyPage()">마이페이지</a>
- 
-</div>
-
-  <nav class="main-nav">
-    <div class="logo">
-      ✈ <strong>ACORN AIR</strong>
-      <span class="circle">S</span>
-    </div>
-
-    
-   <ul class="nav-menu">
-  <li class="nav-item">
-    예약
-    <div class="mega-menu">
-      <div class="mega-col">
-        <p><a href="/prj_2조/res">항공권 예매</a></p>
-        <p>예약 조회</p>
-      </div>
-    </div>
-  </li>
-
-  <li class="nav-item">
-    부가서비스 신청
-    <div class="mega-menu">
-      <div class="mega-col">
-        <p>좌석 배정</p>
-        <p>초과 수하물 사전 구매</p>
-      </div>
-    </div>
-  </li>
-</ul>
-
-    <div class="search-area">
-      <input type="text" placeholder="궁금한 것을 검색해보세요">
-      <button>로그인</button>
-    </div>
-  </nav>
-</header>
+<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
 <div class="container">
   <div class="card">
@@ -406,59 +338,7 @@ UserDTO loginUser =
   </div>
 </section>
 
-<footer class="footer">
-  <div class="footer-container">
-
-    <div class="footer-col">
-      <h4>회사소개</h4>
-      <p>Our Transformation</p>
-      <p>대한항공에 대하여</p>
-      <p>기업지배구조</p>
-      <p>투자정보</p>
-      <p>지속가능경영</p>
-      <p>뉴스룸</p>
-    </div>
-
-    <div class="footer-col">
-      <h4>고객지원</h4>
-      <p>공지사항</p>
-      <p>고객의 말씀</p>
-      <p>서비스 센터</p>
-      <p>e-서식함</p>
-      <p>디지털 접근성</p>
-    </div>
-
-    <div class="footer-col">
-      <h4>약관 및 규정</h4>
-      <p>개인정보 처리방침</p>
-      <p>이용 약관</p>
-      <p>운송약관 및 고지사항</p>
-      <p>소비자 안전 관련 정보</p>
-      <p>운임 및 서비스 요금표</p>
-      <p>쿠키 설정</p>
-    </div>
-
-    <div class="footer-col">
-      <h4>기타 안내</h4>
-      <p>기업 출장 / 전용기</p>
-      <p>고객 안내 서비스</p>
-      <p>항공교통이용자 서비스 계획</p>
-      <p>항공교통이용자 피해 구제</p>
-      <p>관련 사이트</p>
-      <p>사이트맵</p>
-    </div>
-
-    <div class="footer-col">
-      <h4>인기 방문국가</h4>
-      <p>미국</p>
-      <p>일본</p>
-      <p>중국</p>
-      <p>캐나다</p>
-      <p>태국</p>
-    </div>
-
-  </div>
-</footer>
+<jsp:include page="/WEB-INF/views/util/footer.jsp" />
 
 <script>
 const fromBox = document.getElementById("fromBox");
@@ -970,48 +850,8 @@ renderCalendar();
 updatePassengerUI();
 
 
-//mypage ajax관련 코드
-function loadMyPage() {
-
-    fetch('/acornAir/air/mypage')
-        .then(res => res.text())
-        .then(data => {
-        	console.log("받은 데이터:", data);
-
-            // 로그인 안 된 경우
-            if(data.includes("LOGIN_REQUIRED")) {
-                location.href = '/acornAir/air/login';
-                return;
-            }
-
-            // 로그인 상태
-            document.getElementById('mypage-container').innerHTML = data;
-
-            openMyPage();
- 
-        })
-        .catch(err => console.log("에러 발생:", err));
-
-
-            
-}
-
-function openMyPage() {
-    const modal = document.getElementById('mypage-modal');
-    if(modal) modal.style.display = 'block';
-}
-
-function closeMyPage() {
-    const modal = document.getElementById('mypage-modal');
-    if(modal) {
-        modal.style.display = 'none';
-        // 닫을 때 HTML을 비우기
-        document.getElementById('mypage-container').innerHTML = '';
-    }
-}
 
 
 </script>
-<div id="mypage-container"></div>
 </body>
 </html>

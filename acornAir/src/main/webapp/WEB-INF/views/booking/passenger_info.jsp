@@ -50,7 +50,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 </head>
 <body>
 
-	<%@ include file="/WEB-INF/views/util/header.jsp"%>
+	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
 	<!-- 진행 표시 -->
 	<div class="progress-bar">
@@ -804,6 +804,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		});
 	</script>
 
-	<%@ include file="/WEB-INF/views/util/footer.jsp"%>
+	<jsp:include page="/WEB-INF/views/util/footer.jsp" />
 </body>
 </html>

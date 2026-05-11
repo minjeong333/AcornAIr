@@ -1,10 +1,8 @@
 @charset "UTF-8";
 /*1. 모달*/
 /* 모달 배경 */
-.modal-overlay {
-	/*display: none;  기본 숨김 
-	display: block;*/
-	display: flex;
+#mypage-modal {
+	display: none;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -14,6 +12,10 @@
 	z-index: 2000;
 	justify-content: center;
 	align-items: center;
+}
+
+#mypage-modal.open {
+	display: flex;
 }
 
 /* 모달 본체 */
