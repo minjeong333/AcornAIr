@@ -8,7 +8,10 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import acornAir.booking.dto.PassengerDTO;
 import acornAir.login.dto.UserDTO;
@@ -65,9 +68,6 @@ public class PassengerServlet extends HttpServlet {
 			passengers.add(p);
 		}
 		
-		String contactPhone = req.getParameter("contactPhone");
-		String contactEmail = req.getParameter("contactEmail");
-
 		String contactPhone = req.getParameter("contactPhone");
 		String contactEmail = req.getParameter("contactEmail");
 
