@@ -1,59 +1,92 @@
-const btnConfirm    = document.getElementById('btn-passenger-confirm');
-const passengerAcc  = btnConfirm.closest('.accordion');
-const passengerHdr  = passengerAcc.querySelector('.accordion-header');
-const passengerBody = passengerAcc.querySelector('.accordion-body');
-const contactHeader = document.getElementById('contact-header');
-const contactBody   = document.getElementById('contact-body');
+document.addEventListener('DOMContentLoaded', function () {
 
-// 성인 1 확인 버튼 클릭
-btnConfirm.addEventListener('click', function (e) {
-  e.preventDefault();
-  // 성인 1 접힘 + 완료 표시
-  passengerBody.style.display = 'none';
-  passengerHdr.innerHTML = `
-    <div class="confirmed-name">
-      <div class="check-circle">✓</div>
-      KIM MINJEONG
-    </div>
-    <span class="chevron">∨</span>
-  `;
-  passengerHdr.classList.add('confirmed');
+  var btnConfirm    = document.getElementById('btn-passenger-confirm');
+  var contactHeader = document.getElementById('contact-header');
+  var contactBody   = document.getElementById('contact-body');
+  var baggageHeader = document.getElementById('baggageHeader');
+  var baggageBody   = document.getElementById('baggageBody');
 
-  // 성인 1 헤더 클릭 시 펼치기 토글
-  passengerHdr.onclick = function () {
-    const isOpen = passengerBody.style.display !== 'none';
-    passengerBody.style.display = isOpen ? 'none' : 'block';
-    passengerHdr.querySelector('.chevron').textContent = isOpen ? '∨' : '∧';
-  };
+  // 승객 아코디언 초기 토글
+  document.querySelectorAll('.accordion:not(#contact-accordion)').forEach(function (acc) {
+    var hdr  = acc.querySelector('.accordion-header');
+    var body = acc.querySelector('.accordion-body');
+    if (!hdr || !body) return;
+    hdr.style.cursor = 'pointer';
+    hdr.addEventListener('click', function () {
+      var isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : 'block';
+      var chevron = hdr.querySelector('.chevron');
+      if (chevron) chevron.textContent = isOpen ? '∨' : '∧';
+    });
+  });
 
-  // 연락처 정보 자동 열기
-  contactBody.classList.remove('hidden');
-  contactHeader.classList.remove('secondary');
-  contactHeader.classList.add('contact-open');
-  contactHeader.querySelector('.chevron').textContent = '∧';
-  contactHeader.style.color = '#fff';
+  // 연락처 헤더 초기 토글
+  if (contactHeader && contactBody) {
+    contactHeader.style.cursor = 'pointer';
+    contactHeader.addEventListener('click', function () {
+      var isOpen = !contactBody.classList.contains('hidden');
+      contactBody.classList.toggle('hidden', isOpen);
+      var chevron = contactHeader.querySelector('.chevron');
+      if (chevron) chevron.textContent = isOpen ? '∨' : '∧';
+    });
+  }
 
-  // 연락처 헤더 토글
-  contactHeader.onclick = function () {
-    const isOpen = !contactBody.classList.contains('hidden');
-    contactBody.classList.toggle('hidden', isOpen);
-    contactHeader.querySelector('.chevron').textContent = isOpen ? '∨' : '∧';
-  };
+  // 승객 확인 버튼 클릭
+  if (btnConfirm) {
+    btnConfirm.addEventListener('click', function () {
+      document.querySelectorAll('.accordion:not(#contact-accordion)').forEach(function (acc, idx) {
+        var hdr  = acc.querySelector('.accordion-header');
+        var body = acc.querySelector('.accordion-body');
+        if (!hdr || !body) return;
 
-  // 연락처 정보로 스크롤
-  document.getElementById('contact-accordion').scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
+        var lastInput  = acc.querySelector('input[name^="engLastName_"]');
+        var firstInput = acc.querySelector('input[name^="engFirstName_"]');
+        var last  = lastInput  ? lastInput.value.trim()  : '';
+        var first = firstInput ? firstInput.value.trim() : '';
+        var nameText = (last || first) ? (last + ' ' + first) : ('성인 ' + (idx + 1));
 
-// 연락처 확인 버튼 클릭 → 폼 제출
-document.getElementById('btn-contact-confirm').addEventListener('click', function () {
-  btnConfirm.closest('form').submit();
-});
+        body.style.display = 'none';
+        hdr.innerHTML =
+          '<div class="confirmed-name">' +
+            '<div class="check-circle">✓</div>' +
+            nameText +
+          '</div>' +
+          '<span class="chevron">∨</span>';
+        hdr.classList.add('confirmed');
+      });
 
-// 수하물 정보 아코디언 토글
-const baggageHeader = document.getElementById('baggageHeader');
-const baggageBody   = document.getElementById('baggageBody');
-baggageHeader.addEventListener('click', function () {
-  const isOpen = baggageBody.style.display !== 'none';
-  baggageBody.style.display = isOpen ? 'none' : 'block';
-  baggageHeader.querySelector('.chevron').textContent = isOpen ? '∨' : '∧';
+      if (contactBody && contactHeader) {
+        contactBody.classList.remove('hidden');
+        contactHeader.classList.remove('secondary');
+        contactHeader.classList.add('contact-open');
+        var chevron = contactHeader.querySelector('.chevron');
+        if (chevron) chevron.textContent = '∧';
+        contactHeader.style.color = '#fff';
+
+        var contactAcc = document.getElementById('contact-accordion');
+        if (contactAcc) contactAcc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  // 연락처 확인 버튼 클릭 → 폼 제출
+  var btnContactConfirm = document.getElementById('btn-contact-confirm');
+  if (btnContactConfirm && btnConfirm) {
+    btnContactConfirm.addEventListener('click', function () {
+      var form = btnConfirm.closest('form');
+      if (form) form.submit();
+    });
+  }
+
+  // 수하물 정보 아코디언 토글
+  if (baggageHeader && baggageBody) {
+    baggageHeader.style.cursor = 'pointer';
+    baggageHeader.addEventListener('click', function () {
+      var isOpen = baggageBody.style.display !== 'none';
+      baggageBody.style.display = isOpen ? 'none' : 'block';
+      var chevron = baggageHeader.querySelector('.chevron');
+      if (chevron) chevron.textContent = isOpen ? '∨' : '∧';
+    });
+  }
+
 });

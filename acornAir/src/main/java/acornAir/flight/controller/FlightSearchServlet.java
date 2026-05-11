@@ -55,13 +55,25 @@ public class FlightSearchServlet extends HttpServlet {
 		// session 저장
 		HttpSession session = req.getSession();
 
+		// 이전 예약 흐름 세션 초기화 (재검색 시 오염 방지)
+		session.removeAttribute("goFlight");
+		session.removeAttribute("backFlight");
+		session.removeAttribute("goSeatClass");
+		session.removeAttribute("backSeatClass");
+		session.removeAttribute("goFlightId");
+		session.removeAttribute("goPrice");
+		session.removeAttribute("passengers");
+		session.removeAttribute("bookingDTO");
+		session.removeAttribute("goSeats");
+		session.removeAttribute("backSeats");
+		session.removeAttribute("bags");
+
 		session.setAttribute("depAirport", depAirport);
 		session.setAttribute("arrAirport", arrAirport);
 		session.setAttribute("depDate", depDate);
 		session.setAttribute("passCnt", passCnt);
 		session.setAttribute("tripType", tripType);
 		session.setAttribute("returnDate", returnDate);
-		session.setAttribute("seatClass", seatClass);
 
 		// 결과 페이지 이동
 		req.getRequestDispatcher("/WEB-INF/views/flight/flightList.jsp").forward(req, resp);

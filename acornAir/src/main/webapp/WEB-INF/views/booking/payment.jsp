@@ -236,22 +236,11 @@
 				extraBags += parseInt(el.textContent.trim()) || 0;
 			});
 
-			var total = BASE_PRICE + extraBags * BAG_PRICE;
-
-			// iframe 안에서 열린 경우: 부모 passenger_info.jsp에 값 전달 후 모달 닫기
-			if (window.parent && window.parent !== window
-					&& window.parent.updateBaggageInfo) {
-				window.parent.updateBaggageInfo(extraBags, extraBags
-						* BAG_PRICE);
-
-				if (window.parent.closeBaggageModal) {
-					window.parent.closeBaggageModal();
-				}
-				return;
-			}
-
-			// 단독 페이지로 열린 경우: passenger로 복귀
-			location.href = "${pageContext.request.contextPath}/air/booking/passenger";
+			window.parent.postMessage({
+				type   : 'baggageDone',
+				bags   : extraBags,
+				bagFee : extraBags * BAG_PRICE
+			}, '*');
 		}
 		updateTotal();
 	</script>

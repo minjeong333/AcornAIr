@@ -27,6 +27,11 @@ public class ReservationListServlet extends HttpServlet {
     	UserDTO loginUser =
     	        (UserDTO) session.getAttribute("loginUser");
 
+    	if (loginUser == null) {
+    	    resp.sendRedirect(req.getContextPath() + "/air/login");
+    	    return;
+    	}
+
     	String userId = loginUser.getUserId();
         ReservationDAO dao = new ReservationDAO();
 
