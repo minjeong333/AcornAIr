@@ -1,13 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    String tripType = (String) session.getAttribute("tripType");
-    String seatClass = (String) session.getAttribute("seatClass");
+    String tripType      = (String) session.getAttribute("tripType");
+    String goSeatClass   = (String) session.getAttribute("goSeatClass");
+    String backSeatClass = (String) session.getAttribute("backSeatClass");
 
-    if (tripType == null) tripType = "OW";
-    if (seatClass == null) seatClass = "Y";
+    if (tripType == null)      tripType = "OW";
+    if (goSeatClass == null)   goSeatClass = "Y";
+    if (backSeatClass == null) backSeatClass = "Y";
 
-    boolean isRoundTrip = tripType.equals("RT");
-    boolean isBusiness  = seatClass.equals("C");
+    boolean isRoundTrip    = "RT".equals(tripType);
+    boolean isGoBusiness   = "C".equals(goSeatClass);
+    boolean isBackBusiness = "C".equals(backSeatClass);
+
+    String[] cols = {"A", "B", "C", "D", "E", "F"};
 %>
 <!DOCTYPE html>
 <html>
@@ -33,27 +38,27 @@
     </div>
 
     <div class="wrap">
-        <div class="seat-area <%= isBusiness ? "business-area" : "" %>">
 
-            <% if (isBusiness) { %>
+        <!-- 가는편 좌석 -->
+        <div id="seat-area-go" class="seat-area <%= isGoBusiness ? "business-area" : "" %>">
+            <% if (isGoBusiness) { %>
                 <div class="seat-header business">
-                    <span></span> <span>A</span> <span></span>
-                    <span>B</span><span>C</span> <span></span>
-                    <span>D</span> <span></span>
+                    <span></span><span>A</span><span></span>
+                    <span>B</span><span>C</span><span></span>
+                    <span>D</span><span></span>
                 </div>
                 <% for (int i = 1; i <= 5; i++) { %>
                 <div class="seat-row business">
                     <span class="row-num"><%=i%></span>
-                    <button class="seat business-seat" data-seat="<%=i + "A"%>"><%=i%>A</button>
+                    <button class="seat business-seat" data-seat="<%=i%>A"><%=i%>A</button>
                     <div class="business-aisle"></div>
-                    <button class="seat business-seat" data-seat="<%=i + "B"%>"><%=i%>B</button>
-                    <button class="seat business-seat" data-seat="<%=i + "C"%>"><%=i%>C</button>
+                    <button class="seat business-seat" data-seat="<%=i%>B"><%=i%>B</button>
+                    <button class="seat business-seat" data-seat="<%=i%>C"><%=i%>C</button>
                     <div class="business-aisle"></div>
-                    <button class="seat business-seat" data-seat="<%=i + "D"%>"><%=i%>D</button>
+                    <button class="seat business-seat" data-seat="<%=i%>D"><%=i%>D</button>
                     <span class="row-num"><%=i%></span>
                 </div>
                 <% } %>
-
             <% } else { %>
                 <div class="seat-header">
                     <span></span>
@@ -62,23 +67,61 @@
                     <span>D</span><span>E</span><span>F</span>
                     <span></span>
                 </div>
-                <%
-                String[] cols = {"A", "B", "C", "D", "E", "F"};
-                for (int i = 1; i <= 33; i++) {
-                %>
+                <% for (int i = 1; i <= 33; i++) { %>
                 <div class="seat-row">
                     <span class="row-num"><%=i%></span>
                     <% for (int j = 0; j < cols.length; j++) {
-                        if (j == 3) { %>
-                        <div class="aisle"></div>
-                    <% } %>
-                    <button class="seat" data-seat="<%=i + cols[j]%>"><%=cols[j]%></button>
+                        if (j == 3) { %><div class="aisle"></div><% } %>
+                    <button class="seat" data-seat="<%=i%><%=cols[j]%>"><%=cols[j]%></button>
                     <% } %>
                     <span class="row-num"><%=i%></span>
                 </div>
                 <% } %>
             <% } %>
         </div>
+
+        <!-- 오는편 좌석 (왕복일 때만) -->
+        <% if (isRoundTrip) { %>
+        <div id="seat-area-back" class="seat-area <%= isBackBusiness ? "business-area" : "" %>" style="display:none;">
+            <% if (isBackBusiness) { %>
+                <div class="seat-header business">
+                    <span></span><span>A</span><span></span>
+                    <span>B</span><span>C</span><span></span>
+                    <span>D</span><span></span>
+                </div>
+                <% for (int i = 1; i <= 5; i++) { %>
+                <div class="seat-row business">
+                    <span class="row-num"><%=i%></span>
+                    <button class="seat business-seat" data-seat="<%=i%>A"><%=i%>A</button>
+                    <div class="business-aisle"></div>
+                    <button class="seat business-seat" data-seat="<%=i%>B"><%=i%>B</button>
+                    <button class="seat business-seat" data-seat="<%=i%>C"><%=i%>C</button>
+                    <div class="business-aisle"></div>
+                    <button class="seat business-seat" data-seat="<%=i%>D"><%=i%>D</button>
+                    <span class="row-num"><%=i%></span>
+                </div>
+                <% } %>
+            <% } else { %>
+                <div class="seat-header">
+                    <span></span>
+                    <span>A</span><span>B</span><span>C</span>
+                    <span></span>
+                    <span>D</span><span>E</span><span>F</span>
+                    <span></span>
+                </div>
+                <% for (int i = 1; i <= 33; i++) { %>
+                <div class="seat-row">
+                    <span class="row-num"><%=i%></span>
+                    <% for (int j = 0; j < cols.length; j++) {
+                        if (j == 3) { %><div class="aisle"></div><% } %>
+                    <button class="seat" data-seat="<%=i%><%=cols[j]%>"><%=cols[j]%></button>
+                    <% } %>
+                    <span class="row-num"><%=i%></span>
+                </div>
+                <% } %>
+            <% } %>
+        </div>
+        <% } %>
 
         <div class="info-box">
             <h3>좌석정보</h3>
@@ -109,39 +152,46 @@
 <script>
     const IS_ROUND_TRIP = <%= isRoundTrip %>;
 
-    const seats            = document.querySelectorAll(".seat");
     const selectedSeatsBox = document.getElementById("selectedSeats");
-    const tripTabs         = document.querySelectorAll(".trip-tab");
     const nextBtn          = document.getElementById("nextBtn");
     const bottomNextBtn    = document.getElementById("bottomNextBtn");
 
-    let currentTrip = "go";
+    let currentTrip   = "go";
     let selectedSeats = IS_ROUND_TRIP ? { go: [], back: [] } : [];
 
-    seats.forEach(function(seat) {
+    // 좌석 클릭 핸들러 (모든 좌석에 등록)
+    document.querySelectorAll(".seat").forEach(function(seat) {
         seat.addEventListener("click", function() {
             const seatName = seat.dataset.seat;
-            const list = IS_ROUND_TRIP ? selectedSeats[currentTrip] : selectedSeats;
+            const area     = seat.closest("[id^='seat-area-']");
+            const trip     = area ? area.id.replace("seat-area-", "") : "go";
 
-            if (seat.classList.contains("active")) {
-                seat.classList.remove("active");
-                if (IS_ROUND_TRIP) {
-                    selectedSeats[currentTrip] = list.filter(function(s) { return s !== seatName; });
+            if (IS_ROUND_TRIP) {
+                const list = selectedSeats[trip];
+                if (seat.classList.contains("active")) {
+                    seat.classList.remove("active");
+                    selectedSeats[trip] = list.filter(function(s) { return s !== seatName; });
                 } else {
-                    selectedSeats = selectedSeats.filter(function(s) { return s !== seatName; });
+                    seat.classList.add("active");
+                    list.push(seatName);
                 }
             } else {
-                seat.classList.add("active");
-                list.push(seatName);
+                if (seat.classList.contains("active")) {
+                    seat.classList.remove("active");
+                    selectedSeats = selectedSeats.filter(function(s) { return s !== seatName; });
+                } else {
+                    seat.classList.add("active");
+                    selectedSeats.push(seatName);
+                }
             }
             showSelectedSeats();
         });
     });
 
-    tripTabs.forEach(function(tab) {
+    // 탭 클릭
+    document.querySelectorAll(".trip-tab").forEach(function(tab) {
         tab.addEventListener("click", function() {
-            currentTrip = tab.dataset.trip;
-            changeTrip(currentTrip);
+            changeTrip(tab.dataset.trip);
         });
     });
 
@@ -150,14 +200,11 @@
 
     function nextStep() {
         const list = IS_ROUND_TRIP ? selectedSeats[currentTrip] : selectedSeats;
-
         if (list.length === 0) {
             alert("좌석을 선택해주세요.");
             return;
         }
-
         if (IS_ROUND_TRIP && currentTrip === "go") {
-            currentTrip = "back";
             changeTrip("back");
             window.scrollTo(0, 0);
         } else {
@@ -166,19 +213,22 @@
     }
 
     function changeTrip(trip) {
-        tripTabs.forEach(function(tab) {
+        currentTrip = trip;
+
+        // 좌석 영역 표시 전환
+        var goArea   = document.getElementById("seat-area-go");
+        var backArea = document.getElementById("seat-area-back");
+        if (goArea)   goArea.style.display   = (trip === "go")   ? "" : "none";
+        if (backArea) backArea.style.display  = (trip === "back") ? "" : "none";
+
+        // 탭 활성화
+        document.querySelectorAll(".trip-tab").forEach(function(tab) {
             tab.classList.toggle("active", tab.dataset.trip === trip);
         });
 
-        seats.forEach(function(seat) {
-            const inList = IS_ROUND_TRIP
-                ? selectedSeats[trip].includes(seat.dataset.seat)
-                : selectedSeats.includes(seat.dataset.seat);
-            seat.classList.toggle("active", inList);
-        });
-
-        const label = (!IS_ROUND_TRIP || trip === "back") ? "완료" : "다음";
-        nextBtn.innerText = label;
+        // 버튼 레이블
+        var label = (!IS_ROUND_TRIP || trip === "back") ? "완료" : "다음";
+        nextBtn.innerText      = label;
         bottomNextBtn.innerText = label;
 
         showSelectedSeats();
@@ -187,7 +237,6 @@
     function showSelectedSeats() {
         selectedSeatsBox.innerHTML = "";
         const list = IS_ROUND_TRIP ? selectedSeats[currentTrip] : selectedSeats;
-
         list.forEach(function(seatName) {
             const span = document.createElement("span");
             span.className = "selected-item";
@@ -203,7 +252,8 @@
         } else {
             selectedSeats = selectedSeats.filter(function(s) { return s !== seatName; });
         }
-        const btn = document.querySelector("[data-seat='" + seatName + "']");
+        const area = document.getElementById("seat-area-" + currentTrip);
+        const btn  = area ? area.querySelector("[data-seat='" + seatName + "']") : null;
         if (btn) btn.classList.remove("active");
         showSelectedSeats();
     }
@@ -215,8 +265,8 @@
 
         function addHidden(name, value) {
             const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = name;
+            input.type  = "hidden";
+            input.name  = name;
             input.value = value;
             form.appendChild(input);
         }

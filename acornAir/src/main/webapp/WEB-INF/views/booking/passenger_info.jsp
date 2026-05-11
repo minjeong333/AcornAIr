@@ -1,5 +1,6 @@
 ﻿<%@page import="acornAir.booking.dto.PassengerDTO"%>
 <%@page import="acornAir.flight.dto.FlightDTO"%>
+<%@page import="acornAir.login.dto.UserDTO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Locale"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -16,6 +17,8 @@ boolean isRoundTrip = "RT".equals(tripType);
 
 SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy년 M월 dd일 (E)", new Locale("ko"));
 SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm");
+SimpleDateFormat birthFmt = new SimpleDateFormat("yyyy-MM-dd");
+UserDTO loginUser = (UserDTO) request.getAttribute("loginUser");
 
 // 운임 계산
 int farePrice = 0;
@@ -139,34 +142,23 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				<div class="passenger-warning">예약 후 성명 변경은 불가하오니 여권에 기재된 성명을
 					정확히 확인하시기 바랍니다.</div>
 
-				<!-- 성인 1 아코디언 -->
-				<div class="accordion">
-					<div class="accordion-header">
-						<span>성인 1</span> <span class="chevron">∧</span>
-					</div>
-					<div class="accordion-body">
+				<!-- 승객 입력 폼 (passCnt만큼 반복) -->
+				<form method="post"
+					action="${pageContext.request.contextPath}/air/booking/passenger">
+					<input type="hidden" name="passCnt" value="<%=passCnt%>" />
 
-						<!-- 승객 선택 -->
-						<div class="form-group">
-							<div class="form-label">승객 선택</div>
-							<div class="select-wrap">
-								<select class="form-select">
-									<option>KIM MINJEONG</option>
-								</select>
-							</div>
+					<%
+					for (int i = 0; i < passCnt; i++) {
+						String lastVal  = (i == 0 && loginUser != null && loginUser.getEngLastName()  != null) ? loginUser.getEngLastName()  : "";
+						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null) ? loginUser.getEngFirstName() : "";
+						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate()    != null) ? birthFmt.format(loginUser.getBirthDate()) : "";
+						String genderVal = (i == 0 && loginUser != null && loginUser.getGender()      != null) ? loginUser.getGender() : "F";
+					%>
+					<div class="accordion">
+						<div class="accordion-header">
+							<span>성인 <%=i + 1%></span> <span class="chevron">∧</span>
 						</div>
-
-
-						<!-- 세견값 확인용 -->
-						<%
-						PassengerDTO p = (PassengerDTO) session.getAttribute("passenger");
-						if (p != null)
-							out.println(p.toString());
-						%>
-
-
-						<form method="post"
-							action="${pageContext.request.contextPath}/air/booking/passenger">
+						<div class="accordion-body">
 
 							<!-- 성 / 이름 -->
 							<div class="form-row">
@@ -174,17 +166,15 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									<div class="form-label">
 										승객 성 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="text" name="engLastName"
-										value="${loginUser.engLastName}" />
-									<!-- UserDTO 세션값 적용 -->
+									<input class="form-input" type="text"
+										name="engLastName_<%=i%>" value="<%=lastVal%>" required />
 								</div>
 								<div>
 									<div class="form-label">
 										승객 이름 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="text" name="engFirstName"
-										value="${loginUser.engFirstName}" />
-									<!-- UserDTO 세션값 적용 -->
+									<input class="form-input" type="text"
+										name="engFirstName_<%=i%>" value="<%=firstVal%>" required />
 								</div>
 							</div>
 
@@ -195,9 +185,9 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 										성별 <span class="req">*</span>
 									</div>
 									<div class="select-wrap">
-										<select class="form-select" name="gender">
-											<option value="F">여성(F)</option>
-											<option value="M">남성(M)</option>
+										<select class="form-select" name="gender_<%=i%>">
+											<option value="F" <%="F".equals(genderVal) ? "selected" : ""%>>여성(F)</option>
+											<option value="M" <%="M".equals(genderVal) ? "selected" : ""%>>남성(M)</option>
 										</select>
 									</div>
 								</div>
@@ -205,21 +195,22 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									<div class="form-label">
 										생년월일 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="date" name="birthDate"
-										value="${loginUser.birthDate}" />
+									<input class="form-input" type="date"
+										name="birthDate_<%=i%>" value="<%=birthVal%>" />
 								</div>
 							</div>
 
-							<!-- 확인 버튼 -->
-							<div class="btn-confirm-wrap">
-								<button type="submit" class="btn-confirm"
-									id="btn-passenger-confirm">확인</button>
-							</div>
-
-						</form>
-
+						</div>
 					</div>
-				</div>
+					<% } %>
+
+					<!-- 확인 버튼 (모든 승객 한 번에 제출) -->
+					<div class="btn-confirm-wrap">
+						<button type="button" class="btn-confirm"
+							id="btn-passenger-confirm">확인</button>
+					</div>
+
+				</form>
 
 				<!-- 연락처 정보 아코디언 -->
 				<div class="accordion" id="contact-accordion">
@@ -464,7 +455,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		applyPriceView();
 	</script>
 	<script
-		src="${pageContext.request.contextPath}/js/booking/passenger.js"></script>
+		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=4"></script>
 
 	<!-- ===== 결제 모달 ===== -->
 	<div class="modal-overlay" id="payModal" onclick="closePayModal(event)">
@@ -731,12 +722,21 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			}
 		} --%>
 		function doPay() {
-			var confirmed = confirm('결제를 진행하시겠습니까?');
-			if (!confirmed)
-				return;
-
 			var payMethod = document
 					.querySelector("input[name='payMethod']:checked").value;
+
+			var msg = '결제를 진행하시겠습니까?';
+			if (payMethod === 'card') {
+				msg = '신용카드로 결제하시겠습니까?';
+			} else if (payMethod === 'transfer') {
+				msg = '계좌이체로 이용하시겠습니까?';
+			} else if (payMethod === 'simple') {
+				msg = '간편결제로 이용하시겠습니까?';
+			}
+
+			var confirmed = confirm(msg);
+			if (!confirmed)
+				return;
 
 			var form = document.createElement("form");
 			form.method = "POST";
@@ -781,20 +781,25 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			document.body.style.overflow = 'hidden';
 		}
 		function closeBaggageModal(e) {
-			if (!e || e.target === document.getElementById('baggageModal')) {
-				document.getElementById('baggageModal').style.display = 'none';
-				document.getElementById('baggageFrame').src = '';
-				document.body.style.overflow = '';
-			}
+			if (e && e.target !== document.getElementById('baggageModal')) return;
+			document.getElementById('baggageModal').style.display = 'none';
+			document.getElementById('baggageFrame').src = '';
+			document.body.style.overflow = '';
 		}
 
-		// iframe(payment.jsp)에서 호출 — bags: 수화물 개수, bagFee: 수화물 금액만
 		function updateBaggageInfo(bags, baggageOnlyPrice) {
 			serverBags = bags;
 			serverTotal = BASE_PRICE + (serverBags * BAG_PRICE);
-
 			applyPriceView();
 		}
+
+		// iframe(payment.jsp)에서 postMessage로 수하물 데이터 수신
+		window.addEventListener('message', function(e) {
+			if (!e.data || e.data.type !== 'baggageDone') return;
+			updateBaggageInfo(e.data.bags, e.data.bagFee);
+			closeBaggageModal();
+			closeSeatModal();
+		});
 	</script>
 
 	<%@ include file="/WEB-INF/views/util/footer.jsp"%>
