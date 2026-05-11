@@ -34,30 +34,34 @@ public class PassengerServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
-		
-		PassengerDTO p = new PassengerDTO();
-		
-		p.setEngLastName(req.getParameter("engLastName"));
-	    p.setEngFirstName(req.getParameter("engFirstName"));
-	    p.setGender(req.getParameter("gender"));
-	    
-	    //date 형변환
-	    String birthStr = req.getParameter("birthDate");
-	    try {
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	        java.util.Date birthDate = sdf.parse(birthStr);
-	        p.setBirthDate(birthDate);
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	    }
-	    
-	    HttpSession session = req.getSession();
-	    List<PassengerDTO> passengers = new ArrayList<>();
-	    passengers.add(p);
-	    session.setAttribute("passengers", passengers);
-	    session.setAttribute("contactPhone", req.getParameter("contactPhone"));
-	    
-	    resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
+
+		HttpSession session = req.getSession();
+		int passCnt = session.getAttribute("passCnt") != null ? (Integer) session.getAttribute("passCnt") : 1;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<PassengerDTO> passengers = new ArrayList<>();
+
+		for (int i = 0; i < passCnt; i++) {
+			PassengerDTO p = new PassengerDTO();
+			p.setEngLastName(req.getParameter("engLastName_" + i));
+			p.setEngFirstName(req.getParameter("engFirstName_" + i));
+			p.setGender(req.getParameter("gender_" + i));
+
+			String birthStr = req.getParameter("birthDate_" + i);
+			if (birthStr != null && !birthStr.isEmpty()) {
+				try {
+					p.setBirthDate(sdf.parse(birthStr));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			passengers.add(p);
+		}
+
+		session.setAttribute("passengers", passengers);
+		session.setAttribute("contactPhone", req.getParameter("contactPhone"));
+
+		resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
 	}
 	
 			

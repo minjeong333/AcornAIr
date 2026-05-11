@@ -130,7 +130,7 @@ public class PaymentServlet extends HttpServlet {
 			session.removeAttribute("bags");
 			session.removeAttribute("total");
 
-			resp.sendRedirect(req.getContextPath() + "/air/mypage");
+			resp.sendRedirect(req.getContextPath() + "/reservation/list");
 			System.out.println("=== DB INSERT 완료 ===");
 
 		} catch (Exception e) {

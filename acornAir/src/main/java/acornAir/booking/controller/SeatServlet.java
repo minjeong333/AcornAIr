@@ -40,45 +40,30 @@ public class SeatServlet extends HttpServlet {
 
 		// 항공편 가격 계산
 		FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
-		
-		// 임시추가 - dhy
+
 		if (goFlight == null) {
-		    String goFlightId = (String) session.getAttribute("goFlightId");
-		    String goPrice = (String) session.getAttribute("goPrice");
-
-		    goFlight = new FlightDTO();
-
-		    if (goFlightId != null) {
-		        goFlight.setFlightId(Integer.parseInt(goFlightId));
-		    } else {
-		        goFlight.setFlightId(1); // 임시 테스트용, DB에 실제 있는 FLIGHT_ID
-		    }
-
-		    if (goPrice != null) {
-		        goFlight.setPrice(Integer.parseInt(goPrice));
-		        goFlight.setBizPrice(Integer.parseInt(goPrice));
-		    } else {
-		        goFlight.setPrice(190000);
-		        goFlight.setBizPrice(450000);
-		    }
-
-		    session.setAttribute("goFlight", goFlight);
+		    resp.sendRedirect(req.getContextPath() + "/home");
+		    return;
 		}
-		//
-		
+
 		FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
-		String seatClass = (String) session.getAttribute("seatClass");
+		String goSeatClass  = (String) session.getAttribute("goSeatClass");
+		String backSeatClass = (String) session.getAttribute("backSeatClass");
 
 		@SuppressWarnings("unchecked")
 		List<PassengerDTO> passengers = (List<PassengerDTO>) session.getAttribute("passengers");
-		int passCnt = (passengers != null) ? passengers.size() : 1;
+		if (passengers == null || passengers.isEmpty()) {
+			resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
+			return;
+		}
+		int passCnt = passengers.size();
 
 		int unitPrice = 0;
 		if (goFlight != null) {
-			unitPrice += "C".equals(seatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
+			unitPrice += "C".equals(goSeatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
 		}
 		if (backFlight != null) {
-			unitPrice += "C".equals(seatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
+			unitPrice += "C".equals(backSeatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
 		}
 
 		int basePrice = unitPrice * passCnt;

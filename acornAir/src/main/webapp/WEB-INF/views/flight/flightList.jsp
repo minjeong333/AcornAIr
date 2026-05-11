@@ -17,6 +17,17 @@
 	String returnDate = (String) session.getAttribute("returnDate");
 	Integer passCnt = (Integer) session.getAttribute("passCnt");
 	String tripType = (String) session.getAttribute("tripType");
+
+	// 가는 편 가격 서버에서 계산 (sessionStorage 대체)
+	acornAir.flight.dto.FlightDTO goFlight = (acornAir.flight.dto.FlightDTO) session.getAttribute("goFlight");
+	String goSeatClass = (String) session.getAttribute("goSeatClass");
+	int serverGoPrice = 0;
+	String serverGoSeatLabel = "일반석";
+	if (goFlight != null && passCnt != null) {
+		serverGoPrice = "C".equals(goSeatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
+		serverGoPrice *= passCnt;
+		serverGoSeatLabel = "C".equals(goSeatClass) ? "비즈니스석" : "일반석";
+	}
 	%>
 <script>
     var contextPath = "<%=request.getContextPath()%>";
@@ -27,6 +38,8 @@
     returnDate: "<%=returnDate != null ? returnDate : ""%>",
     passCnt: "<%=passCnt != null ? passCnt : 1%>"
   	};
+    var serverGoPrice = <%=serverGoPrice%>;
+    var serverGoSeatLabel = "<%=serverGoSeatLabel%>";
 </script>
 <script src="${pageContext.request.contextPath}/js/flight/search.js" defer></script>
 </head>
