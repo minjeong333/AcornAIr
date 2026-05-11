@@ -16,8 +16,10 @@ public class ReservationDTO {
 
 	private int passengerCount;
 
-	private String seatClass;
-	private String seatNo;
+	private String goSeatClass;
+	private String backSeatClass;
+	private String goSeatNo;
+	private String backSeatNo;
 
 	private int baggageKg;
 
@@ -25,6 +27,17 @@ public class ReservationDTO {
 
 	private String bookStatus;
 
+	private String backFlightId;
+	
+
+
+	public String getBackFlightId() {
+	    return backFlightId;
+	}
+
+	public void setBackFlightId(String backFlightId) {
+	    this.backFlightId = backFlightId;
+	}
 	// getter setter
 
 	public String getBookStatus() {
@@ -107,22 +120,6 @@ public class ReservationDTO {
 		this.passengerCount = passengerCount;
 	}
 
-	public String getSeatClass() {
-		return seatClass;
-	}
-
-	public void setSeatClass(String seatClass) {
-		this.seatClass = seatClass;
-	}
-
-	public String getSeatNo() {
-		return seatNo;
-	}
-
-	public void setSeatNo(String seatNo) {
-		this.seatNo = seatNo;
-	}
-
 	public int getBaggageKg() {
 		return baggageKg;
 	}
@@ -137,5 +134,37 @@ public class ReservationDTO {
 
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public String getBackSeatNo() {
+		return backSeatNo;
+	}
+
+	public void setBackSeatNo(String backSeatNo) {
+		this.backSeatNo = backSeatNo;
+	}
+
+	public String getBackSeatClass() {
+		return backSeatClass;
+	}
+
+	public void setBackSeatClass(String backSeatClass) {
+		this.backSeatClass = backSeatClass;
+	}
+
+	public String getGoSeatClass() {
+		return goSeatClass;
+	}
+
+	public void setGoSeatClass(String goSeatClass) {
+		this.goSeatClass = goSeatClass;
+	}
+
+	public String getGoSeatNo() {
+		return goSeatNo;
+	}
+
+	public void setGoSeatNo(String goSeatNo) {
+		this.goSeatNo = goSeatNo;
 	}
 }

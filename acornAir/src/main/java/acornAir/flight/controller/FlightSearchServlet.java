@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import acornAir.flight.dao.FlightDAO;
 import acornAir.flight.dto.FlightDTO;
-import 예약.ReservationDAO;
+import acornAir.reservation.dao.ReservationDAO;
 
 @WebServlet("/home")
 public class FlightSearchServlet extends HttpServlet {
