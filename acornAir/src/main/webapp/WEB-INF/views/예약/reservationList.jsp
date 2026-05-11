@@ -86,34 +86,6 @@ body {
 	cursor: pointer;
 }
 
-.search-area {
-	margin-left: auto;
-	display: flex;
-	gap: 12px;
-}
-
-.search-area input {
-	width: 260px;
-	height: 38px;
-	border: 1px solid #ccd3df;
-	border-radius: 20px;
-	padding: 0 18px;
-}
-
-.search-area button {
-	width: 90px;
-	height: 40px;
-	border: 1px solid #ccd3df;
-	border-radius: 20px;
-	background: white;
-	cursor: pointer;
-}
-
-.search-area button:hover {
-	background: #0064de;
-	color: white;
-}
-
 .nav-menu {
 	display: flex;
 	gap: 35px;
@@ -146,6 +118,9 @@ body {
 	background: #001b66;
 }
 
+.reservation-card {
+	margin-bottom: 30px;
+}
 /* 드롭다운 전체 */
 .mega-menu {
 	display: none;
@@ -319,114 +294,125 @@ a {
 					</div>
 				</li>
 			</ul>
-
-			<div class="search-area">
-				<input type="text" placeholder="궁금한 것을 검색해보세요">
-				<button>로그인</button>
-			</div>
 		</nav>
 	</header>
 
 	<%
-ArrayList<ReservationDTO> list =
-    (ArrayList<ReservationDTO>) request.getAttribute("reservationList");
-%>
+	ArrayList<ReservationDTO> list = (ArrayList<ReservationDTO>) request.getAttribute("reservationList");
+	%>
 
-<div class="reservation-wrap">
+	<div class="reservation-wrap">
 
-    <h1>예약 내역</h1>
+		<h1>예약 내역</h1>
 
-    <%
-    if (list == null || list.isEmpty()) {
-    %>
+		<%
+		if (list == null || list.isEmpty()) {
+		%>
 
-        <div class="empty-box">
-            예약 내역이 없습니다.
-        </div>
+		<div class="empty-box">예약 내역이 없습니다.</div>
 
-    <%
-    } else {
-        for (ReservationDTO r : list) {
-    %>
+		<%
+		} else {
+		for (ReservationDTO r : list) {
+		%>
 
-    <div class="reservation-card">
+		<div class="reservation-card">
 
-        <div class="reservation-top">
-            <strong>예약번호 : R<%=r.getBookingId()%></strong>
-            <span class="status">
-                <%="Y".equals(r.getBookStatus()) ? "예약완료" : "예약취소"%>
-            </span>
-        </div>
+			<div class="reservation-top">
+				<strong>예약번호 : R<%=r.getBookingId()%></strong> <span class="status">
+					<%="Y".equals(r.getBookStatus()) ? "예약완료" : "예약취소"%>
+				</span>
+			</div>
 
-        <div class="info-row">
-            <strong>이름</strong>
-            <span><%=r.getUserName()%></span>
-        </div>
+			<div class="info-row">
+				<strong>이름</strong> <span><%=r.getUserName()%></span>
+			</div>
 
-        <div class="flight-section">
-            <div class="flight-box">
-                <h3>가는편 정보</h3>
-                <p><%=r.getGoDep()%> → <%=r.getGoArr()%></p>
-                <p><%=r.getGoDate()%></p>
-            </div>
+			<div class="flight-section">
+				<div class="flight-box">
+					<h3>가는편 정보</h3>
+					<p><%=r.getGoDep()%>
+						→
+						<%=r.getGoArr()%></p>
+					<p><%=r.getGoDate()%></p>
+					<p>
+						좌석 등급 :
+						<%=r.getGoSeatClass()%></p>
+					<p>
+						좌석 번호 :
+						<%=(r.getGoSeatNo() != null ? r.getGoSeatNo() : "-")%></p>
+				</div>
+				<%
+				if (r.getBackFlightId() != null && !r.getBackFlightId().trim().equals("")) {
+				%>
+				<div class="flight-box">
+					<h3>오는편 정보</h3>
+					<p><%=r.getBackDep()%>
+						→
+						<%=r.getBackArr()%></p>
+					<p><%=r.getBackDate()%></p>
+					<p>
+						좌석 등급 :
+						<%=r.getBackSeatClass()%></p>
+					<p>
+						좌석 번호 :
+						<%=(r.getBackSeatNo() != null ? r.getBackSeatNo() : "-")%></p>
+				</div>
+				<%
+				}
+				%>
+			</div>
 
-            <div class="flight-box">
-                <h3>오는편 정보</h3>
-                <p><%=r.getBackDep()%> → <%=r.getBackArr()%></p>
-                <p><%=r.getBackDate()%></p>
-            </div>
-        </div>
+			<div class="detail-section">
 
-        <div class="detail-section">
+				<div class="detail-box">
+					<span class="label">탑승객 수</span> <span class="value">성인 <%=r.getPassengerCount()%>명
+					</span>
+				</div>
 
-            <div class="detail-box">
-                <span class="label">탑승객 수</span>
-                <span class="value">성인 <%=r.getPassengerCount()%>명</span>
-            </div>
 
-            <div class="detail-box">
-                <span class="label">좌석 등급</span>
-                <span class="value"><%=r.getSeatClass()%></span>
-            </div>
 
-            <div class="detail-box">
-                <span class="label">좌석 번호</span>
-                <span class="value"><%=r.getSeatNo() != null ? r.getSeatNo() : "-"%></span>
-            </div>
+				<div class="detail-box">
+					<span class="label">추가 수하물</span> <span class="value"><%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "개" : "없음"%></span>
 
-            <div class="detail-box">
-                <span class="label">추가 수하물</span>
- 
-                <span class="value"><%=r.getBaggageKg() > 0 ? r.getBaggageKg() + "개" : "없음"%></span>
- 
-            </div>
+				</div>
 
-            <div class="detail-box total-price">
-                <span class="label">총 결제 금액</span>
-                <span class="value"><%=String.format("%,d", r.getTotalPrice())%>원</span>
-            </div>
+				<div class="detail-box total-price">
+					<span class="label">총 결제 금액</span> <span class="value"><%=String.format("%,d", r.getTotalPrice())%>원</span>
+				</div>
 
-        </div>
+			</div>
 
-        <div class="btn-area">
-            <form action="<%=request.getContextPath()%>/reservation/cancel"
-                  method="post">
-                <input type="hidden" name="bookingId"
-                       value="<%=r.getBookingId()%>">
+			<div class="btn-area">
+				<form action="<%=request.getContextPath()%>/reservation/cancel"
+					method="post" onsubmit="return confirmCancel();">
 
-                <button type="submit" class="cancel-btn">
-                    예약 취소
-                </button>
-            </form>
-        </div>
+					<input type="hidden" name="bookingId" value="<%=r.getBookingId()%>">
 
-    </div>
+					<button type="submit" class="cancel-btn">예약 취소</button>
+				</form>
+			</div>
 
-    <%
-        }
-    }
-    %>
+		</div>
 
-</div>
+		<%
+		}
+		}
+		%>
+
+	</div>
 </body>
+<script>
+	function confirmCancel() {
+
+		const result = confirm("예약을 취소하시겠습니까?");
+
+		if (result) {
+			alert("예약이 취소되었습니다.");
+			return true;
+		}
+
+		return false;
+	}
+</script>
 </html>
