@@ -7,7 +7,7 @@ body {
   font-size: 14px;
 }
 
-/* ── 상단 진행 표시 ── */
+/* /* ── 상단 진행 표시 ── */
 .progress-bar {
   display: flex;
   justify-content: flex-end;
@@ -42,7 +42,7 @@ body {
   border-color: #00256C;
   color: #fff;
 }
-.progress-bar .step.active > span { color: #00256C; font-weight: 700; }
+.progress-bar .step.active > span { color: #00256C; font-weight: 700; } */
 
 /* ── 메인 레이아웃 ── */
 .container {

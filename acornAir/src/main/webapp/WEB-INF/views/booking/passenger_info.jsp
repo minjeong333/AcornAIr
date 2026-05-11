@@ -10,6 +10,7 @@ boolean passengerDone = session.getAttribute("passengers") != null;
 boolean contactDone = session.getAttribute("contactPhone") != null;
 boolean seatDone = session.getAttribute("goSeats") != null;
 boolean baggageDone = session.getAttribute("bags") != null;
+
 FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
 String goSeatClass = (String) session.getAttribute("goSeatClass");
@@ -36,9 +37,13 @@ if (backFlight != null) {
 }
 farePrice *= passCnt;
 
-int fuelSurcharge = 114000;
-int tax = 63000;
-int baseTotal = farePrice + fuelSurcharge + tax;
+// int fuelSurcharge = 114000;
+// int tax = 63000;
+int baseTotal = farePrice;
+// ※ 유류할증료·세금 복원 시 위 3줄을 아래로 교체
+// int fuelSurcharge = 114000;
+// int tax = 63000;
+// int baseTotal = farePrice + fuelSurcharge + tax;
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -56,7 +61,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
-	<!-- 진행 표시 -->
+	<!-- 	<!-- 상단 진행 표시 -->
 	<div class="progress-bar">
 		<div class="step done">
 			<div class="circle">✓</div>
@@ -71,6 +76,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			<span>결제</span>
 		</div>
 	</div>
+	-->
 
 	<!-- 메인 컨테이너 -->
 	<div class="container">
@@ -155,15 +161,9 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 					<%
 					for (int i = 0; i < passCnt; i++) {
-						String lastVal = (i == 0 && loginUser != null && loginUser.getEngLastName() != null)
-						? loginUser.getEngLastName()
-						: "";
-						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null)
-						? loginUser.getEngFirstName()
-						: "";
-						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate() != null)
-						? birthFmt.format(loginUser.getBirthDate())
-						: "";
+						String lastVal = (i == 0 && loginUser != null && loginUser.getEngLastName() != null) ? loginUser.getEngLastName(): "";
+						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null)? loginUser.getEngFirstName(): "";
+						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate() != null)? birthFmt.format(loginUser.getBirthDate()): "";
 						String genderVal = (i == 0 && loginUser != null && loginUser.getGender() != null) ? loginUser.getGender() : "F";
 					%>
 					<div class="accordion">
@@ -250,6 +250,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 								<div class="country-row">
 									<button class="btn-country">국가번호</button>
 									<input class="form-input" type="text"
+									name="contactPhone"
 										value="${loginUser.phoneCountry}" style="max-width: 60px;" />
 								</div>
 							</div>
@@ -257,7 +258,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 								<div class="form-label">
 									휴대전화 번호 <span class="req">*</span>
 								</div>
-								<input class="form-input" type="text" name="contactPhone"
+								<input class="form-input" type="text"
 									value="${loginUser.userPhone}" style="color: #0066cc;" />
 							</div>
 						</div>
@@ -268,7 +269,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 								<div class="form-label">
 									이메일 <span class="req">*</span>
 								</div>
-								<input class="form-input" type="email" name="contactEmail"
+								<input class="form-input" type="email"
+								name="contactEmail"
 									value="${loginUser.userEmail}" style="color: #0066cc;" />
 							</div>
 							<div>
@@ -404,14 +406,12 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				<div class="price-row">
 					<span>운임</span> <span><%=String.format("%,d", farePrice)%> 원</span>
 				</div>
-				<div class="price-row">
-					<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
-						원</span>
+				<%-- <div class="price-row">
+					<span>유류할증료</span> <span>원</span>
 				</div>
 				<div class="price-row">
-					<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
-						원</span>
-				</div>
+					<span>세금, 수수료 및 기타 요금</span> <span>원</span>
+				</div> --%>
 				<div id="extraBaggageRow" class="price-row" style="display: none;">
 					<span id="extraBaggageLabel">초과 수하물</span> <span
 						id="extraBaggagePrice">0 원</span>
@@ -470,7 +470,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		applyPriceView();
 	</script>
-	<script>
+		<script>
 		window.stepState = {
 			passenger :
 	<%=passengerDone%>
@@ -605,14 +605,18 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 							<span>운임</span> <span><%=String.format("%,d", farePrice)%>
 								원</span>
 						</div>
-						<div class="modal-fee-row">
+
+						<!-- !!!!! 세금 부분 일단 주석처리 -->
+						<%-- <div class="modal-fee-row">
 							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
 								원</span>
 						</div>
 						<div class="modal-fee-row">
 							<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
 								원</span>
-						</div>
+						</div> --%>
+
+
 						<div class="modal-fee-total">
 							<span>소계</span> <span><%=String.format("%,d", baseTotal)%>
 								원</span>
@@ -667,14 +671,12 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 							<span>항공권 운임</span> <span><%=String.format("%,d", farePrice)%>
 								원</span>
 						</div>
-						<div class="modal-fee-row">
-							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
-								원</span>
+						<%-- <div class="modal-fee-row">
+							<span>유류할증료</span> <span>원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금 및 수수료</span> <span><%=String.format("%,d", tax)%>
-								원</span>
-						</div>
+							<span>세금 및 수수료</span> <span>원</span>
+						</div> --%>
 						<div class="modal-fee-row" id="summaryBaggageRow"
 							style="display: none;">
 							<span id="summaryBaggageLabel">초과 수하물</span> <span
@@ -739,7 +741,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		function openPayModal() {
 			if (!checkStepBeforePay())
 				return;
-
 			var modal = document.getElementById('payModal');
 			var t = serverTotal;
 			var b = serverBags;
@@ -834,7 +835,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		function openSeatModal() {
 			if (!checkStepBeforeSeat())
 				return;
-
 			document.getElementById('seatFrame').src = '${pageContext.request.contextPath}/air/booking/seatSelect';
 			document.getElementById('seatModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
@@ -851,7 +851,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		function openBaggageModal() {
 			if (!checkStepBeforeBaggage())
 				return;
-
 			document.getElementById('baggageFrame').src = '${pageContext.request.contextPath}/air/booking/payment';
 			document.getElementById('baggageModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';

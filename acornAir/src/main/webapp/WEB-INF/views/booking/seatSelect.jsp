@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
 <%
     String tripType      = (String) session.getAttribute("tripType");
     String goSeatClass   = (String) session.getAttribute("goSeatClass");
@@ -13,6 +14,28 @@
     boolean isBackBusiness = "C".equals(backSeatClass);
 
     String[] cols = {"A", "B", "C", "D", "E", "F"};
+
+    @SuppressWarnings("unchecked")
+    List<String> goBookedSeats   = (List<String>) request.getAttribute("goBookedSeats");
+    @SuppressWarnings("unchecked")
+    List<String> backBookedSeats = (List<String>) request.getAttribute("backBookedSeats");
+    if (goBookedSeats == null)   goBookedSeats   = new java.util.ArrayList<>();
+    if (backBookedSeats == null) backBookedSeats = new java.util.ArrayList<>();
+
+    // JS에 전달할 JSON 배열 문자열 생성
+    StringBuilder goBookedJson = new StringBuilder("[");
+    for (int k = 0; k < goBookedSeats.size(); k++) {
+        if (k > 0) goBookedJson.append(",");
+        goBookedJson.append("\"").append(goBookedSeats.get(k)).append("\"");
+    }
+    goBookedJson.append("]");
+
+    StringBuilder backBookedJson = new StringBuilder("[");
+    for (int k = 0; k < backBookedSeats.size(); k++) {
+        if (k > 0) backBookedJson.append(",");
+        backBookedJson.append("\"").append(backBookedSeats.get(k)).append("\"");
+    }
+    backBookedJson.append("]");
 %>
 <!DOCTYPE html>
 <html>
@@ -47,15 +70,23 @@
                     <span>B</span><span>C</span><span></span>
                     <span>D</span><span></span>
                 </div>
-                <% for (int i = 1; i <= 5; i++) { %>
+                <% for (int i = 1; i <= 5; i++) {
+                    String[] bizCols = {"A","B","C","D"};
+                %>
                 <div class="seat-row business">
                     <span class="row-num"><%=i%></span>
-                    <button class="seat business-seat" data-seat="<%=i%>A"><%=i%>A</button>
-                    <div class="business-aisle"></div>
-                    <button class="seat business-seat" data-seat="<%=i%>B"><%=i%>B</button>
-                    <button class="seat business-seat" data-seat="<%=i%>C"><%=i%>C</button>
-                    <div class="business-aisle"></div>
-                    <button class="seat business-seat" data-seat="<%=i%>D"><%=i%>D</button>
+                    <% for (int j = 0; j < bizCols.length; j++) {
+                        String seatId = i + bizCols[j];
+                        boolean booked = goBookedSeats.contains(seatId);
+                        if (j == 1) { %><div class="business-aisle"></div><% }
+                        if (j == 3) { %><div class="business-aisle"></div><% }
+                    %>
+                    <button class="seat business-seat<%= booked ? " disabled" : "" %>"
+                            data-seat="<%=seatId%>"
+                            <%= booked ? "disabled" : "" %>>
+                        <%= booked ? "✕" : (i + bizCols[j]) %>
+                    </button>
+                    <% } %>
                     <span class="row-num"><%=i%></span>
                 </div>
                 <% } %>
@@ -71,8 +102,15 @@
                 <div class="seat-row">
                     <span class="row-num"><%=i%></span>
                     <% for (int j = 0; j < cols.length; j++) {
-                        if (j == 3) { %><div class="aisle"></div><% } %>
-                    <button class="seat" data-seat="<%=i%><%=cols[j]%>"><%=cols[j]%></button>
+                        if (j == 3) { %><div class="aisle"></div><% }
+                        String seatId = i + cols[j];
+                        boolean booked = goBookedSeats.contains(seatId);
+                    %>
+                    <button class="seat<%= booked ? " disabled" : "" %>"
+                            data-seat="<%=seatId%>"
+                            <%= booked ? "disabled" : "" %>>
+                        <%= booked ? "✕" : cols[j] %>
+                    </button>
                     <% } %>
                     <span class="row-num"><%=i%></span>
                 </div>
@@ -89,15 +127,23 @@
                     <span>B</span><span>C</span><span></span>
                     <span>D</span><span></span>
                 </div>
-                <% for (int i = 1; i <= 5; i++) { %>
+                <% for (int i = 1; i <= 5; i++) {
+                    String[] bizCols = {"A","B","C","D"};
+                %>
                 <div class="seat-row business">
                     <span class="row-num"><%=i%></span>
-                    <button class="seat business-seat" data-seat="<%=i%>A"><%=i%>A</button>
-                    <div class="business-aisle"></div>
-                    <button class="seat business-seat" data-seat="<%=i%>B"><%=i%>B</button>
-                    <button class="seat business-seat" data-seat="<%=i%>C"><%=i%>C</button>
-                    <div class="business-aisle"></div>
-                    <button class="seat business-seat" data-seat="<%=i%>D"><%=i%>D</button>
+                    <% for (int j = 0; j < bizCols.length; j++) {
+                        String seatId = i + bizCols[j];
+                        boolean booked = backBookedSeats.contains(seatId);
+                        if (j == 1) { %><div class="business-aisle"></div><% }
+                        if (j == 3) { %><div class="business-aisle"></div><% }
+                    %>
+                    <button class="seat business-seat<%= booked ? " disabled" : "" %>"
+                            data-seat="<%=seatId%>"
+                            <%= booked ? "disabled" : "" %>>
+                        <%= booked ? "✕" : (i + bizCols[j]) %>
+                    </button>
+                    <% } %>
                     <span class="row-num"><%=i%></span>
                 </div>
                 <% } %>
@@ -113,8 +159,15 @@
                 <div class="seat-row">
                     <span class="row-num"><%=i%></span>
                     <% for (int j = 0; j < cols.length; j++) {
-                        if (j == 3) { %><div class="aisle"></div><% } %>
-                    <button class="seat" data-seat="<%=i%><%=cols[j]%>"><%=cols[j]%></button>
+                        if (j == 3) { %><div class="aisle"></div><% }
+                        String seatId = i + cols[j];
+                        boolean booked = backBookedSeats.contains(seatId);
+                    %>
+                    <button class="seat<%= booked ? " disabled" : "" %>"
+                            data-seat="<%=seatId%>"
+                            <%= booked ? "disabled" : "" %>>
+                        <%= booked ? "✕" : cols[j] %>
+                    </button>
                     <% } %>
                     <span class="row-num"><%=i%></span>
                 </div>
@@ -150,7 +203,9 @@
     <button type="button" class="bottom-next-btn" id="bottomNextBtn">다음</button>
 
 <script>
-    const IS_ROUND_TRIP = <%= isRoundTrip %>;
+    const IS_ROUND_TRIP   = <%= isRoundTrip %>;
+    const GO_BOOKED       = <%= goBookedJson %>;
+    const BACK_BOOKED     = <%= backBookedJson %>;
 
     const selectedSeatsBox = document.getElementById("selectedSeats");
     const nextBtn          = document.getElementById("nextBtn");
@@ -162,6 +217,7 @@
     // 좌석 클릭 핸들러 (모든 좌석에 등록)
     document.querySelectorAll(".seat").forEach(function(seat) {
         seat.addEventListener("click", function() {
+            if (seat.classList.contains("disabled")) return;
             const seatName = seat.dataset.seat;
             const area     = seat.closest("[id^='seat-area-']");
             const trip     = area ? area.id.replace("seat-area-", "") : "go";

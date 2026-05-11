@@ -64,6 +64,9 @@ public class PassengerServlet extends HttpServlet {
 
 			passengers.add(p);
 		}
+		
+		String contactPhone = req.getParameter("contactPhone");
+		String contactEmail = req.getParameter("contactEmail");
 
 		String contactPhone = req.getParameter("contactPhone");
 		String contactEmail = req.getParameter("contactEmail");
@@ -77,7 +80,7 @@ public class PassengerServlet extends HttpServlet {
 		if (contactEmail != null && !contactEmail.trim().isEmpty()) {
 			session.setAttribute("contactEmail", contactEmail.trim());
 		}
-
+		
 		resp.sendRedirect(req.getContextPath() + "/air/booking/passenger");
 	}
 }

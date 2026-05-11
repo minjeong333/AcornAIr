@@ -101,53 +101,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 연락처 확인 버튼 클릭 → 승객/연락처 form 제출
-	// 연락처 확인 버튼 클릭 → 폼 제출
-	var btnContactConfirm = document.getElementById('btn-contact-confirm');
+    // 연락처 확인 버튼 클릭 → 폼 제출
+    var btnContactConfirm = document.getElementById('btn-contact-confirm');
 
-	if (btnContactConfirm && btnConfirm) {
-	  btnContactConfirm.addEventListener('click', function () {
+    if (btnContactConfirm && btnConfirm) {
+        btnContactConfirm.addEventListener('click', function() {
 
-	    if (!window.stepState.passenger) {
-	      alert('먼저 승객정보 확인 버튼을 눌러주세요.');
-	      return;
-	    }
+            if (!window.stepState.passenger) {
+                alert('먼저 승객정보 확인 버튼을 눌러주세요.');
+                return;
+            }
 
-	    var phoneInput = document.querySelector('input[name="contactPhone"]');
-	    var emailInput = document.querySelector('input[name="contactEmail"]');
+            var phoneInput = document.querySelector('input[name="contactPhone"]');
+            var emailInput = document.querySelector('input[name="contactEmail"]');
 
-	    if (phoneInput && phoneInput.value.trim() === '') {
-	      alert('휴대전화 번호를 입력해주세요.');
-	      phoneInput.focus();
-	      return;
-	    }
+            if (phoneInput && phoneInput.value.trim() === '') {
+                alert('휴대전화 번호를 입력해주세요.');
+                phoneInput.focus();
+                return;
+            }
 
-	    if (emailInput && emailInput.value.trim() === '') {
-	      alert('이메일을 입력해주세요.');
-	      emailInput.focus();
-	      return;
-	    }
+            if (emailInput && emailInput.value.trim() === '') {
+                alert('이메일을 입력해주세요.');
+                emailInput.focus();
+                return;
+            }
 
-	    var form = btnConfirm.closest('form');
-	    if (!form) return;
+            var form = btnConfirm.closest('form');
+            if (!form) return;
 
-	    // 연락처 input이 form 밖에 있으므로 hidden으로 복사해서 전송
-	    var hiddenPhone = document.createElement('input');
-	    hiddenPhone.type = 'hidden';
-	    hiddenPhone.name = 'contactPhone';
-	    hiddenPhone.value = phoneInput ? phoneInput.value.trim() : '';
+            // 연락처 input이 form 밖에 있으므로 hidden으로 복사해서 전송
+            var hiddenPhone = document.createElement('input');
+            hiddenPhone.type = 'hidden';
+            hiddenPhone.name = 'contactPhone';
+            hiddenPhone.value = phoneInput ? phoneInput.value.trim() : '';
 
-	    var hiddenEmail = document.createElement('input');
-	    hiddenEmail.type = 'hidden';
-	    hiddenEmail.name = 'contactEmail';
-	    hiddenEmail.value = emailInput ? emailInput.value.trim() : '';
+            var hiddenEmail = document.createElement('input');
+            hiddenEmail.type = 'hidden';
+            hiddenEmail.name = 'contactEmail';
+            hiddenEmail.value = emailInput ? emailInput.value.trim() : '';
 
-	    form.appendChild(hiddenPhone);
-	    form.appendChild(hiddenEmail);
+            form.appendChild(hiddenPhone);
+            form.appendChild(hiddenEmail);
 
-	    window.stepState.contact = true;
-	    form.submit();
-	  });
+            window.stepState.contact = true;
+            form.submit();
+        });
     }
 
     // 수하물 정보 아코디언 토글

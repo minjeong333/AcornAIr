@@ -118,7 +118,8 @@ body {
 
 .seat:hover { border-color: #001b66; color: #001b66; }
 .seat.active { background: #001b66; color: #fff; border-color: #001b66; }
-.seat.disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
+.seat.disabled, .seat:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; border-color: #ccc; }
+.seat.disabled:hover, .seat:disabled:hover { border-color: #ccc; color: #999; }
 
 .aisle { width: 20px; }
 
@@ -143,6 +144,8 @@ body {
 
 .business-seat:hover { border-color: #001b66; color: #001b66; }
 .business-seat.active { background: #001b66; color: #fff; border-color: #001b66; }
+.business-seat.disabled, .business-seat:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; border-color: #ccc; }
+.business-seat.disabled:hover, .business-seat:disabled:hover { border-color: #ccc; color: #999; }
 .business-aisle { width: 30px; }
 
 /* ── 우측 정보 패널 ── */

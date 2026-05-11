@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import acornAir.booking.dto.BaggageDTO;
@@ -72,7 +73,22 @@ public class BookingDAO {
 		}
 	}
 
-	// 3. 좌석 중복 확인
+	// 3. 항공편의 예약된 좌석 목록 조회
+	public List<String> getBookedSeats(int flightId, Connection con) throws SQLException {
+		String sql = "SELECT SEAT_NO FROM TB_SEAT WHERE FLIGHT_ID = ?";
+		List<String> seats = new ArrayList<>();
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setInt(1, flightId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					seats.add(rs.getString("SEAT_NO"));
+				}
+			}
+		}
+		return seats;
+	}
+
+	// 4. 좌석 중복 확인
 	public boolean isSeatAlreadyBooked(int flightId, String seatNo, Connection con) throws SQLException {
 		String sql = "SELECT COUNT(*) FROM TB_SEAT " + "WHERE FLIGHT_ID = ? AND SEAT_NO = ?";
 

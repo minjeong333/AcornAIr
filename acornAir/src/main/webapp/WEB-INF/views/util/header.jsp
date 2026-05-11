@@ -44,27 +44,14 @@ UserDTO loginUser =
     예약
     <div class="mega-menu">
       <div class="mega-col">
-        <p><a href="/prj_2조/res">항공권 예매</a></p>
-        <p>예약 조회</p>
+        <p><a href="${pageContext.request.contextPath}/res">항공권 예매</a></p>
+        <p><a href="${pageContext.request.contextPath}/reservation/list">예약 조회</a></p>
       </div>
     </div>
   </li>
 
-  <li class="nav-item">
-    부가서비스 신청
-    <div class="mega-menu">
-      <div class="mega-col">
-        <p>좌석 배정</p>
-        <p>초과 수하물 사전 구매</p>
-      </div>
-    </div>
-  </li>
 </ul>
 
-    <div class="search-area">
-      <input type="text" placeholder="궁금한 것을 검색해보세요">
-      <button>로그인</button>
-    </div>
   </nav>
 </header>
 

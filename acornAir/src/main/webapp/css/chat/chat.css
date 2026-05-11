@@ -248,3 +248,49 @@
   text-align: center;
   margin-top: 15px;
 }
+/* --- 기존 .chat-popup 스타일에 추가/수정 --- */
+.chat-popup {
+  /* ... 기존 설정 유지 ... */
+  transition: all 0.3s ease-in-out;
+  transform-origin: bottom right; /* 우측 하단에서 커지도록 설정 */
+  z-index: 1001;
+}
+
+/* 팝업 숨김 상태 */
+.chat-popup.hidden {
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+/* 새로 추가하는 AI 챗봇 버튼 스타일 */
+.chat-trigger-btn {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6a5af9, #2d79f3); /* 이미지와 유사한 그라데이션 */
+  color: white;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  z-index: 1000;
+  font-family: sans-serif;
+}
+
+.chat-trigger-btn:hover {
+  transform: scale(1.05);
+}
+
+.chat-trigger-btn .icon {
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+
+.chat-trigger-btn .text {
+  font-weight: 600;
+  font-size: 15px;
+}

@@ -45,7 +45,7 @@ public class ReservationListServlet extends HttpServlet {
         req.setAttribute("reservationList", list);
 
         req.getRequestDispatcher(
-                "/WEB-INF/views/예약/reservationList.jsp")
+                "/WEB-INF/views/reservation/reservationList.jsp")
                 .forward(req, resp);
     }
 }

@@ -73,34 +73,6 @@ body {
   border-radius: 50%;
 }
 
-/* ── 검색 영역 ── */
-.search-area {
-  margin-left: auto;
-  display: flex;
-  gap: 12px;
-}
-
-.search-area input {
-  width: 260px;
-  height: 38px;
-  border: 1px solid #ccd3df;
-  border-radius: 20px;
-  padding: 0 18px;
-}
-
-.search-area button {
-  width: 90px;
-  height: 40px;
-  border: 1px solid #ccd3df;
-  border-radius: 20px;
-  background: white;
-  cursor: pointer;
-}
-
-.search-area button:hover {
-  background: #0064de;
-  color: white;
-}
 
 /* ── 내비 메뉴 ── */
 .nav-menu {
@@ -208,15 +180,6 @@ body {
     font-size: 15px;
   }
 
-  .search-area {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .search-area input {
-    width: 100%;
-    box-sizing: border-box;
-  }
 }
 
 @media (max-width: 600px) {
@@ -236,13 +199,5 @@ body {
   .main-nav ul {
     gap: 18px;
     font-size: 14px;
-  }
-
-  .search-area {
-    flex-direction: column;
-  }
-
-  .search-area button {
-    width: 100%;
   }
 }
