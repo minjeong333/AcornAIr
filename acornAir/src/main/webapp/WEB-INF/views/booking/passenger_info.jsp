@@ -8,11 +8,13 @@
 <%
 FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
-String seatClass = (String) session.getAttribute("seatClass");
+String goSeatClass = (String) session.getAttribute("goSeatClass");
+String backSeatClass = (String) session.getAttribute("backSeatClass");
 String tripType = (String) session.getAttribute("tripType");
 int passCnt = session.getAttribute("passCnt") != null ? (Integer) session.getAttribute("passCnt") : 1;
 
-String seatLabel = "C".equals(seatClass) ? "비즈니스석" : "일반석";
+String goSeatLabel = "C".equals(goSeatClass) ? "비즈니스석" : "일반석";
+String backSeatLabel = "C".equals(backSeatClass) ? "비즈니스석" : "일반석";
 boolean isRoundTrip = "RT".equals(tripType);
 
 SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy년 M월 dd일 (E)", new Locale("ko"));
@@ -23,10 +25,10 @@ UserDTO loginUser = (UserDTO) request.getAttribute("loginUser");
 // 운임 계산
 int farePrice = 0;
 if (goFlight != null) {
-	farePrice += "C".equals(seatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
+	farePrice += "C".equals(goSeatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
 }
 if (backFlight != null) {
-	farePrice += "C".equals(seatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
+	farePrice += "C".equals(backSeatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
 }
 farePrice *= passCnt;
 
@@ -85,7 +87,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			<div class="flight-card">
 				<div>
 					<div class="flight-label">가는 편</div>
-					<div class="flight-type"><%=seatLabel%></div>
+					<div class="flight-type"><%=goSeatLabel%></div>
 				</div>
 				<div>
 					<div class="flight-route">
@@ -111,7 +113,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			<div class="flight-card">
 				<div>
 					<div class="flight-label">오는 편</div>
-					<div class="flight-type"><%=seatLabel%></div>
+					<div class="flight-type"><%=backSeatLabel%></div>
 				</div>
 				<div>
 					<div class="flight-route">
