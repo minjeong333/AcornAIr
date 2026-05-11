@@ -16,7 +16,6 @@ public class FlightDAO {
 	String user = "scott";
 	String password = "tiger";
 
-	// lib -> ojdbc8.jar enrl
 	public Connection dbcon() {
 		Connection con = null;
 
@@ -24,12 +23,11 @@ public class FlightDAO {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, user, password);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return con;
 	}
 
@@ -39,12 +37,11 @@ public class FlightDAO {
 		ResultSet rs = null;
 		FlightDTO dto = null;
 
-		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO, "
-				+ "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
+		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO, " + "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
 				+ "A1.AIRPORT_NAME AS DEP_NAME, A2.AIRPORT_NAME AS ARR_NAME, "
-				+ "Y.DEP_TIME, Y.ARR_TIME, Y.PRICE AS Y_PRICE, C.PRICE AS C_PRICE "
-				+ "FROM TB_FLIGHT Y "
-				+ "JOIN TB_FLIGHT C ON Y.FLIGHT_NO = C.FLIGHT_NO AND Y.DEP_TIME = C.DEP_TIME AND C.SEAT_CLASS = 'C' "
+				+ "Y.DEP_TIME, Y.ARR_TIME, Y.PRICE AS Y_PRICE, C.PRICE AS C_PRICE " + "FROM TB_FLIGHT Y "
+				+ "JOIN TB_FLIGHT C ON Y.FLIGHT_NO = C.FLIGHT_NO "
+				+ "AND Y.DEP_TIME = C.DEP_TIME AND C.SEAT_CLASS = 'C' "
 				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
 				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE "
 				+ "WHERE Y.SEAT_CLASS = 'Y' AND Y.FLIGHT_ID = ?";
@@ -54,6 +51,7 @@ public class FlightDAO {
 			pst = con.prepareStatement(sql);
 			pst.setInt(1, flightId);
 			rs = pst.executeQuery();
+
 			if (rs.next()) {
 				dto = new FlightDTO();
 				dto.setFlightId(rs.getInt(1));
@@ -70,10 +68,23 @@ public class FlightDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try { if (rs != null) rs.close(); } catch (Exception e) {}
-			try { if (pst != null) pst.close(); } catch (Exception e) {}
-			try { if (con != null) con.close(); } catch (Exception e) {}
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
 		}
+
 		return dto;
 	}
 
@@ -85,19 +96,17 @@ public class FlightDAO {
 
 		ArrayList<FlightDTO> list = new ArrayList<>();
 
-		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO,\r\n" + "       Y.DEP_AIRPORT, Y.ARR_AIRPORT,\r\n"
-				+ "       A1.AIRPORT_NAME AS DEP_NAME,\r\n" + "       A2.AIRPORT_NAME AS ARR_NAME,\r\n"
-				+ "       Y.DEP_TIME, Y.ARR_TIME,\r\n" + "       Y.PRICE AS Y_PRICE,\r\n"
-				+ "       C.PRICE AS C_PRICE\r\n" + "FROM TB_FLIGHT Y\r\n" + "JOIN TB_FLIGHT C\r\n"
-				+ "  ON Y.FLIGHT_NO = C.FLIGHT_NO\r\n" + "  AND Y.DEP_TIME = C.DEP_TIME\r\n"
-				+ "  AND C.SEAT_CLASS = 'C'\r\n" + "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE\r\n"
-				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE\r\n" + "WHERE Y.SEAT_CLASS = 'Y'\r\n"
-				+ "  AND Y.DEP_AIRPORT = ?\r\n" + "  AND Y.ARR_AIRPORT = ?\r\n"
-				+ "  AND TRUNC(Y.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD')\r\n" + "  AND Y.REMAIN_SEAT >= ?\r\n"
+		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO, " + "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
+				+ "A1.AIRPORT_NAME AS DEP_NAME, " + "A2.AIRPORT_NAME AS ARR_NAME, " + "Y.DEP_TIME, Y.ARR_TIME, "
+				+ "Y.PRICE AS Y_PRICE, " + "C.PRICE AS C_PRICE " + "FROM TB_FLIGHT Y " + "JOIN TB_FLIGHT C "
+				+ "ON Y.FLIGHT_NO = C.FLIGHT_NO " + "AND Y.DEP_TIME = C.DEP_TIME " + "AND C.SEAT_CLASS = 'C' "
+				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
+				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE " + "WHERE Y.SEAT_CLASS = 'Y' "
+				+ "AND Y.DEP_AIRPORT = ? " + "AND Y.ARR_AIRPORT = ? "
+				+ "AND TRUNC(Y.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD') " + "AND Y.REMAIN_SEAT >= ? "
 				+ "ORDER BY Y.DEP_TIME ASC";
 
 		try {
-
 			con = dbcon();
 			pst = con.prepareStatement(sql);
 
@@ -109,47 +118,181 @@ public class FlightDAO {
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
+				FlightDTO dto = new FlightDTO();
 
-			    FlightDTO dto = new FlightDTO();
+				dto.setFlightId(rs.getInt(1));
+				dto.setFlightNo(rs.getString(2));
+				dto.setDepAirport(rs.getString(3));
+				dto.setArrAirport(rs.getString(4));
+				dto.setDepAirportName(rs.getString(5));
+				dto.setArrAirportName(rs.getString(6));
+				dto.setDepTime(rs.getDate(7));
+				dto.setArrTime(rs.getDate(8));
+				dto.setPrice(rs.getInt(9));
+				dto.setBizPrice(rs.getInt(10));
 
-			    dto.setFlightId(rs.getInt(1));
-			    dto.setFlightNo(rs.getString(2));
-
-			    dto.setDepAirport(rs.getString(3));
-			    dto.setArrAirport(rs.getString(4));
-
-			    dto.setDepAirportName(rs.getString(5));
-			    dto.setArrAirportName(rs.getString(6));
-
-			    dto.setDepTime(rs.getDate(7));
-			    dto.setArrTime(rs.getDate(8));
-
-			    dto.setPrice(rs.getInt(9));      // 일반석 가격
-			    dto.setBizPrice(rs.getInt(10));  // 비즈니스 가격
-
-			    list.add(dto);
+				list.add(dto);
 			}
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
-
 		} finally {
-
 			try {
 				if (rs != null)
 					rs.close();
+			} catch (Exception e) {
+			}
+			try {
 				if (pst != null)
 					pst.close();
+			} catch (Exception e) {
+			}
+			try {
 				if (con != null)
 					con.close();
-
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 
 		return list;
 	}
 
+	// 관리자 항공편 전체 조회
+	public ArrayList<FlightDTO> getAllFlights() {
+		ArrayList<FlightDTO> list = new ArrayList<>();
+
+		String sql = "SELECT FLIGHT_ID, FLIGHT_NO, DEP_AIRPORT, ARR_AIRPORT, "
+				+ "DEP_TIME, ARR_TIME, SEAT_CLASS, PRICE, TOTAL_SEAT, REMAIN_SEAT " + "FROM TB_FLIGHT "
+				+ "ORDER BY DEP_TIME DESC";
+
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			con = dbcon();
+			pst = con.prepareStatement(sql);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				FlightDTO dto = new FlightDTO();
+
+				dto.setFlightId(rs.getInt("FLIGHT_ID"));
+				dto.setFlightNo(rs.getString("FLIGHT_NO"));
+				dto.setDepAirport(rs.getString("DEP_AIRPORT"));
+				dto.setArrAirport(rs.getString("ARR_AIRPORT"));
+				dto.setDepTime(rs.getDate("DEP_TIME"));
+				dto.setArrTime(rs.getDate("ARR_TIME"));
+				dto.setSeatClass(rs.getString("SEAT_CLASS"));
+				dto.setPrice(rs.getInt("PRICE"));
+				dto.setTotalSeat(rs.getInt("TOTAL_SEAT"));
+				dto.setRemainSeat(rs.getInt("REMAIN_SEAT"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return list;
+	}
+
+	// 관리자 항공편 삭제
+	public int deleteFlight(int flightId) {
+		String sql = "DELETE FROM TB_FLIGHT WHERE FLIGHT_ID = ?";
+
+		Connection con = null;
+		PreparedStatement pst = null;
+		int result = 0;
+
+		try {
+			con = dbcon();
+			pst = con.prepareStatement(sql);
+			pst.setInt(1, flightId);
+
+			result = pst.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return result;
+	}
+
+	// 관리자 항공편 추가
+	public int insertFlight(FlightDTO flight) {
+
+		String sql = "INSERT INTO TB_FLIGHT " + "(FLIGHT_ID, FLIGHT_NO, DEP_AIRPORT, ARR_AIRPORT, "
+				+ "DEP_TIME, ARR_TIME, SEAT_CLASS, PRICE, TOTAL_SEAT, REMAIN_SEAT) "
+				+ "VALUES (SEQ_FLIGHT.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		Connection con = null;
+		PreparedStatement pst = null;
+		int result = 0;
+
+		try {
+			con = dbcon();
+
+			pst = con.prepareStatement(sql);
+
+			pst.setString(1, flight.getFlightNo());
+			pst.setString(2, flight.getDepAirport());
+			pst.setString(3, flight.getArrAirport());
+
+			pst.setTimestamp(4, new java.sql.Timestamp(flight.getDepTime().getTime()));
+
+			pst.setTimestamp(5, new java.sql.Timestamp(flight.getArrTime().getTime()));
+
+			pst.setString(6, flight.getSeatClass());
+			pst.setInt(7, flight.getPrice());
+			pst.setInt(8, flight.getTotalSeat());
+			pst.setInt(9, flight.getRemainSeat());
+
+			result = pst.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return result;
+	}
 }
