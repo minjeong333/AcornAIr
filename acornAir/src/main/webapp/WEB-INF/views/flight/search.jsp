@@ -10,39 +10,7 @@
 <script src="${pageContext.request.contextPath}/js/flight/search.js" defer></script>
 </head>
 <body>
-<header class="top-menu">
-	<div class="top-links">
-		<span>로그인/가입</span>
-	    <span>마이페이지</span>
-	</div>
-	<nav class="main-nav">
-    <div class="logo">✈ <strong>ACORN AIR</strong>
-    <span class="circle">S</span>
-    </div>
-    <ul class="nav-menu">
-    	<li class="nav-item"><p>예약</p>
-        	<div class="mega-menu">
-	        	<div class="mega-col">
-	        	<p><a href="/prj_2조/res">항공권 예매</a></p>
-	        	<p>예약 조회</p>
-	        	</div>
-        	</div>
-    	</li>
-      	<li class="nav-item"><p>부가서비스 신청</p>
-	      <div class="mega-menu">
-	      <div class="mega-col">
-	        <p>좌석 배정</p>
-	        <p>초과 수하물 사전 구매</p>
-	      </div>
-    		</div>
-      	</li>
-    </ul>
-    <div class="search-area">
-      <input type="text" placeholder="궁금한 것을 물어보세요">
-      <button>로그인</button>
-    </div>
-  </nav>
-</header>
+<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
 <div class="container">
 	<!-- 그라데이션 배경 바 추가 -->
