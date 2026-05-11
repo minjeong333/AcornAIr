@@ -6,6 +6,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
+boolean passengerDone = session.getAttribute("passengers") != null;
+boolean contactDone = session.getAttribute("contactPhone") != null;
+boolean seatDone = session.getAttribute("goSeats") != null;
+boolean baggageDone = session.getAttribute("bags") != null;
 FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
 String goSeatClass = (String) session.getAttribute("goSeatClass");
@@ -151,10 +155,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 					<%
 					for (int i = 0; i < passCnt; i++) {
-						String lastVal  = (i == 0 && loginUser != null && loginUser.getEngLastName()  != null) ? loginUser.getEngLastName()  : "";
-						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null) ? loginUser.getEngFirstName() : "";
-						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate()    != null) ? birthFmt.format(loginUser.getBirthDate()) : "";
-						String genderVal = (i == 0 && loginUser != null && loginUser.getGender()      != null) ? loginUser.getGender() : "F";
+						String lastVal = (i == 0 && loginUser != null && loginUser.getEngLastName() != null)
+						? loginUser.getEngLastName()
+						: "";
+						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null)
+						? loginUser.getEngFirstName()
+						: "";
+						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate() != null)
+						? birthFmt.format(loginUser.getBirthDate())
+						: "";
+						String genderVal = (i == 0 && loginUser != null && loginUser.getGender() != null) ? loginUser.getGender() : "F";
 					%>
 					<div class="accordion">
 						<div class="accordion-header">
@@ -168,8 +178,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									<div class="form-label">
 										승객 성 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="text"
-										name="engLastName_<%=i%>" value="<%=lastVal%>" required />
+									<input class="form-input" type="text" name="engLastName_<%=i%>"
+										value="<%=lastVal%>" required />
 								</div>
 								<div>
 									<div class="form-label">
@@ -188,8 +198,10 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									</div>
 									<div class="select-wrap">
 										<select class="form-select" name="gender_<%=i%>">
-											<option value="F" <%="F".equals(genderVal) ? "selected" : ""%>>여성(F)</option>
-											<option value="M" <%="M".equals(genderVal) ? "selected" : ""%>>남성(M)</option>
+											<option value="F"
+												<%="F".equals(genderVal) ? "selected" : ""%>>여성(F)</option>
+											<option value="M"
+												<%="M".equals(genderVal) ? "selected" : ""%>>남성(M)</option>
 										</select>
 									</div>
 								</div>
@@ -197,14 +209,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									<div class="form-label">
 										생년월일 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="date"
-										name="birthDate_<%=i%>" value="<%=birthVal%>" />
+									<input class="form-input" type="date" name="birthDate_<%=i%>"
+										value="<%=birthVal%>" />
 								</div>
 							</div>
 
 						</div>
 					</div>
-					<% } %>
+					<%
+					}
+					%>
 
 					<!-- 확인 버튼 (모든 승객 한 번에 제출) -->
 					<div class="btn-confirm-wrap">
@@ -243,7 +257,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 								<div class="form-label">
 									휴대전화 번호 <span class="req">*</span>
 								</div>
-								<input class="form-input" type="text"
+								<input class="form-input" type="text" name="contactPhone"
 									value="${loginUser.userPhone}" style="color: #0066cc;" />
 							</div>
 						</div>
@@ -254,7 +268,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 								<div class="form-label">
 									이메일 <span class="req">*</span>
 								</div>
-								<input class="form-input" type="email"
+								<input class="form-input" type="email" name="contactEmail"
 									value="${loginUser.userEmail}" style="color: #0066cc;" />
 							</div>
 							<div>
@@ -455,6 +469,57 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		}
 
 		applyPriceView();
+	</script>
+	<script>
+		window.stepState = {
+			passenger :
+	<%=passengerDone%>
+		,
+			contact :
+	<%=contactDone%>
+		,
+			seat :
+	<%=seatDone%>
+		,
+			baggage :
+	<%=baggageDone%>
+		};
+
+		function checkStepBeforeSeat() {
+			if (!window.stepState.passenger) {
+				alert("먼저 승객정보 확인 버튼을 눌러주세요.");
+				return false;
+			}
+			if (!window.stepState.contact) {
+				alert("먼저 연락처정보 확인 버튼을 눌러주세요.");
+				return false;
+			}
+			return true;
+		}
+
+		function checkStepBeforeBaggage() {
+			if (!window.stepState.seat) {
+				alert("먼저 좌석배정을 완료해주세요.");
+				return false;
+			}
+			return true;
+		}
+
+		function checkStepBeforePay() {
+			if (!window.stepState.passenger) {
+				alert("승객정보 확인을 먼저 진행해주세요.");
+				return false;
+			}
+			if (!window.stepState.contact) {
+				alert("연락처정보 확인을 먼저 진행해주세요.");
+				return false;
+			}
+			if (!window.stepState.seat) {
+				alert("좌석배정을 먼저 완료해주세요.");
+				return false;
+			}
+			return true;
+		}
 	</script>
 	<script
 		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=4"></script>
@@ -672,6 +737,9 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		var selectedOpt = 'opt1';
 
 		function openPayModal() {
+			if (!checkStepBeforePay())
+				return;
+
 			var modal = document.getElementById('payModal');
 			var t = serverTotal;
 			var b = serverBags;
@@ -764,6 +832,9 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		// 좌석 배정 모달
 		function openSeatModal() {
+			if (!checkStepBeforeSeat())
+				return;
+
 			document.getElementById('seatFrame').src = '${pageContext.request.contextPath}/air/booking/seatSelect';
 			document.getElementById('seatModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
@@ -778,12 +849,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		// 초과 수화물 모달
 		function openBaggageModal() {
+			if (!checkStepBeforeBaggage())
+				return;
+
 			document.getElementById('baggageFrame').src = '${pageContext.request.contextPath}/air/booking/payment';
 			document.getElementById('baggageModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
 		}
 		function closeBaggageModal(e) {
-			if (e && e.target !== document.getElementById('baggageModal')) return;
+			if (e && e.target !== document.getElementById('baggageModal'))
+				return;
 			document.getElementById('baggageModal').style.display = 'none';
 			document.getElementById('baggageFrame').src = '';
 			document.body.style.overflow = '';
@@ -797,10 +872,21 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		// iframe(payment.jsp)에서 postMessage로 수하물 데이터 수신
 		window.addEventListener('message', function(e) {
-			if (!e.data || e.data.type !== 'baggageDone') return;
-			updateBaggageInfo(e.data.bags, e.data.bagFee);
-			closeBaggageModal();
-			closeSeatModal();
+			if (!e.data)
+				return;
+
+			if (e.data.type === 'seatDone') {
+				window.stepState.seat = true;
+				closeSeatModal();
+				return;
+			}
+
+			if (e.data.type === 'baggageDone') {
+				window.stepState.baggage = true;
+				updateBaggageInfo(e.data.bags, e.data.bagFee);
+				closeBaggageModal();
+				return;
+			}
 		});
 	</script>
 
