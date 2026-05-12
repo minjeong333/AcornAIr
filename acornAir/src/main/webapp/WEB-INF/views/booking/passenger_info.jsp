@@ -55,7 +55,7 @@ int baseTotal = farePrice;
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/util/common.css" />
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/booking/passenger.css" />
+	href="${pageContext.request.contextPath}/css/booking/passenger.css" />  <!--적용안되는중 -->
 </head>
 <body>
 
@@ -79,7 +79,7 @@ int baseTotal = farePrice;
 	-->
 
 	<!-- 메인 컨테이너 -->
-	<div class="container">
+	<div class="container-b">
 
 		<!-- 왼쪽 본문 -->
 		<div class="main">
