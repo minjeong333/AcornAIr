@@ -21,13 +21,23 @@ public class PaymentServlet extends HttpServlet {
 	private PaymentService paymentService = new PaymentService();
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		HttpSession session = req.getSession();
 
 		BookingDTO bookingDTO = (BookingDTO) session.getAttribute("bookingDTO");
+		String mode = req.getParameter("mode");
 
+		if ("baggage".equals(mode)) {
+
+			req.setAttribute("basePrice", 0);
+			req.setAttribute("totalPrice", 0);
+			req.setAttribute("bagPrice", 40000);
+
+			req.getRequestDispatcher("/WEB-INF/views/booking/baggage.jsp").forward(req, resp);
+
+			return;
+		}
 		if (bookingDTO == null) {
 			resp.sendRedirect(req.getContextPath() + "/home");
 			return;
@@ -37,13 +47,11 @@ public class PaymentServlet extends HttpServlet {
 		req.setAttribute("totalPrice", bookingDTO.getTotalPrice());
 		req.setAttribute("bagPrice", 40000);
 
-		req.getRequestDispatcher("/WEB-INF/views/booking/payment.jsp")
-		   .forward(req, resp);
+		req.getRequestDispatcher("/WEB-INF/views/booking/payment.jsp").forward(req, resp);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		req.setCharacterEncoding("UTF-8");
 
@@ -139,10 +147,8 @@ public class PaymentServlet extends HttpServlet {
 			resp.setContentType("text/html; charset=UTF-8");
 
 			resp.getWriter().println("<script>");
-			resp.getWriter().println("alert('결제 오류: "
-					+ e.toString().replace("'", "") + "');");
-			resp.getWriter().println("location.href='"
-					+ req.getContextPath() + "/air/booking/passenger';");
+			resp.getWriter().println("alert('결제 오류: " + e.toString().replace("'", "") + "');");
+			resp.getWriter().println("location.href='" + req.getContextPath() + "/air/booking/passenger';");
 			resp.getWriter().println("</script>");
 		}
 	}

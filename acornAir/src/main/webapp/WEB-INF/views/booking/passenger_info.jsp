@@ -161,9 +161,15 @@ int baseTotal = farePrice;
 
 					<%
 					for (int i = 0; i < passCnt; i++) {
-						String lastVal = (i == 0 && loginUser != null && loginUser.getEngLastName() != null) ? loginUser.getEngLastName(): "";
-						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null)? loginUser.getEngFirstName(): "";
-						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate() != null)? birthFmt.format(loginUser.getBirthDate()): "";
+						String lastVal = (i == 0 && loginUser != null && loginUser.getEngLastName() != null)
+						? loginUser.getEngLastName()
+						: "";
+						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null)
+						? loginUser.getEngFirstName()
+						: "";
+						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate() != null)
+						? birthFmt.format(loginUser.getBirthDate())
+						: "";
 						String genderVal = (i == 0 && loginUser != null && loginUser.getGender() != null) ? loginUser.getGender() : "F";
 					%>
 					<div class="accordion">
@@ -226,84 +232,82 @@ int baseTotal = farePrice;
 							id="btn-passenger-confirm">확인</button>
 					</div>
 
+
+
+					<!-- 연락처 정보 아코디언 -->
+					<div class="accordion" id="contact-accordion">
+						<div class="accordion-header secondary" id="contact-header">
+							<span>연락처 정보</span> <span class="chevron">∨</span>
+						</div>
+						<div class="accordion-body hidden" id="contact-body">
+
+							<!-- 안내 문구 -->
+							<div class="contact-notice">
+								<span class="icon">📋</span> <span>e-티켓 확인증과 항공편 스케줄 변동
+									등의 안내를 받으실 수 있도록 휴대전화 번호와 이메일을 입력해주세요.</span>
+							</div>
+
+							<!-- 국가번호 / 휴대전화 번호 -->
+							<div class="form-row">
+								<div>
+									<div class="form-label">
+										국가번호 <span class="req">*</span>
+									</div>
+									<div class="country-row">
+										<button type="button" class="btn-country">국가번호</button>
+										<input class="form-input" type="text" name="phoneCountry"
+											value="${loginUser.phoneCountry}" style="max-width: 60px;" />
+									</div>
+								</div>
+								<div>
+									<div class="form-label">
+										휴대전화 번호 <span class="req">*</span>
+									</div>
+									<input class="form-input" type="text" name="contactPhone"
+										value="${loginUser.userPhone}" style="color: #0066cc;" />
+								</div>
+							</div>
+
+							<!-- 이메일 / 언어 선택 -->
+							<div class="form-row">
+								<div>
+									<div class="form-label">
+										이메일 <span class="req">*</span>
+									</div>
+									<input class="form-input" type="email" name="contactEmail"
+										value="${loginUser.userEmail}" style="color: #0066cc;" />
+								</div>
+								<div>
+									<div class="form-label">
+										언어 선택 <span class="req">*</span>
+									</div>
+									<div class="select-wrap">
+										<select class="form-select">
+											<option>한국어</option>
+											<option>English</option>
+											<option>日本語</option>
+											<option>中文</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<!-- 동의 체크박스 -->
+							<div class="agree-row">
+								<input type="checkbox" id="agree-update" /> <label
+									for="agree-update"> [선택] 상기의 휴대전화 번호와 이메일 주소를 나의 회원 정보에
+									업데이트 하는 것을 동의합니다. </label>
+							</div>
+
+							<!-- 확인 버튼 -->
+							<div class="btn-confirm-wrap">
+								<button class="btn-confirm" id="btn-contact-confirm"
+									type="button">확인</button>
+							</div>
+
+						</div>
+					</div>
 				</form>
-
-				<!-- 연락처 정보 아코디언 -->
-				<div class="accordion" id="contact-accordion">
-					<div class="accordion-header secondary" id="contact-header">
-						<span>연락처 정보</span> <span class="chevron">∨</span>
-					</div>
-					<div class="accordion-body hidden" id="contact-body">
-
-						<!-- 안내 문구 -->
-						<div class="contact-notice">
-							<span class="icon">📋</span> <span>e-티켓 확인증과 항공편 스케줄 변동 등의
-								안내를 받으실 수 있도록 휴대전화 번호와 이메일을 입력해주세요.</span>
-						</div>
-
-						<!-- 국가번호 / 휴대전화 번호 -->
-						<div class="form-row">
-							<div>
-								<div class="form-label">
-									국가번호 <span class="req">*</span>
-								</div>
-								<div class="country-row">
-									<button class="btn-country">국가번호</button>
-									<input class="form-input" type="text"
-									name="contactPhone"
-										value="${loginUser.phoneCountry}" style="max-width: 60px;" />
-								</div>
-							</div>
-							<div>
-								<div class="form-label">
-									휴대전화 번호 <span class="req">*</span>
-								</div>
-								<input class="form-input" type="text"
-									value="${loginUser.userPhone}" style="color: #0066cc;" />
-							</div>
-						</div>
-
-						<!-- 이메일 / 언어 선택 -->
-						<div class="form-row">
-							<div>
-								<div class="form-label">
-									이메일 <span class="req">*</span>
-								</div>
-								<input class="form-input" type="email"
-								name="contactEmail"
-									value="${loginUser.userEmail}" style="color: #0066cc;" />
-							</div>
-							<div>
-								<div class="form-label">
-									언어 선택 <span class="req">*</span>
-								</div>
-								<div class="select-wrap">
-									<select class="form-select">
-										<option>한국어</option>
-										<option>English</option>
-										<option>日本語</option>
-										<option>中文</option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<!-- 동의 체크박스 -->
-						<div class="agree-row">
-							<input type="checkbox" id="agree-update" /> <label
-								for="agree-update"> [선택] 상기의 휴대전화 번호와 이메일 주소를 나의 회원 정보에
-								업데이트 하는 것을 동의합니다. </label>
-						</div>
-
-						<!-- 확인 버튼 -->
-						<div class="btn-confirm-wrap">
-							<button class="btn-confirm" id="btn-contact-confirm"
-								type="button">확인</button>
-						</div>
-
-					</div>
-				</div>
-
 			</div>
 
 			<!-- 부가서비스 신청 -->
@@ -470,7 +474,7 @@ int baseTotal = farePrice;
 
 		applyPriceView();
 	</script>
-		<script>
+	<script>
 		window.stepState = {
 			passenger :
 	<%=passengerDone%>
@@ -480,9 +484,10 @@ int baseTotal = farePrice;
 		,
 			seat :
 	<%=seatDone%>
-		,
+		|| sessionStorage.getItem('seatDone') === 'true',
 			baggage :
 	<%=baggageDone%>
+		|| sessionStorage.getItem('baggageDone') === 'true'
 		};
 
 		function checkStepBeforeSeat() {
@@ -522,8 +527,7 @@ int baseTotal = farePrice;
 		}
 	</script>
 	<script
-		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=4"></script>
-
+		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=6"></script>
 	<!-- ===== 결제 모달 ===== -->
 	<div class="modal-overlay" id="payModal" onclick="closePayModal(event)">
 		<div class="modal-wrap">
@@ -720,7 +724,7 @@ int baseTotal = farePrice;
 
 	<!-- ===== 초과 수화물 모달 ===== -->
 	<div class="modal-overlay" id="baggageModal"
-		onclick="closeBaggageModal(event)">
+		onclick="closeBaggageModalByOverlay(event)">
 		<div class="modal-wrap"
 			style="width: 900px; max-width: 95vw; height: 88vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
 			<div class="modal-header" style="padding: 20px 24px; flex-shrink: 0;">
@@ -851,16 +855,22 @@ int baseTotal = farePrice;
 		function openBaggageModal() {
 			if (!checkStepBeforeBaggage())
 				return;
-			document.getElementById('baggageFrame').src = '${pageContext.request.contextPath}/air/booking/payment';
+
+			document.getElementById('baggageFrame').src = '${pageContext.request.contextPath}/air/booking/baggage';
+
 			document.getElementById('baggageModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
 		}
-		function closeBaggageModal(e) {
-			if (e && e.target !== document.getElementById('baggageModal'))
-				return;
+		function closeBaggageModal() {
 			document.getElementById('baggageModal').style.display = 'none';
 			document.getElementById('baggageFrame').src = '';
 			document.body.style.overflow = '';
+		}
+
+		function closeBaggageModalByOverlay(e) {
+			if (e.target === document.getElementById('baggageModal')) {
+				closeBaggageModal();
+			}
 		}
 
 		function updateBaggageInfo(bags, baggageOnlyPrice) {
@@ -876,12 +886,21 @@ int baseTotal = farePrice;
 
 			if (e.data.type === 'seatDone') {
 				window.stepState.seat = true;
+				sessionStorage.setItem('seatDone', 'true');
+
 				closeSeatModal();
+
+				// 좌석 완료 후 자동으로 수하물창 열기
+				setTimeout(function() {
+					openBaggageModal();
+				}, 200);
+
 				return;
 			}
 
 			if (e.data.type === 'baggageDone') {
 				window.stepState.baggage = true;
+				sessionStorage.setItem('baggageDone', 'true');
 				updateBaggageInfo(e.data.bags, e.data.bagFee);
 				closeBaggageModal();
 				return;

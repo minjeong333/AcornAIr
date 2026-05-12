@@ -25,7 +25,7 @@ public class SeatServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		FlightDTO goFlight   = (FlightDTO) session.getAttribute("goFlight");
+		FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 		FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
 
 		BookingDAO dao = new BookingDAO();
@@ -41,7 +41,8 @@ public class SeatServlet extends HttpServlet {
 			}
 			if (backFlight != null) {
 				List<String> booked = dao.getBookedSeats(backFlight.getFlightId(), con);
-				System.out.println("[SeatServlet] backFlightId=" + backFlight.getFlightId() + ", bookedSeats=" + booked);
+				System.out
+						.println("[SeatServlet] backFlightId=" + backFlight.getFlightId() + ", bookedSeats=" + booked);
 				req.setAttribute("backBookedSeats", booked);
 			} else {
 				req.setAttribute("backBookedSeats", new ArrayList<>());
@@ -49,7 +50,7 @@ public class SeatServlet extends HttpServlet {
 		} catch (Exception e) {
 			System.out.println("[SeatServlet] 예외 발생: " + e.getMessage());
 			e.printStackTrace();
-			req.setAttribute("goBookedSeats",   new ArrayList<>());
+			req.setAttribute("goBookedSeats", new ArrayList<>());
 			req.setAttribute("backBookedSeats", new ArrayList<>());
 		}
 
@@ -75,12 +76,12 @@ public class SeatServlet extends HttpServlet {
 		FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 
 		if (goFlight == null) {
-		    resp.sendRedirect(req.getContextPath() + "/home");
-		    return;
+			resp.sendRedirect(req.getContextPath() + "/home");
+			return;
 		}
 
 		FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
-		String goSeatClass  = (String) session.getAttribute("goSeatClass");
+		String goSeatClass = (String) session.getAttribute("goSeatClass");
 		String backSeatClass = (String) session.getAttribute("backSeatClass");
 
 		@SuppressWarnings("unchecked")
@@ -120,7 +121,7 @@ public class SeatServlet extends HttpServlet {
 		String tripType = (String) session.getAttribute("tripType");
 
 		if (tripType == null || tripType.isEmpty()) {
-		    tripType = "RT"; // 임시 테스트 기본값
+			tripType = "RT"; // 임시 테스트 기본값
 		}
 
 		bookingDTO.setTripType(tripType);
@@ -129,17 +130,17 @@ public class SeatServlet extends HttpServlet {
 		bookingDTO.setGoFlight(goFlight);
 
 		if (backFlight != null) {
-		    bookingDTO.setBackFlight(backFlight);
+			bookingDTO.setBackFlight(backFlight);
 		}
 
 		bookingDTO.setPassengers(passengers);
 
 		if (goSeats != null && !goSeats.isEmpty()) {
-		    bookingDTO.setGoSeats(java.util.Arrays.asList(goSeats.split(",")));
+			bookingDTO.setGoSeats(java.util.Arrays.asList(goSeats.split(",")));
 		}
 
 		if (backSeats != null && !backSeats.isEmpty()) {
-		    bookingDTO.setBackSeats(java.util.Arrays.asList(backSeats.split(",")));
+			bookingDTO.setBackSeats(java.util.Arrays.asList(backSeats.split(",")));
 		}
 
 		bookingDTO.setBasePrice(basePrice);
@@ -147,6 +148,8 @@ public class SeatServlet extends HttpServlet {
 
 		session.setAttribute("bookingDTO", bookingDTO);
 
-		resp.sendRedirect(req.getContextPath() + "/air/booking/payment");
+//		resp.sendRedirect(req.getContextPath() + "/air/booking/payment");
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.getWriter().write("<script>" + "window.parent.postMessage({type:'seatDone'}, '*');" + "</script>");
 	}
 }
