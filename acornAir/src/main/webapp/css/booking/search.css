@@ -408,70 +408,6 @@ a {
 	color: #001b66;
 }
 
-/* 슬라이더/카드 스타일 */
-.date-slider-wrap {
-	position: relative; /* 화살표 버튼의 기준점 */
-	width: 100%;
-	margin-bottom: 40px;
-}
-
-.date-slider-viewport {
-	flex: 1;
-	overflow: hidden;
-	border: 1px solid #e0e0e0;
-	border-radius: 12px;
-	background: white;
-	margin: 20px 0;
-}
-
-.date-slider-track {
-	display: flex;
-	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.date-item {
-	min-width: 20%;
-	flex-shrink: 0;
-	text-align: center;
-	padding: 20px 0;
-	border-right: 1px solid #f0f0f0;
-	cursor: pointer;
-}
-
-.date-item:hover {
-	color: #00256c;
-	font-weight: bold;
-}
-
-/* 화살표 버튼 스타일*/
-.slider-btn {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%); /* 세로 중앙 정렬 */
-	z-index: 10;
-	background: transparent;
-	border: none; /* 테두리 없이 깔끔하게 */
-	width: 30px;
-	height: 90%; /* 슬라이더 높이에 맞춤 */
-	cursor: pointer;
-	color: #e0e0e0;
-	font-size: 1rem;
-	transition: background 0.2s;
-}
-
-.prev-btn {
-	left: 1px;
-	border-radius: 12px 0 0 12px;
-}
-
-.next-btn {
-	right: 1px;
-	border-radius: 0 12px 12px 0;
-}
-
-.slider-btn:hover {
-	background: #f8f9fa;
-}
 
 /*여정 내용*/
 .flight-card {
@@ -483,6 +419,7 @@ a {
 	overflow: hidden;
 	padding: 25px;
 	align-items: center;
+	margin-bottom: 30px;
 }
 
 .time {
@@ -572,7 +509,12 @@ a {
 	color: #00256c;
 }
 
+.spacer { height: 160px; }
+
+.footer { margin-top: 40px; }
+
 /*바닥 금액표시줄*/
+.bottom-bar * { margin: 0; }
 .bottom-bar {
 	position: fixed;
 	bottom: 0;
@@ -583,9 +525,9 @@ a {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	padding: 15px 10%;
+	padding: 14px 40px;
 	box-sizing: border-box;
-	gap: 30px;
+	gap: 24px;
 	z-index: 1000;
 }
 
@@ -725,6 +667,7 @@ a {
 		display: flex !important;
 		flex-direction: column !important; /* 세로 배치 강제 */
 		height: auto !important;
+		margin-bottom: 30px;
 	}
 	.time {
 		width: 100% !important;

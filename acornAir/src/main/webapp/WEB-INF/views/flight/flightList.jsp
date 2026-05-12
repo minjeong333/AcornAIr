@@ -345,6 +345,7 @@
 
 	</div>
 
+	<div class="spacer"></div>
 
 	<div class="bottom-bar">
 		<!-- id="totalPriceText" 추가 -->
