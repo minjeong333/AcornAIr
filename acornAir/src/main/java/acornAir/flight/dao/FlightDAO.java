@@ -44,7 +44,7 @@ public class FlightDAO {
 				+ "AND Y.DEP_TIME = C.DEP_TIME AND C.SEAT_CLASS = 'C' "
 				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
 				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE "
-				+ "WHERE Y.SEAT_CLASS = 'Y' AND Y.FLIGHT_ID = ?";
+				+ "WHERE Y.FLIGHT_ID = ?";
 
 		try {
 			con = dbcon();
@@ -96,15 +96,31 @@ public class FlightDAO {
 
 		ArrayList<FlightDTO> list = new ArrayList<>();
 
-		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO, " + "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
-				+ "A1.AIRPORT_NAME AS DEP_NAME, " + "A2.AIRPORT_NAME AS ARR_NAME, " + "Y.DEP_TIME, Y.ARR_TIME, "
-				+ "Y.PRICE AS Y_PRICE, " + "C.PRICE AS C_PRICE " + "FROM TB_FLIGHT Y " + "JOIN TB_FLIGHT C "
-				+ "ON Y.FLIGHT_NO = C.FLIGHT_NO " + "AND Y.DEP_TIME = C.DEP_TIME " + "AND C.SEAT_CLASS = 'C' "
-				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
-				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE " + "WHERE Y.SEAT_CLASS = 'Y' "
-				+ "AND Y.DEP_AIRPORT = ? " + "AND Y.ARR_AIRPORT = ? "
-				+ "AND TRUNC(Y.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD') " + "AND Y.REMAIN_SEAT >= ? "
-				+ "ORDER BY Y.DEP_TIME ASC";
+		System.out.println("=== FlightDAO search 실행됨 ===");
+	    System.out.println(depAirport + " -> " + arrAirport + " / " + depDate);
+		String sql =
+		        "SELECT Y.FLIGHT_ID, NVL(C.FLIGHT_ID, 0) AS C_FLIGHT_ID, Y.FLIGHT_NO, "
+		      + "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
+		      + "A1.AIRPORT_NAME AS DEP_NAME, "
+		      + "A2.AIRPORT_NAME AS ARR_NAME, "
+		      + "Y.DEP_TIME, Y.ARR_TIME, "
+		      + "Y.PRICE AS Y_PRICE, "
+		      + "NVL(C.PRICE, 0) AS C_PRICE "
+		      + "FROM TB_FLIGHT Y "
+		      + "LEFT JOIN TB_FLIGHT C "
+		      + "ON C.SEAT_CLASS = 'C' "
+		      + "AND Y.FLIGHT_NO = C.FLIGHT_NO "
+		      + "AND Y.DEP_AIRPORT = C.DEP_AIRPORT "
+		      + "AND Y.ARR_AIRPORT = C.ARR_AIRPORT "
+		      + "AND Y.DEP_TIME = C.DEP_TIME "
+		      + "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
+		      + "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE "
+		      + "WHERE Y.SEAT_CLASS = 'Y' "
+		      + "AND Y.DEP_AIRPORT = ? "
+		      + "AND Y.ARR_AIRPORT = ? "
+		      + "AND TRUNC(Y.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD') "
+		      + "AND Y.REMAIN_SEAT >= ? "
+		      + "ORDER BY Y.DEP_TIME ASC";
 
 		try {
 			con = dbcon();
@@ -121,15 +137,16 @@ public class FlightDAO {
 				FlightDTO dto = new FlightDTO();
 
 				dto.setFlightId(rs.getInt(1));
-				dto.setFlightNo(rs.getString(2));
-				dto.setDepAirport(rs.getString(3));
-				dto.setArrAirport(rs.getString(4));
-				dto.setDepAirportName(rs.getString(5));
-				dto.setArrAirportName(rs.getString(6));
-				dto.setDepTime(rs.getDate(7));
-				dto.setArrTime(rs.getDate(8));
-				dto.setPrice(rs.getInt(9));
-				dto.setBizPrice(rs.getInt(10));
+				dto.setBizFlightId(rs.getInt(2));
+				dto.setFlightNo(rs.getString(3));
+				dto.setDepAirport(rs.getString(4));
+				dto.setArrAirport(rs.getString(5));
+				dto.setDepAirportName(rs.getString(6));
+				dto.setArrAirportName(rs.getString(7));
+				dto.setDepTime(rs.getDate(8));
+				dto.setArrTime(rs.getDate(9));
+				dto.setPrice(rs.getInt(10));
+				dto.setBizPrice(rs.getInt(11));
 
 				list.add(dto);
 			}
@@ -295,4 +312,48 @@ public class FlightDAO {
 
 		return result;
 	}
+	
+	public int getRoundTripLowestPrice(String arrAirport) {
+
+	    Connection con = null;
+	    PreparedStatement pst = null;
+	    ResultSet rs = null;
+
+	    int price = 0;
+
+	    String sql = """
+	        SELECT MIN(GO.PRICE + BACK.PRICE) AS ROUND_PRICE
+	        FROM TB_FLIGHT GO
+	        JOIN TB_FLIGHT BACK
+	        ON GO.DEP_AIRPORT = BACK.ARR_AIRPORT
+	        AND GO.ARR_AIRPORT = BACK.DEP_AIRPORT
+	        WHERE GO.DEP_AIRPORT = 'ICN'
+	        AND GO.ARR_AIRPORT = ?
+	        AND GO.SEAT_CLASS = 'Y'
+	        AND BACK.SEAT_CLASS = 'Y'
+	    """;
+
+	    try {
+	        con = dbcon();
+	        pst = con.prepareStatement(sql);
+	        pst.setString(1, arrAirport);
+
+	        rs = pst.executeQuery();
+
+	        if (rs.next()) {
+	            price = rs.getInt("ROUND_PRICE");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (pst != null) pst.close(); } catch (Exception e) {}
+	        try { if (con != null) con.close(); } catch (Exception e) {}
+	    }
+
+	    return price;
+	}
+
+	
 }

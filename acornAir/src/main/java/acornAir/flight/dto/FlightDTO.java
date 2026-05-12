@@ -17,7 +17,8 @@ public class FlightDTO {
 	private int bizPrice; // 비즈니스석 가격 (C) ← 추가
 	private int remainSeat; // 잔여 좌석
 	private int totalSeat; // 총좌석
-
+	private int bizFlightId;
+	
 	public int getTotalSeat() {
 		return totalSeat;
 	}
@@ -151,6 +152,14 @@ public class FlightDTO {
 				+ ", arrAirport=" + arrAirport + ", depAirportName=" + depAirportName + ", arrAirportName="
 				+ arrAirportName + ", depTime=" + depTime + ", arrTime=" + arrTime + ", seatClass=" + seatClass
 				+ ", price=" + price + ", bizPrice=" + bizPrice + ", remainSeat=" + remainSeat + "]";
+	}
+
+	public int getBizFlightId() {
+		return bizFlightId;
+	}
+
+	public void setBizFlightId(int bizFlightId) {
+		this.bizFlightId = bizFlightId;
 	}
 
 }

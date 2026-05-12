@@ -39,11 +39,17 @@ public class FlightSearchServlet extends HttpServlet {
 		// 처음 home 들어왔을 때
 		if (depAirport == null) {
 
-			req.getRequestDispatcher("/WEB-INF/views/flight/main.jsp").forward(req, resp);
+		    FlightDAO dao = new FlightDAO();
 
-			return;
+		    req.setAttribute("nyPrice", dao.getRoundTripLowestPrice("JFK"));
+		    req.setAttribute("sfPrice", dao.getRoundTripLowestPrice("SFO"));
+		    req.setAttribute("londonPrice", dao.getRoundTripLowestPrice("LHR"));
+		    req.setAttribute("parisPrice", dao.getRoundTripLowestPrice("CDG"));
+
+		    req.getRequestDispatcher("/WEB-INF/views/flight/main.jsp").forward(req, resp);
+
+		    return;
 		}
-
 		// DAO 호출
 		FlightDAO dao = new FlightDAO();
 
@@ -52,6 +58,13 @@ public class FlightSearchServlet extends HttpServlet {
 		// request 저장
 		req.setAttribute("flightList", list);
 
+		if ("RT".equals(tripType)) {
+
+		    ArrayList<FlightDTO> backList =
+		            dao.search(arrAirport, depAirport, returnDate, passCnt);
+
+		    req.setAttribute("backFlightList", backList);
+		}
 		// session 저장
 		HttpSession session = req.getSession();
 
