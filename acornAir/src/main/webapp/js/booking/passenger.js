@@ -131,18 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!form) return;
 
             // 연락처 input이 form 밖에 있으므로 hidden으로 복사해서 전송
-            var hiddenPhone = document.createElement('input');
-            hiddenPhone.type = 'hidden';
-            hiddenPhone.name = 'contactPhone';
-            hiddenPhone.value = phoneInput ? phoneInput.value.trim() : '';
-
-            var hiddenEmail = document.createElement('input');
-            hiddenEmail.type = 'hidden';
-            hiddenEmail.name = 'contactEmail';
-            hiddenEmail.value = emailInput ? emailInput.value.trim() : '';
-
-            form.appendChild(hiddenPhone);
-            form.appendChild(hiddenEmail);
+            var form = btnConfirm.closest('form');
+            if (!form) return;
 
             window.stepState.contact = true;
             form.submit();
