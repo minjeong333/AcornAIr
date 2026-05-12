@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <div id="chat-trigger-btn" class="chat-trigger-btn" onclick="toggleChat()">
-    <span class="chat-icon">✨</span>
-    <span class="chat-text">AI 챗봇</span>
+    <span>✨</span>
+    <span>AI 챗봇</span>
 </div>
 
 <div id="chat-window" class="chat-popup hidden">
@@ -29,23 +29,13 @@
     </div>
 
     <div class="chat-content" id="chat-content">
-        <div class="ai-logo">
-            <div class="symbol">S</div>
-        </div>
+        <div class="chat-symbol">S</div>
         <h2 class="ai-title">ACORNAIR 챗봇과 여정을 함께하세요.</h2>
         <div class="guide-grid">
-            <div class="grid-item" onclick="sendToBot('회원가입안내')">
-                <span class="chat-icon">📝</span><span class="chat-text">회원가입안내</span>
-            </div>
-            <div class="grid-item" onclick="sendToBot('항공권 구매')">
-                <span class="chat-icon">✈️</span><span class="chat-text">항공권 구매</span>
-            </div>
-            <div class="grid-item" onclick="sendToBot('예약조회')">
-                <span class="chat-icon">📅</span><span class="chat-text">예약조회</span>
-            </div>
-            <div class="grid-item" onclick="sendToBot('수하물규정')">
-                <span class="chat-icon">🛫</span><span class="chat-text">수하물규정</span>
-            </div>
+            <div class="grid-item" onclick="sendToBot('회원가입안내')">📝 회원가입안내</div>
+            <div class="grid-item" onclick="sendToBot('항공권 구매')">✈️ 항공권 구매</div>
+            <div class="grid-item" onclick="sendToBot('예약조회')">📅 예약조회</div>
+            <div class="grid-item" onclick="sendToBot('수하물규정')">🛫 수하물규정</div>
         </div>
     </div>
 

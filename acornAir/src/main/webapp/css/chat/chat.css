@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* 팝업 창 전체 */
 .chat-popup {
   width: 450px;
   height: 600px;
@@ -14,22 +13,20 @@
   bottom: 30px;
   overflow: hidden;
   font-family: sans-serif;
+  transition: all 0.3s ease-in-out;
+  transform-origin: bottom right;
+  z-index: 1001;
 }
-
-/* 헤더 */
+.chat-popup.hidden {
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
 .chat-header {
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.login-btn {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 15px;
-  padding: 4px 12px;
-  font-size: 12px;
-  cursor: pointer;
 }
 .icon-btn {
   background: none;
@@ -39,72 +36,47 @@
   cursor: pointer;
   margin-left: 10px;
 }
-
-/*햄버거버튼 슬라이드*/
-/* 1. 사이드 메뉴 기본 상태 (왼쪽 밖으로 숨김) */
 .side-menu {
   position: absolute;
   top: 0;
-  left: -50%; /* 창 밖으로 완전히 숨김 */
+  left: -50%;
   width: 50%;
   height: 100%;
   background: white;
   z-index: 100;
-  transition: left 0.3s ease; /* 슬라이드 애니메이션 */
+  transition: left 0.3s ease;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
-/* 2. 메뉴 활성화 */
-.side-menu.active {
-  left: 0; /* 화면 안으로 들어옴 */
-}
-
-/* 3. 배경 오버레이 */
+.side-menu.active { left: 0; }
 .menu-overlay {
-  display: none; /* 기본은 숨김 */
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0,0,0,0.4);
   z-index: 99;
 }
-
-.menu-overlay.active {
-  display: block; /* 메뉴 열릴 때만 보임 */
-}
+.menu-overlay.active { display: block; }
 .side-menu-header {
   padding: 20px;
   font-size: 0.8rem;
   display: flex;
-  justify-content: space-between; /* 양 끝 정렬 */
+  justify-content: space-between;
   align-items: center;
 }
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 뒤로가기 버튼 */
+.header-brand { display: flex; align-items: center; gap: 8px; }
 .back-btn {
   background: none;
   border: none;
   font-size: 24px;
   color: #00256c;
   cursor: pointer;
-  display: flex;
-  align-items: center;
 }
-
-/* 새 채팅 버튼 스타일 */
-.side-menu-content {
-  padding: 0 20px;
-}
-
+.side-menu-content { padding: 0 20px; }
 .new-chat-btn {
   width: 100%;
   padding: 12px;
@@ -118,25 +90,7 @@
   cursor: pointer;
   border-radius: 8px;
 }
-
-.new-chat-btn:hover {
-  background-color: #f5f5f5;
-}
-
-/* 하단 주의사항 스타일 */
-.side-menu-footer {
-  margin-top: auto; /* 맨 아래로 밀기 */
-  padding: 20px;
-}
-
-.side-menu-footer p {
-  font-size: 11px;
-  color: #888;
-  line-height: 1.6;
-  letter-spacing: -0.5px;
-}
-
-/* 중앙 컨텐츠 */
+.new-chat-btn:hover { background-color: #f5f5f5; }
 .chat-content {
   flex: 1;
   display: flex;
@@ -146,7 +100,7 @@
   text-align: center;
   overflow-y: auto;
 }
-.symbol {
+.chat-symbol {
   width: 50px;
   height: 50px;
   background: #00256c;
@@ -164,56 +118,30 @@
   line-height: 1.4;
   margin-bottom: 40px;
 }
-
-/* 가이드 그리드 컨테이너 */
 .guide-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 가로로 2개 */
-  gap: 10px;                      /* 버튼 사이 간격 */
-  width: 90%;                     /* 전체 너비 조절 */
-  margin: 0 auto;                 /* 중앙 정렬 */
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 90%;
+  margin: 0 auto;
 }
-
-/* 각 버튼 아이템 */
 .grid-item {
-  background: white;             
-  border: 1px solid #ddd;        
-  border-radius: 8px;            
-  padding: 15px 10px;           
-  display: flex;
-  align-items: center;           
-  justify-content: flex-start;   /* 왼쪽 정렬 */
-  gap: 10px;                     /* 아이콘과 텍스트 사이 간격 */
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-/* 버튼 호버 */
-.grid-item:hover {
-  background: #f9f9f9;
-  border-color: #bbb;
-}
-
-/* 아이콘 스타일 */
-.grid-item .icon {
-  font-size: 1.2rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 24px;
-}
-
-/* 텍스트 스타일 */
-.grid-item .text {
+  justify-content: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
   font-size: 14px;
   font-weight: 500;
   color: #333;
 }
-
-/* 하단 입력창 */
-.chat-footer {
-  padding: 20px;
-}
+.grid-item:hover { background: #f9f9f9; border-color: #bbb; }
+.chat-footer { padding: 20px; }
 .input-box {
   background: white;
   border-radius: 15px;
@@ -227,71 +155,41 @@
   height: 50px;
   outline: none;
   font-size: 14px;
+  box-sizing: border-box;
 }
 .input-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 10px;
 }
-.char-count { font-size: 12px; color: #999; }
 .send-btn {
-  background: #f0f0f0;
+  background: #00256c;
+  color: white;
   border: none;
   width: 30px;
   height: 30px;
   border-radius: 50%;
   cursor: pointer;
+  font-size: 16px;
 }
-.disclaimer {
-  font-size: 11px;
-  color: #888;
-  text-align: center;
-  margin-top: 15px;
-}
-/* --- 기존 .chat-popup 스타일에 추가/수정 --- */
-.chat-popup {
-  /* ... 기존 설정 유지 ... */
-  transition: all 0.3s ease-in-out;
-  transform-origin: bottom right; /* 우측 하단에서 커지도록 설정 */
-  z-index: 1001;
-}
-
-/* 팝업 숨김 상태 */
-.chat-popup.hidden {
-  opacity: 0;
-  transform: scale(0);
-  pointer-events: none;
-}
-
-/* 새로 추가하는 AI 챗봇 버튼 스타일 */
 .chat-trigger-btn {
   position: fixed;
   right: 30px;
-  bottom: 30px;
+  bottom: 90px;
   display: flex;
   align-items: center;
+  gap: 8px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #6a5af9, #2d79f3); /* 이미지와 유사한 그라데이션 */
+  background: linear-gradient(135deg, #6a5af9, #2d79f3);
   color: white;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;
   z-index: 1000;
   font-family: sans-serif;
-}
-
-.chat-trigger-btn:hover {
-  transform: scale(1.05);
-}
-
-.chat-trigger-btn .chat-icon {
-  margin-right: 8px;
-  font-size: 1.1rem;
-}
-
-.chat-trigger-btn .chat-text {
   font-weight: 600;
   font-size: 15px;
 }
+.chat-trigger-btn:hover { transform: scale(1.05); }

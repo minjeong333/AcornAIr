@@ -1,3 +1,6 @@
+
+@charset "UTF-8";
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -7,7 +10,7 @@ body {
   font-size: 14px;
 }
 
-/* /* ── 상단 진행 표시 ── */
+ /* ── 상단 진행 표시 ── */
 .progress-bar {
   display: flex;
   justify-content: flex-end;
@@ -42,10 +45,10 @@ body {
   border-color: #00256C;
   color: #fff;
 }
-.progress-bar .step.active > span { color: #00256C; font-weight: 700; } */
+.progress-bar .step.active > span { color: #00256C; font-weight: 700; }
 
 /* ── 메인 레이아웃 ── */
-.container {
+.container-b {
   display: flex;
   gap: 24px;
   max-width: 1200px;
@@ -365,22 +368,39 @@ body {
 }
 .link-refund:hover { text-decoration: underline; }
 
+/* 챗봇 버튼을 결제 바 위로 올림 */
+.chat-trigger-btn { bottom: 90px; }
+.chat-popup { bottom: 90px; }
+
 /* ── 하단 결제 바 ── */
 .bottom-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   background: #fff;
   border-top: 1px solid #e0e0e0;
-  padding: 14px 40px;
+  padding: 14px 40px 24px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 24px;
   z-index: 100;
 }
-.bottom-bar .total-label { font-size: 13px; color: #555; }
-.bottom-bar .total-amount { font-size: 20px; font-weight: 700; color: #111; }
-.bottom-bar .total-amount span { font-size: 14px; margin-left: 2px; }
+.bottom-bar .total-label { 
+  font-size: 13px; 
+  color: #555; 
+}
+
+.bottom-bar .total-amount {
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #111; 
+}
+
+.bottom-bar .total-amount span { 
+  font-size: 14px; 
+  margin-left: 2px; 
+}
+
 .btn-pay {
   background: #00a3e0;
   color: #fff;
