@@ -87,7 +87,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			<!-- 여정 정보 -->
 			<div class="section-header">
 				<h2 class="section-title">여정 정보</h2>
-				<button class="btn-share">↗ 공유</button>
 			</div>
 
 			<!-- 가는 편 -->
@@ -110,7 +109,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 						<span>✈ <%=goFlight.getFlightNo()%></span>
 					</div>
 				</div>
-				<button class="btn-detail">상세 보기</button>
+				<button class="empty-area"></button>
 			</div>
 			<%
 			}
@@ -136,7 +135,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 						<span>✈ <%=backFlight.getFlightNo()%></span>
 					</div>
 				</div>
-				<button class="btn-detail">상세 보기</button>
+				<button class="empty-area"></button>
 			</div>
 			<%
 			}
@@ -146,7 +145,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			<div class="passenger-section">
 				<div class="section-header">
 					<h2 class="section-title">승객 정보</h2>
-					<button class="btn-share">성명 입력 안내</button>
 				</div>
 				<p class="passenger-notice">
 					<span class="req">*</span>는 필수 입력 사항입니다.
@@ -333,7 +331,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<div class="agree-box-header">
 						<span class="agree-badge">✓ 동의</span> <span class="agree-text">[필수]
 							운송약관, 변경/환불 규정을 포함한 운임 규정, 수하물 규정을 확인하였으며 이에 동의합니다.</span>
-						<button class="agree-view-btn">보기</button>
 					</div>
 					<div class="agree-desc">
 						에이콘항공 항공권을 구매하시는 것은 본 항공사와 운송계약 체결에 동의하는 것으로 운임규정은 항공권 변경, 취소 등에
@@ -347,7 +344,6 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					<div class="agree-box-header">
 						<span class="agree-badge">✓ 동의</span> <span class="agree-text">[필수]
 							리튬 보조배터리 및 위험품 안내를 확인하였습니다.</span>
-						<button class="agree-view-btn">보기</button>
 					</div>
 					<div class="agree-desc">고객 안전을 위해 기내 리튬 보조배터리 사용 및 충전은 금지합니다.
 						폭발성, 인화성, 유독성 물질 등 반입 금지 품목을 미리 확인해 주세요.</div>
@@ -525,11 +521,18 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				alert("좌석배정을 먼저 완료해주세요.");
 				return false;
 			}
+			var badges = document.querySelectorAll('.agree-badge');
+			for (var i = 0; i < badges.length; i++) {
+				if (!badges[i].classList.contains('active')) {
+					alert("필수 동의 항목을 모두 확인해주세요.");
+					return false;
+				}
+			}
 			return true;
 		}
 	</script>
 	<script
-		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=6"></script>
+		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=7"></script>
 	<!-- ===== 결제 모달 ===== -->
 	<div class="modal-overlay" id="payModal" onclick="closePayModal(event)">
 		<div class="modal-wrap">
@@ -804,37 +807,41 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 			var payMethod = document
 					.querySelector("input[name='payMethod']:checked").value;
 
-			var msg = '결제를 진행하시겠습니까?';
+			function submitPayment() {
+				var form = document.createElement("form");
+				form.method = "POST";
+				form.action = "${pageContext.request.contextPath}/air/booking/payment";
+
+				function addHidden(name, value) {
+					var input = document.createElement("input");
+					input.type = "hidden";
+					input.name = name;
+					input.value = value;
+					form.appendChild(input);
+				}
+
+				addHidden("payMethod", payMethod.toUpperCase());
+				addHidden("bags", serverBags);
+				addHidden("total", serverTotal);
+
+				document.body.appendChild(form);
+				form.submit();
+			}
+
 			if (payMethod === 'card') {
-				msg = '신용카드로 결제하시겠습니까?';
+				if (!confirm('카드 결제로 진행하시겠습니까?')) return;
+				alert('결제가 완료되었습니다.');
+				submitPayment();
 			} else if (payMethod === 'transfer') {
-				msg = '계좌이체로 이용하시겠습니까?';
+				if (!confirm('계좌이체로 진행하시겠습니까?')) return;
+				alert('전송된 계좌로 입금시, 결제가 완료됩니다.');
+				alert('결제가 완료되었습니다.');
+				submitPayment();
 			} else if (payMethod === 'simple') {
-				msg = '간편결제로 이용하시겠습니까?';
+				if (!confirm('간편결제로 진행하시겠습니까?')) return;
+				alert('간편결제가 완료되었습니다.');
+				submitPayment();
 			}
-
-			var confirmed = confirm(msg);
-			if (!confirmed)
-				return;
-
-			var form = document.createElement("form");
-			form.method = "POST";
-			form.action = "${pageContext.request.contextPath}/air/booking/payment";
-
-			function addHidden(name, value) {
-				var input = document.createElement("input");
-				input.type = "hidden";
-				input.name = name;
-				input.value = value;
-				form.appendChild(input);
-			}
-
-			addHidden("payMethod", payMethod.toUpperCase());
-			addHidden("bags", serverBags);
-			addHidden("total", serverTotal);
-
-			document.body.appendChild(form);
-			form.submit();
 		}
 		// 초기 선택 표시
 		document.getElementById('opt1').classList.add('selected');
