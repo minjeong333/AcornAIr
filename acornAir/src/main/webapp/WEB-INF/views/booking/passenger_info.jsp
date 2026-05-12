@@ -6,6 +6,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
+boolean passengerDone = session.getAttribute("passengers") != null;
+boolean contactDone = session.getAttribute("contactPhone") != null;
+boolean seatDone = session.getAttribute("goSeats") != null;
+boolean baggageDone = session.getAttribute("bags") != null;
+
 FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
 String goSeatClass = (String) session.getAttribute("goSeatClass");
@@ -32,9 +37,13 @@ if (backFlight != null) {
 }
 farePrice *= passCnt;
 
-int fuelSurcharge = 114000;
-int tax = 63000;
-int baseTotal = farePrice + fuelSurcharge + tax;
+// int fuelSurcharge = 114000;
+// int tax = 63000;
+int baseTotal = farePrice;
+// ※ 유류할증료·세금 복원 시 위 3줄을 아래로 교체
+// int fuelSurcharge = 114000;
+// int tax = 63000;
+// int baseTotal = farePrice + fuelSurcharge + tax;
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -46,30 +55,14 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/util/common.css" />
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/booking/passenger.css" />
+	href="${pageContext.request.contextPath}/css/booking/passenger.css" />  <!--적용안되는중 -->
 </head>
 <body>
 
 	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
-	<!-- 진행 표시 -->
-	<div class="progress-bar">
-		<div class="step done">
-			<div class="circle">✓</div>
-			<span>검색</span>
-		</div>
-		<div class="step done">
-			<div class="circle">✓</div>
-			<span>항공편</span>
-		</div>
-		<div class="step active">
-			<div class="circle">3</div>
-			<span>결제</span>
-		</div>
-	</div>
-
 	<!-- 메인 컨테이너 -->
-	<div class="container">
+	<div class="container-b">
 
 		<!-- 왼쪽 본문 -->
 		<div class="main">
@@ -151,10 +144,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 					<%
 					for (int i = 0; i < passCnt; i++) {
-						String lastVal  = (i == 0 && loginUser != null && loginUser.getEngLastName()  != null) ? loginUser.getEngLastName()  : "";
-						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null) ? loginUser.getEngFirstName() : "";
-						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate()    != null) ? birthFmt.format(loginUser.getBirthDate()) : "";
-						String genderVal = (i == 0 && loginUser != null && loginUser.getGender()      != null) ? loginUser.getGender() : "F";
+						String lastVal = (i == 0 && loginUser != null && loginUser.getEngLastName() != null)
+						? loginUser.getEngLastName()
+						: "";
+						String firstVal = (i == 0 && loginUser != null && loginUser.getEngFirstName() != null)
+						? loginUser.getEngFirstName()
+						: "";
+						String birthVal = (i == 0 && loginUser != null && loginUser.getBirthDate() != null)
+						? birthFmt.format(loginUser.getBirthDate())
+						: "";
+						String genderVal = (i == 0 && loginUser != null && loginUser.getGender() != null) ? loginUser.getGender() : "F";
 					%>
 					<div class="accordion">
 						<div class="accordion-header">
@@ -168,8 +167,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									<div class="form-label">
 										승객 성 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="text"
-										name="engLastName_<%=i%>" value="<%=lastVal%>" required />
+									<input class="form-input" type="text" name="engLastName_<%=i%>"
+										value="<%=lastVal%>" required />
 								</div>
 								<div>
 									<div class="form-label">
@@ -188,8 +187,10 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									</div>
 									<div class="select-wrap">
 										<select class="form-select" name="gender_<%=i%>">
-											<option value="F" <%="F".equals(genderVal) ? "selected" : ""%>>여성(F)</option>
-											<option value="M" <%="M".equals(genderVal) ? "selected" : ""%>>남성(M)</option>
+											<option value="F"
+												<%="F".equals(genderVal) ? "selected" : ""%>>여성(F)</option>
+											<option value="M"
+												<%="M".equals(genderVal) ? "selected" : ""%>>남성(M)</option>
 										</select>
 									</div>
 								</div>
@@ -197,14 +198,16 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 									<div class="form-label">
 										생년월일 <span class="req">*</span>
 									</div>
-									<input class="form-input" type="date"
-										name="birthDate_<%=i%>" value="<%=birthVal%>" />
+									<input class="form-input" type="date" name="birthDate_<%=i%>"
+										value="<%=birthVal%>" />
 								</div>
 							</div>
 
 						</div>
 					</div>
-					<% } %>
+					<%
+					}
+					%>
 
 					<!-- 확인 버튼 (모든 승객 한 번에 제출) -->
 					<div class="btn-confirm-wrap">
@@ -212,82 +215,82 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 							id="btn-passenger-confirm">확인</button>
 					</div>
 
+
+
+					<!-- 연락처 정보 아코디언 -->
+					<div class="accordion" id="contact-accordion">
+						<div class="accordion-header secondary" id="contact-header">
+							<span>연락처 정보</span> <span class="chevron">∨</span>
+						</div>
+						<div class="accordion-body hidden" id="contact-body">
+
+							<!-- 안내 문구 -->
+							<div class="contact-notice">
+								<span class="icon">📋</span> <span>e-티켓 확인증과 항공편 스케줄 변동
+									등의 안내를 받으실 수 있도록 휴대전화 번호와 이메일을 입력해주세요.</span>
+							</div>
+
+							<!-- 국가번호 / 휴대전화 번호 -->
+							<div class="form-row">
+								<div>
+									<div class="form-label">
+										국가번호 <span class="req">*</span>
+									</div>
+									<div class="country-row">
+										<button type="button" class="btn-country">국가번호</button>
+										<input class="form-input" type="text" name="phoneCountry"
+											value="${loginUser.phoneCountry}" style="max-width: 60px;" />
+									</div>
+								</div>
+								<div>
+									<div class="form-label">
+										휴대전화 번호 <span class="req">*</span>
+									</div>
+									<input class="form-input" type="text" name="contactPhone"
+										value="${loginUser.userPhone}" style="color: #0066cc;" />
+								</div>
+							</div>
+
+							<!-- 이메일 / 언어 선택 -->
+							<div class="form-row">
+								<div>
+									<div class="form-label">
+										이메일 <span class="req">*</span>
+									</div>
+									<input class="form-input" type="email" name="contactEmail"
+										value="${loginUser.userEmail}" style="color: #0066cc;" />
+								</div>
+								<div>
+									<div class="form-label">
+										언어 선택 <span class="req">*</span>
+									</div>
+									<div class="select-wrap">
+										<select class="form-select">
+											<option>한국어</option>
+											<option>English</option>
+											<option>日本語</option>
+											<option>中文</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<!-- 동의 체크박스 -->
+							<div class="agree-row">
+								<input type="checkbox" id="agree-update" /> <label
+									for="agree-update"> [선택] 상기의 휴대전화 번호와 이메일 주소를 나의 회원 정보에
+									업데이트 하는 것을 동의합니다. </label>
+							</div>
+
+							<!-- 확인 버튼 -->
+							<div class="btn-confirm-wrap">
+								<button class="btn-confirm" id="btn-contact-confirm"
+									type="button">확인</button>
+							</div>
+
+						</div>
+					</div>
 				</form>
-
-				<!-- 연락처 정보 아코디언 -->
-				<div class="accordion" id="contact-accordion">
-					<div class="accordion-header secondary" id="contact-header">
-						<span>연락처 정보</span> <span class="chevron">∨</span>
-					</div>
-					<div class="accordion-body hidden" id="contact-body">
-
-						<!-- 안내 문구 -->
-						<div class="contact-notice">
-							<span class="icon">📋</span> <span>e-티켓 확인증과 항공편 스케줄 변동 등의
-								안내를 받으실 수 있도록 휴대전화 번호와 이메일을 입력해주세요.</span>
-						</div>
-
-						<!-- 국가번호 / 휴대전화 번호 -->
-						<div class="form-row">
-							<div>
-								<div class="form-label">
-									국가번호 <span class="req">*</span>
-								</div>
-								<div class="country-row">
-									<button class="btn-country">국가번호</button>
-									<input class="form-input" type="text"
-										value="${loginUser.phoneCountry}" style="max-width: 60px;" />
-								</div>
-							</div>
-							<div>
-								<div class="form-label">
-									휴대전화 번호 <span class="req">*</span>
-								</div>
-								<input class="form-input" type="text"
-									value="${loginUser.userPhone}" style="color: #0066cc;" />
-							</div>
-						</div>
-
-						<!-- 이메일 / 언어 선택 -->
-						<div class="form-row">
-							<div>
-								<div class="form-label">
-									이메일 <span class="req">*</span>
-								</div>
-								<input class="form-input" type="email"
-									value="${loginUser.userEmail}" style="color: #0066cc;" />
-							</div>
-							<div>
-								<div class="form-label">
-									언어 선택 <span class="req">*</span>
-								</div>
-								<div class="select-wrap">
-									<select class="form-select">
-										<option>한국어</option>
-										<option>English</option>
-										<option>日本語</option>
-										<option>中文</option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<!-- 동의 체크박스 -->
-						<div class="agree-row">
-							<input type="checkbox" id="agree-update" /> <label
-								for="agree-update"> [선택] 상기의 휴대전화 번호와 이메일 주소를 나의 회원 정보에
-								업데이트 하는 것을 동의합니다. </label>
-						</div>
-
-						<!-- 확인 버튼 -->
-						<div class="btn-confirm-wrap">
-							<button class="btn-confirm" id="btn-contact-confirm"
-								type="button">확인</button>
-						</div>
-
-					</div>
-				</div>
-
 			</div>
 
 			<!-- 부가서비스 신청 -->
@@ -390,14 +393,12 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 				<div class="price-row">
 					<span>운임</span> <span><%=String.format("%,d", farePrice)%> 원</span>
 				</div>
-				<div class="price-row">
-					<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
-						원</span>
+				<%-- <div class="price-row">
+					<span>유류할증료</span> <span>원</span>
 				</div>
 				<div class="price-row">
-					<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
-						원</span>
-				</div>
+					<span>세금, 수수료 및 기타 요금</span> <span>원</span>
+				</div> --%>
 				<div id="extraBaggageRow" class="price-row" style="display: none;">
 					<span id="extraBaggageLabel">초과 수하물</span> <span
 						id="extraBaggagePrice">0 원</span>
@@ -456,9 +457,60 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		applyPriceView();
 	</script>
-	<script
-		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=4"></script>
+	<script>
+		window.stepState = {
+			passenger :
+	<%=passengerDone%>
+		,
+			contact :
+	<%=contactDone%>
+		,
+			seat :
+	<%=seatDone%>
+		|| sessionStorage.getItem('seatDone') === 'true',
+			baggage :
+	<%=baggageDone%>
+		|| sessionStorage.getItem('baggageDone') === 'true'
+		};
 
+		function checkStepBeforeSeat() {
+			if (!window.stepState.passenger) {
+				alert("먼저 승객정보 확인 버튼을 눌러주세요.");
+				return false;
+			}
+			if (!window.stepState.contact) {
+				alert("먼저 연락처정보 확인 버튼을 눌러주세요.");
+				return false;
+			}
+			return true;
+		}
+
+		function checkStepBeforeBaggage() {
+			if (!window.stepState.seat) {
+				alert("먼저 좌석배정을 완료해주세요.");
+				return false;
+			}
+			return true;
+		}
+
+		function checkStepBeforePay() {
+			if (!window.stepState.passenger) {
+				alert("승객정보 확인을 먼저 진행해주세요.");
+				return false;
+			}
+			if (!window.stepState.contact) {
+				alert("연락처정보 확인을 먼저 진행해주세요.");
+				return false;
+			}
+			if (!window.stepState.seat) {
+				alert("좌석배정을 먼저 완료해주세요.");
+				return false;
+			}
+			return true;
+		}
+	</script>
+	<script
+		src="${pageContext.request.contextPath}/js/booking/passenger.js?v=6"></script>
 	<!-- ===== 결제 모달 ===== -->
 	<div class="modal-overlay" id="payModal" onclick="closePayModal(event)">
 		<div class="modal-wrap">
@@ -540,14 +592,18 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 							<span>운임</span> <span><%=String.format("%,d", farePrice)%>
 								원</span>
 						</div>
-						<div class="modal-fee-row">
+
+						<!-- !!!!! 세금 부분 일단 주석처리 -->
+						<%-- <div class="modal-fee-row">
 							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
 								원</span>
 						</div>
 						<div class="modal-fee-row">
 							<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
 								원</span>
-						</div>
+						</div> --%>
+
+
 						<div class="modal-fee-total">
 							<span>소계</span> <span><%=String.format("%,d", baseTotal)%>
 								원</span>
@@ -602,14 +658,12 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 							<span>항공권 운임</span> <span><%=String.format("%,d", farePrice)%>
 								원</span>
 						</div>
-						<div class="modal-fee-row">
-							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
-								원</span>
+						<%-- <div class="modal-fee-row">
+							<span>유류할증료</span> <span>원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금 및 수수료</span> <span><%=String.format("%,d", tax)%>
-								원</span>
-						</div>
+							<span>세금 및 수수료</span> <span>원</span>
+						</div> --%>
 						<div class="modal-fee-row" id="summaryBaggageRow"
 							style="display: none;">
 							<span id="summaryBaggageLabel">초과 수하물</span> <span
@@ -653,7 +707,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 	<!-- ===== 초과 수화물 모달 ===== -->
 	<div class="modal-overlay" id="baggageModal"
-		onclick="closeBaggageModal(event)">
+		onclick="closeBaggageModalByOverlay(event)">
 		<div class="modal-wrap"
 			style="width: 900px; max-width: 95vw; height: 88vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
 			<div class="modal-header" style="padding: 20px 24px; flex-shrink: 0;">
@@ -672,6 +726,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 		var selectedOpt = 'opt1';
 
 		function openPayModal() {
+			if (!checkStepBeforePay())
+				return;
 			var modal = document.getElementById('payModal');
 			var t = serverTotal;
 			var b = serverBags;
@@ -764,6 +820,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		// 좌석 배정 모달
 		function openSeatModal() {
+			if (!checkStepBeforeSeat())
+				return;
 			document.getElementById('seatFrame').src = '${pageContext.request.contextPath}/air/booking/seatSelect';
 			document.getElementById('seatModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
@@ -778,15 +836,24 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		// 초과 수화물 모달
 		function openBaggageModal() {
-			document.getElementById('baggageFrame').src = '${pageContext.request.contextPath}/air/booking/payment';
+			if (!checkStepBeforeBaggage())
+				return;
+
+			document.getElementById('baggageFrame').src = '${pageContext.request.contextPath}/air/booking/baggage';
+
 			document.getElementById('baggageModal').style.display = 'flex';
 			document.body.style.overflow = 'hidden';
 		}
-		function closeBaggageModal(e) {
-			if (e && e.target !== document.getElementById('baggageModal')) return;
+		function closeBaggageModal() {
 			document.getElementById('baggageModal').style.display = 'none';
 			document.getElementById('baggageFrame').src = '';
 			document.body.style.overflow = '';
+		}
+
+		function closeBaggageModalByOverlay(e) {
+			if (e.target === document.getElementById('baggageModal')) {
+				closeBaggageModal();
+			}
 		}
 
 		function updateBaggageInfo(bags, baggageOnlyPrice) {
@@ -797,10 +864,30 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 		// iframe(payment.jsp)에서 postMessage로 수하물 데이터 수신
 		window.addEventListener('message', function(e) {
-			if (!e.data || e.data.type !== 'baggageDone') return;
-			updateBaggageInfo(e.data.bags, e.data.bagFee);
-			closeBaggageModal();
-			closeSeatModal();
+			if (!e.data)
+				return;
+
+			if (e.data.type === 'seatDone') {
+				window.stepState.seat = true;
+				sessionStorage.setItem('seatDone', 'true');
+
+				closeSeatModal();
+
+				// 좌석 완료 후 자동으로 수하물창 열기
+				setTimeout(function() {
+					openBaggageModal();
+				}, 200);
+
+				return;
+			}
+
+			if (e.data.type === 'baggageDone') {
+				window.stepState.baggage = true;
+				sessionStorage.setItem('baggageDone', 'true');
+				updateBaggageInfo(e.data.bags, e.data.bagFee);
+				closeBaggageModal();
+				return;
+			}
 		});
 	</script>
 

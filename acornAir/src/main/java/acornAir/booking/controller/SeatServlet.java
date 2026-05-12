@@ -1,6 +1,8 @@
 package acornAir.booking.controller;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,16 +12,48 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import acornAir.booking.dao.BookingDAO;
 import acornAir.booking.dto.BookingDTO;
 import acornAir.booking.dto.PassengerDTO;
 import acornAir.flight.dto.FlightDTO;
 import acornAir.login.dto.UserDTO;
+import acornAir.util.DBUtil;
 
 @WebServlet("/air/booking/seatSelect")
 public class SeatServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
+		FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
+
+		BookingDAO dao = new BookingDAO();
+
+		try (Connection con = new DBUtil().dbcon()) {
+			if (goFlight != null) {
+				List<String> booked = dao.getBookedSeats(goFlight.getFlightId(), con);
+				System.out.println("[SeatServlet] goFlightId=" + goFlight.getFlightId() + ", bookedSeats=" + booked);
+				req.setAttribute("goBookedSeats", booked);
+			} else {
+				System.out.println("[SeatServlet] goFlight is null");
+				req.setAttribute("goBookedSeats", new ArrayList<>());
+			}
+			if (backFlight != null) {
+				List<String> booked = dao.getBookedSeats(backFlight.getFlightId(), con);
+				System.out
+						.println("[SeatServlet] backFlightId=" + backFlight.getFlightId() + ", bookedSeats=" + booked);
+				req.setAttribute("backBookedSeats", booked);
+			} else {
+				req.setAttribute("backBookedSeats", new ArrayList<>());
+			}
+		} catch (Exception e) {
+			System.out.println("[SeatServlet] 예외 발생: " + e.getMessage());
+			e.printStackTrace();
+			req.setAttribute("goBookedSeats", new ArrayList<>());
+			req.setAttribute("backBookedSeats", new ArrayList<>());
+		}
+
 		req.getRequestDispatcher("/WEB-INF/views/booking/seatSelect.jsp").forward(req, resp);
 	}
 
@@ -42,12 +76,12 @@ public class SeatServlet extends HttpServlet {
 		FlightDTO goFlight = (FlightDTO) session.getAttribute("goFlight");
 
 		if (goFlight == null) {
-		    resp.sendRedirect(req.getContextPath() + "/home");
-		    return;
+			resp.sendRedirect(req.getContextPath() + "/home");
+			return;
 		}
 
 		FlightDTO backFlight = (FlightDTO) session.getAttribute("backFlight");
-		String goSeatClass  = (String) session.getAttribute("goSeatClass");
+		String goSeatClass = (String) session.getAttribute("goSeatClass");
 		String backSeatClass = (String) session.getAttribute("backSeatClass");
 
 		@SuppressWarnings("unchecked")
@@ -87,7 +121,7 @@ public class SeatServlet extends HttpServlet {
 		String tripType = (String) session.getAttribute("tripType");
 
 		if (tripType == null || tripType.isEmpty()) {
-		    tripType = "RT"; // 임시 테스트 기본값
+			tripType = "RT"; // 임시 테스트 기본값
 		}
 
 		bookingDTO.setTripType(tripType);
@@ -96,17 +130,17 @@ public class SeatServlet extends HttpServlet {
 		bookingDTO.setGoFlight(goFlight);
 
 		if (backFlight != null) {
-		    bookingDTO.setBackFlight(backFlight);
+			bookingDTO.setBackFlight(backFlight);
 		}
 
 		bookingDTO.setPassengers(passengers);
 
 		if (goSeats != null && !goSeats.isEmpty()) {
-		    bookingDTO.setGoSeats(java.util.Arrays.asList(goSeats.split(",")));
+			bookingDTO.setGoSeats(java.util.Arrays.asList(goSeats.split(",")));
 		}
 
 		if (backSeats != null && !backSeats.isEmpty()) {
-		    bookingDTO.setBackSeats(java.util.Arrays.asList(backSeats.split(",")));
+			bookingDTO.setBackSeats(java.util.Arrays.asList(backSeats.split(",")));
 		}
 
 		bookingDTO.setBasePrice(basePrice);
@@ -114,6 +148,8 @@ public class SeatServlet extends HttpServlet {
 
 		session.setAttribute("bookingDTO", bookingDTO);
 
-		resp.sendRedirect(req.getContextPath() + "/air/booking/payment");
+//		resp.sendRedirect(req.getContextPath() + "/air/booking/payment");
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.getWriter().write("<script>" + "window.parent.postMessage({type:'seatDone'}, '*');" + "</script>");
 	}
 }

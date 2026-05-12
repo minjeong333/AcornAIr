@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import acornAir.booking.dto.BaggageDTO;
@@ -72,9 +73,33 @@ public class BookingDAO {
 		}
 	}
 
-	// 3. 좌석 중복 확인
+	// 3. 항공편의 예약된 좌석 목록 조회
+	public List<String> getBookedSeats(int flightId, Connection con) throws SQLException {
+
+		List<String> list = new ArrayList<>();
+
+		String sql = "SELECT S.SEAT_NO " + "FROM TB_SEAT S " + "JOIN TB_BOOKING B " + "ON S.BOOKING_ID = B.BOOKING_ID "
+				+ "WHERE S.FLIGHT_ID = ? " + "AND B.BOOK_STATUS = 'Y'";
+
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+			pstmt.setInt(1, flightId);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+
+				while (rs.next()) {
+					list.add(rs.getString("SEAT_NO"));
+				}
+			}
+		}
+
+		return list;
+	}
+
+	// 4. 좌석 중복 확인
 	public boolean isSeatAlreadyBooked(int flightId, String seatNo, Connection con) throws SQLException {
-		String sql = "SELECT COUNT(*) FROM TB_SEAT " + "WHERE FLIGHT_ID = ? AND SEAT_NO = ?";
+		String sql = "SELECT COUNT(*) " + "FROM TB_SEAT S " + "JOIN TB_BOOKING B ON S.BOOKING_ID = B.BOOKING_ID "
+				+ "WHERE S.FLIGHT_ID = ? " + "AND S.SEAT_NO = ? " + "AND B.BOOK_STATUS = 'Y'";
 
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, flightId);
@@ -223,24 +248,81 @@ public class BookingDAO {
 	// 관리자 예약 취소
 	public int cancelBooking(int bookingId) {
 
-		String sql = "UPDATE TB_BOOKING SET BOOK_STATUS = 'N' WHERE BOOKING_ID = ?";
-
 		Connection con = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
 		int result = 0;
 
 		try {
 			acornAir.util.DBUtil db = new acornAir.util.DBUtil();
 			con = db.dbcon();
+			con.setAutoCommit(false);
 
-			pstmt = con.prepareStatement(sql);
+			String selectSql = "SELECT B.GO_FLIGHT_ID, B.BACK_FLIGHT_ID, " + "COUNT(P.PASSENGER_ID) AS PASSENGER_COUNT "
+					+ "FROM TB_BOOKING B " + "LEFT JOIN TB_PASSENGER P " + "ON B.BOOKING_ID = P.BOOKING_ID "
+					+ "WHERE B.BOOKING_ID = ? " + "AND B.BOOK_STATUS = 'Y' "
+					+ "GROUP BY B.GO_FLIGHT_ID, B.BACK_FLIGHT_ID";
+
+			pstmt = con.prepareStatement(selectSql);
 			pstmt.setInt(1, bookingId);
+			rs = pstmt.executeQuery();
 
+			if (!rs.next()) {
+				con.rollback();
+				return 0;
+			}
+
+			int goFlightId = rs.getInt("GO_FLIGHT_ID");
+
+			int backFlightId = rs.getInt("BACK_FLIGHT_ID");
+			boolean hasBackFlight = !rs.wasNull();
+
+			int passengerCount = rs.getInt("PASSENGER_COUNT");
+
+			rs.close();
+			pstmt.close();
+
+			String updateBookingSql = "UPDATE TB_BOOKING " + "SET BOOK_STATUS = 'N' " + "WHERE BOOKING_ID = ?";
+
+			pstmt = con.prepareStatement(updateBookingSql);
+			pstmt.setInt(1, bookingId);
 			result = pstmt.executeUpdate();
 
+			pstmt.close();
+
+			String updateFlightSql = "UPDATE TB_FLIGHT " + "SET REMAIN_SEAT = REMAIN_SEAT + ? " + "WHERE FLIGHT_ID = ?";
+
+			pstmt = con.prepareStatement(updateFlightSql);
+
+			pstmt.setInt(1, passengerCount);
+			pstmt.setInt(2, goFlightId);
+			pstmt.executeUpdate();
+
+			if (hasBackFlight) {
+				pstmt.setInt(1, passengerCount);
+				pstmt.setInt(2, backFlightId);
+				pstmt.executeUpdate();
+			}
+
+			con.commit();
+
 		} catch (Exception e) {
+			try {
+				if (con != null)
+					con.rollback();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 			e.printStackTrace();
+
 		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
 			try {
 				if (pstmt != null)
 					pstmt.close();
