@@ -42,9 +42,23 @@ function sendToBot(keyword) {
 function appendChatMessage(sender, text) {
     var chatContent = document.getElementById('chat-content');
     if (!chatContent) return;
-    var msgDiv = document.createElement('div');
-    msgDiv.innerText = text;
-    msgDiv.style.cssText = 'padding:10px 14px;margin:5px 10px;border-radius:12px;max-width:75%;word-break:break-word;font-size:14px;';
+	
+    const msgDiv = document.createElement('div');
+
+	// innertxt -> innerHTML contextPath추가	
+	if (sender === 'bot') {
+	        const fixedText = text.replace(/href="\//g, 'href="' + contextPath + '/');
+	        msgDiv.innerHTML = fixedText; 
+	    } else {
+	        msgDiv.innerText = text;
+	    }
+
+    msgDiv.style.padding = "10px";
+    msgDiv.style.margin = "5px";
+    msgDiv.style.borderRadius = "10px";
+    msgDiv.style.maxWidth = "70%";
+    msgDiv.style.display = "block";
+
     if (sender === 'user') {
         msgDiv.style.backgroundColor = '#00256c';
         msgDiv.style.color = 'white';

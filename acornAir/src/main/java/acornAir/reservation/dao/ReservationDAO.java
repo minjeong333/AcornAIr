@@ -96,6 +96,7 @@ public class ReservationDAO {
             	    ON B.BOOKING_ID = P.BOOKING_ID
 
             	    WHERE B.USER_ID = ?
+            	    AND B.BOOK_STATUS = 'Y'
 
             	    GROUP BY
             	        B.BOOKING_ID,
@@ -219,55 +220,140 @@ public class ReservationDAO {
         return false;
     }
 
+//    public void cancelReservation(int bookingId) {
+//
+//        Connection con = null;
+//        PreparedStatement pst1 = null;
+//        PreparedStatement pst2 = null;
+//        PreparedStatement pst3 = null;
+//        PreparedStatement pst4 = null;
+//
+//        try {
+//            con = dbcon();
+//            con.setAutoCommit(false);
+//
+//            pst1 = con.prepareStatement("DELETE FROM TB_BAGGAGE WHERE BOOKING_ID = ?");
+//            pst1.setInt(1, bookingId);
+//            pst1.executeUpdate();
+//
+//            pst2 = con.prepareStatement("DELETE FROM TB_SEAT WHERE BOOKING_ID = ?");
+//            pst2.setInt(1, bookingId);
+//            pst2.executeUpdate();
+//
+//            pst3 = con.prepareStatement("DELETE FROM TB_PASSENGER WHERE BOOKING_ID = ?");
+//            pst3.setInt(1, bookingId);
+//            pst3.executeUpdate();
+//
+//            pst4 = con.prepareStatement("DELETE FROM TB_BOOKING WHERE BOOKING_ID = ?");
+//            pst4.setInt(1, bookingId);
+//            pst4.executeUpdate();
+//
+//            con.commit();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//            try {
+//                if (con != null) con.rollback();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//
+//        } finally {
+//            try {
+//                if (pst1 != null) pst1.close();
+//                if (pst2 != null) pst2.close();
+//                if (pst3 != null) pst3.close();
+//                if (pst4 != null) pst4.close();
+//                if (con != null) con.close();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
     public void cancelReservation(int bookingId) {
 
         Connection con = null;
-        PreparedStatement pst1 = null;
-        PreparedStatement pst2 = null;
-        PreparedStatement pst3 = null;
-        PreparedStatement pst4 = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
         try {
             con = dbcon();
             con.setAutoCommit(false);
 
-            pst1 = con.prepareStatement("DELETE FROM TB_BAGGAGE WHERE BOOKING_ID = ?");
-            pst1.setInt(1, bookingId);
-            pst1.executeUpdate();
+            // 1. 예약 정보 + 승객 수 조회
+            String selectSql =
+                    "SELECT B.GO_FLIGHT_ID, B.BACK_FLIGHT_ID, COUNT(P.PASSENGER_ID) AS PASSENGER_COUNT " +
+                    "FROM TB_BOOKING B " +
+                    "LEFT JOIN TB_PASSENGER P ON B.BOOKING_ID = P.BOOKING_ID " +
+                    "WHERE B.BOOKING_ID = ? " +
+                    "AND B.BOOK_STATUS = 'Y' " +
+                    "GROUP BY B.GO_FLIGHT_ID, B.BACK_FLIGHT_ID";
 
-            pst2 = con.prepareStatement("DELETE FROM TB_SEAT WHERE BOOKING_ID = ?");
-            pst2.setInt(1, bookingId);
-            pst2.executeUpdate();
+            pst = con.prepareStatement(selectSql);
+            pst.setInt(1, bookingId);
+            rs = pst.executeQuery();
 
-            pst3 = con.prepareStatement("DELETE FROM TB_PASSENGER WHERE BOOKING_ID = ?");
-            pst3.setInt(1, bookingId);
-            pst3.executeUpdate();
+            if (!rs.next()) {
+                con.rollback();
+                return;
+            }
 
-            pst4 = con.prepareStatement("DELETE FROM TB_BOOKING WHERE BOOKING_ID = ?");
-            pst4.setInt(1, bookingId);
-            pst4.executeUpdate();
+            int goFlightId = rs.getInt("GO_FLIGHT_ID");
+
+            int backFlightId = rs.getInt("BACK_FLIGHT_ID");
+            boolean hasBackFlight = !rs.wasNull();
+
+            int passengerCount = rs.getInt("PASSENGER_COUNT");
+
+            rs.close();
+            pst.close();
+
+            // 2. 예약 상태 취소 처리
+            String updateBookingSql =
+                    "UPDATE TB_BOOKING " +
+                    "SET BOOK_STATUS = 'N' " +
+                    "WHERE BOOKING_ID = ?";
+
+            pst = con.prepareStatement(updateBookingSql);
+            pst.setInt(1, bookingId);
+            pst.executeUpdate();
+
+            pst.close();
+
+            // 3. 가는편 좌석 복구
+            String updateSeatSql =
+                    "UPDATE TB_FLIGHT " +
+                    "SET REMAIN_SEAT = REMAIN_SEAT + ? " +
+                    "WHERE FLIGHT_ID = ?";
+
+            pst = con.prepareStatement(updateSeatSql);
+            pst.setInt(1, passengerCount);
+            pst.setInt(2, goFlightId);
+            pst.executeUpdate();
+
+            // 4. 오는편 좌석 복구
+            if (hasBackFlight) {
+                pst.setInt(1, passengerCount);
+                pst.setInt(2, backFlightId);
+                pst.executeUpdate();
+            }
 
             con.commit();
 
         } catch (Exception e) {
-            e.printStackTrace();
-
             try {
                 if (con != null) con.rollback();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
+            e.printStackTrace();
+
         } finally {
-            try {
-                if (pst1 != null) pst1.close();
-                if (pst2 != null) pst2.close();
-                if (pst3 != null) pst3.close();
-                if (pst4 != null) pst4.close();
-                if (con != null) con.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (pst != null) pst.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
         }
     }
 }
