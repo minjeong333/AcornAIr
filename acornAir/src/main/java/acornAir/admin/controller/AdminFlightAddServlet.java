@@ -2,6 +2,7 @@ package acornAir.admin.controller;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,36 +43,53 @@ public class AdminFlightAddServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 
 		try {
-
-			FlightDTO dto = new FlightDTO();
-
-			dto.setFlightNo(request.getParameter("flightNo"));
-			dto.setDepAirport(request.getParameter("depAirport"));
-			dto.setArrAirport(request.getParameter("arrAirport"));
+			String flightNo = request.getParameter("flightNo");
+			String depAirport = request.getParameter("depAirport");
+			String arrAirport = request.getParameter("arrAirport");
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			Date depTime = sdf.parse(request.getParameter("depTime"));
+			Date arrTime = sdf.parse(request.getParameter("arrTime"));
 
-			dto.setDepTime(sdf.parse(request.getParameter("depTime")));
+			int price = Integer.parseInt(request.getParameter("price"));
 
-			dto.setArrTime(sdf.parse(request.getParameter("arrTime")));
-
-			dto.setSeatClass(request.getParameter("seatClass"));
-
-			dto.setPrice(Integer.parseInt(request.getParameter("price")));
-
-			dto.setTotalSeat(Integer.parseInt(request.getParameter("totalSeat")));
-
-			dto.setRemainSeat(Integer.parseInt(request.getParameter("remainSeat")));
+			int economySeat = Integer.parseInt(request.getParameter("economySeat"));
+			int businessSeat = Integer.parseInt(request.getParameter("businessSeat"));
 
 			FlightDAO dao = new FlightDAO();
 
-			dao.insertFlight(dto);
+			// 일반석 Y
+			FlightDTO economy = new FlightDTO();
+			economy.setFlightNo(flightNo);
+			economy.setDepAirport(depAirport);
+			economy.setArrAirport(arrAirport);
+			economy.setDepTime(depTime);
+			economy.setArrTime(arrTime);
+			economy.setSeatClass("Y");
+			economy.setPrice(price);
+			economy.setTotalSeat(economySeat);
+			economy.setRemainSeat(economySeat);
+
+			dao.insertFlight(economy);
+
+			// 비즈니스석 C
+			FlightDTO business = new FlightDTO();
+			business.setFlightNo(flightNo);
+			business.setDepAirport(depAirport);
+			business.setArrAirport(arrAirport);
+			business.setDepTime(depTime);
+			business.setArrTime(arrTime);
+			business.setSeatClass("C");
+			business.setPrice(price);
+			business.setTotalSeat(businessSeat);
+			business.setRemainSeat(businessSeat);
+
+			dao.insertFlight(business);
 
 			response.sendRedirect(request.getContextPath() + "/admin/flights");
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			response.sendRedirect(request.getContextPath() + "/admin/flights/add");
 		}
 	}
