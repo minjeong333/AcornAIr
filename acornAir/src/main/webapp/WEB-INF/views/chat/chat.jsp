@@ -41,9 +41,9 @@
 
     <div class="chat-footer">
         <div class="input-box">
-            <textarea id="chat-input" placeholder="궁금한 사항을 입력해 주세요."></textarea>
+            <textarea id="chat-input" placeholder=" 문의할 내용을 입력하세요.&#10;'기내식','환불','게이트 위치',분실물 센터'&#10;'면세점','마일리지'"></textarea>
             <div class="input-info">
-                <button type="button" class="send-btn" onclick="handleSendMessage()">↑</button>
+                <button type="button" class="send-btn" onclick="handleSendMessage()">▲</button>
             </div>
         </div>
     </div>

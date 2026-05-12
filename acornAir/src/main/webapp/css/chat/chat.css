@@ -141,6 +141,23 @@
   color: #333;
 }
 .grid-item:hover { background: #f9f9f9; border-color: #bbb; }
+
+/* 챗봇 답변 링크 */
+.chat-content a {
+    color: #00256c; 
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.chat-content a:hover {
+    text-decoration: underline;
+    transform: scale(1.05);
+}
+
+
 .chat-footer { padding: 20px; }
 .input-box {
   background: white;
