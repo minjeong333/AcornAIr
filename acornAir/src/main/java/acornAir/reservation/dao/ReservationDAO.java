@@ -58,6 +58,10 @@ public class ReservationDAO {
             	        TO_CHAR(BF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS BACK_DATE,
 
             	        COUNT(DISTINCT P.PASSENGER_ID) AS PASSENGER_COUNT,
+            	        -- TB_SEAT JOIN으로 행이 증가하면 LISTAGG에 중복이 생기므로 DISTINCT 서브쿼리로 처리
+            	        (SELECT LISTAGG(NAME, ', ') WITHIN GROUP (ORDER BY NAME)
+            	         FROM (SELECT DISTINCT ENG_LAST_NAME || ' ' || ENG_FIRST_NAME AS NAME
+            	               FROM TB_PASSENGER WHERE BOOKING_ID = B.BOOKING_ID)) AS PASSENGER_NAMES,
 
             	        CASE
             	            WHEN GF.SEAT_CLASS = 'Y' THEN '일반석'
@@ -69,8 +73,12 @@ public class ReservationDAO {
             	            WHEN BF.SEAT_CLASS = 'C' THEN '비즈니스석'
             	        END AS BACK_SEAT_CLASS,
 
-            	        MAX(CASE WHEN S.FLIGHT_ID = GF.FLIGHT_ID THEN S.SEAT_NO END) AS GO_SEAT_NO,
-            	        MAX(CASE WHEN S.FLIGHT_ID = BF.FLIGHT_ID THEN S.SEAT_NO END) AS BACK_SEAT_NO,
+            	        (SELECT LISTAGG(SEAT_NO, ', ') WITHIN GROUP (ORDER BY SEAT_NO)
+            	         FROM (SELECT DISTINCT SEAT_NO FROM TB_SEAT
+            	               WHERE BOOKING_ID = B.BOOKING_ID AND FLIGHT_ID = GF.FLIGHT_ID)) AS GO_SEAT_NO,
+            	        (SELECT LISTAGG(SEAT_NO, ', ') WITHIN GROUP (ORDER BY SEAT_NO)
+            	         FROM (SELECT DISTINCT SEAT_NO FROM TB_SEAT
+            	               WHERE BOOKING_ID = B.BOOKING_ID AND FLIGHT_ID = BF.FLIGHT_ID)) AS BACK_SEAT_NO,
 
             	        B.TOTAL_PRICE,
             	        NVL(MAX(BG.EXTRA_BAGGAGE), 0) AS EXTRA_BAGGAGE
@@ -104,9 +112,11 @@ public class ReservationDAO {
             	        B.BOOK_STATUS,
             	        U.KOR_LAST_NAME,
             	        U.KOR_FIRST_NAME,
+            	        GF.FLIGHT_ID,
             	        GF.DEP_AIRPORT,
             	        GF.ARR_AIRPORT,
             	        GF.DEP_TIME,
+            	        BF.FLIGHT_ID,
             	        BF.DEP_AIRPORT,
             	        BF.ARR_AIRPORT,
             	        BF.DEP_TIME,
@@ -142,6 +152,7 @@ public class ReservationDAO {
                
 
                 dto.setPassengerCount(rs.getInt("PASSENGER_COUNT"));
+                dto.setPassengerNames(rs.getString("PASSENGER_NAMES"));
                 dto.setGoSeatClass(rs.getString("GO_SEAT_CLASS"));
                 dto.setBackSeatClass(rs.getString("BACK_SEAT_CLASS"));
                 dto.setGoSeatNo(rs.getString("GO_SEAT_NO"));
@@ -194,6 +205,10 @@ public class ReservationDAO {
             	        TO_CHAR(BF.DEP_TIME, 'YYYY-MM-DD HH24:MI') AS BACK_DATE,
 
             	        COUNT(DISTINCT P.PASSENGER_ID) AS PASSENGER_COUNT,
+            	        -- TB_SEAT JOIN으로 행이 증가하면 LISTAGG에 중복이 생기므로 DISTINCT 서브쿼리로 처리
+            	        (SELECT LISTAGG(NAME, ', ') WITHIN GROUP (ORDER BY NAME)
+            	         FROM (SELECT DISTINCT ENG_LAST_NAME || ' ' || ENG_FIRST_NAME AS NAME
+            	               FROM TB_PASSENGER WHERE BOOKING_ID = B.BOOKING_ID)) AS PASSENGER_NAMES,
 
             	        CASE
             	            WHEN GF.SEAT_CLASS = 'Y' THEN '일반석'
@@ -205,8 +220,12 @@ public class ReservationDAO {
             	            WHEN BF.SEAT_CLASS = 'C' THEN '비즈니스석'
             	        END AS BACK_SEAT_CLASS,
 
-            	        MAX(CASE WHEN S.FLIGHT_ID = GF.FLIGHT_ID THEN S.SEAT_NO END) AS GO_SEAT_NO,
-            	        MAX(CASE WHEN S.FLIGHT_ID = BF.FLIGHT_ID THEN S.SEAT_NO END) AS BACK_SEAT_NO,
+            	        (SELECT LISTAGG(SEAT_NO, ', ') WITHIN GROUP (ORDER BY SEAT_NO)
+            	         FROM (SELECT DISTINCT SEAT_NO FROM TB_SEAT
+            	               WHERE BOOKING_ID = B.BOOKING_ID AND FLIGHT_ID = GF.FLIGHT_ID)) AS GO_SEAT_NO,
+            	        (SELECT LISTAGG(SEAT_NO, ', ') WITHIN GROUP (ORDER BY SEAT_NO)
+            	         FROM (SELECT DISTINCT SEAT_NO FROM TB_SEAT
+            	               WHERE BOOKING_ID = B.BOOKING_ID AND FLIGHT_ID = BF.FLIGHT_ID)) AS BACK_SEAT_NO,
 
             	        B.TOTAL_PRICE,
             	        NVL(MAX(BG.EXTRA_BAGGAGE), 0) AS EXTRA_BAGGAGE
@@ -241,9 +260,11 @@ public class ReservationDAO {
             	        B.BOOK_STATUS,
             	        U.KOR_LAST_NAME,
             	        U.KOR_FIRST_NAME,
+            	        GF.FLIGHT_ID,
             	        GF.DEP_AIRPORT,
             	        GF.ARR_AIRPORT,
             	        GF.DEP_TIME,
+            	        BF.FLIGHT_ID,
             	        BF.DEP_AIRPORT,
             	        BF.ARR_AIRPORT,
             	        BF.DEP_TIME,
@@ -280,6 +301,7 @@ public class ReservationDAO {
                
 
                 dto.setPassengerCount(rs.getInt("PASSENGER_COUNT"));
+                dto.setPassengerNames(rs.getString("PASSENGER_NAMES"));
                 dto.setGoSeatClass(rs.getString("GO_SEAT_CLASS"));
                 dto.setBackSeatClass(rs.getString("BACK_SEAT_CLASS"));
                 dto.setGoSeatNo(rs.getString("GO_SEAT_NO"));

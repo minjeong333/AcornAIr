@@ -48,13 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnConfirm) {
         btnConfirm.addEventListener('click', function() {
 
-            window.stepState.passenger = true;
+            var accs = document.querySelectorAll('.accordion:not(#contact-accordion)');
+            var collected = [];
 
-            document.querySelectorAll('.accordion:not(#contact-accordion)').forEach(function(acc, idx) {
-                var hdr = acc.querySelector('.accordion-header');
-                var body = acc.querySelector('.accordion-body');
-                if (!hdr || !body) return;
-
+            // 1단계: 전체 유효성 검사 (하나라도 실패하면 즉시 중단)
+            for (var i = 0; i < accs.length; i++) {
+                var acc = accs[i];
                 var lastInput = acc.querySelector('input[name^="engLastName_"]');
                 var firstInput = acc.querySelector('input[name^="engFirstName_"]');
 
@@ -62,26 +61,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 var first = firstInput ? firstInput.value.trim() : '';
 
                 if (last === '' || first === '') {
-                    alert('승객 성과 이름을 입력해주세요.');
+                    alert('승객 ' + (i + 1) + '의 성과 이름을 입력해주세요.');
                     if (lastInput) lastInput.focus();
-                    window.stepState.passenger = false;
                     return;
                 }
 
-                var nameText = last + ' ' + first;
+                collected.push({ acc: acc, name: last + ' ' + first });
+            }
 
-                body.style.display = 'none';
+            // 2단계: 모두 통과 시 헤더만 확인 상태로 변경 (입력값 유지)
+            collected.forEach(function(item) {
+                var hdr = item.acc.querySelector('.accordion-header');
+
                 hdr.innerHTML =
                     '<div class="confirmed-name">' +
                     '<div class="check-circle">✓</div>' +
-                    nameText +
+                    item.name +
                     '</div>' +
-                    '<span class="chevron">∨</span>';
-
+                    '<span class="chevron">∧</span>';
                 hdr.classList.add('confirmed');
             });
 
-            if (!window.stepState.passenger) return;
+            window.stepState.passenger = true;
 
             if (contactBody && contactHeader) {
                 contactBody.classList.remove('hidden');
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 연락처 확인 버튼 클릭 → 폼 제출
+    // 연락처 확인 버튼 클릭 → AJAX로 전송 (페이지 이동 없이 화면 유지)
     var btnContactConfirm = document.getElementById('btn-contact-confirm');
 
     if (btnContactConfirm && btnConfirm) {
@@ -130,12 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
             var form = btnConfirm.closest('form');
             if (!form) return;
 
-            // 연락처 input이 form 밖에 있으므로 hidden으로 복사해서 전송
-            var form = btnConfirm.closest('form');
-            if (!form) return;
+            var formData = new URLSearchParams(new FormData(form));
 
-            window.stepState.contact = true;
-            form.submit();
+            fetch(form.action, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+            }).then(function() {
+                window.stepState.contact = true;
+            }).catch(function() {
+                window.stepState.contact = true;
+            });
         });
     }
 

@@ -292,7 +292,7 @@ a {
          </div>
 
          <div class="info-row">
-            <strong>이름</strong> <span><%=r.getUserName()%></span>
+            <strong>승객</strong> <span><%=r.getPassengerNames() != null ? r.getPassengerNames() : r.getUserName()%></span>
          </div>
 
          <div class="flight-section">

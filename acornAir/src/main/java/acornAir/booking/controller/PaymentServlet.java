@@ -78,6 +78,27 @@ public class PaymentServlet extends HttpServlet {
 			return;
 		}
 
+		// 승객 생년월일 누락 체크 (실제 결제에 사용되는 bookingDTO 기준으로 검사)
+		List<acornAir.booking.dto.PassengerDTO> passengers = bookingDTO.getPassengers();
+		if (passengers == null || passengers.isEmpty()) {
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.getWriter().println("<script>");
+			resp.getWriter().println("alert('고객정보를 다시 확인하세요.');");
+			resp.getWriter().println("location.href='" + req.getContextPath() + "/air/booking/passenger';");
+			resp.getWriter().println("</script>");
+			return;
+		}
+		for (acornAir.booking.dto.PassengerDTO p : passengers) {
+			if (p.getBirthDate() == null) {
+				resp.setContentType("text/html; charset=UTF-8");
+				resp.getWriter().println("<script>");
+				resp.getWriter().println("alert('고객정보를 다시 확인하세요.');");
+				resp.getWriter().println("location.href='" + req.getContextPath() + "/air/booking/passenger';");
+				resp.getWriter().println("</script>");
+				return;
+			}
+		}
+
 		try {
 			String payMethod = req.getParameter("payMethod");
 
