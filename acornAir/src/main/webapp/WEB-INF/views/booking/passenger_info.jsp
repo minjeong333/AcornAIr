@@ -61,23 +61,6 @@ int baseTotal = farePrice;
 
 	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
-	<!-- 	<!-- 상단 진행 표시 -->
-	<div class="progress-bar">
-		<div class="step done">
-			<div class="circle">✓</div>
-			<span>검색</span>
-		</div>
-		<div class="step done">
-			<div class="circle">✓</div>
-			<span>항공편</span>
-		</div>
-		<div class="step active">
-			<div class="circle">3</div>
-			<span>결제</span>
-		</div>
-	</div>
-	-->
-
 	<!-- 메인 컨테이너 -->
 	<div class="container-b">
 
