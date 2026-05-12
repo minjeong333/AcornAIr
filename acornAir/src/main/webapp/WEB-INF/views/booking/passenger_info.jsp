@@ -172,7 +172,7 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 					%>
 					<div class="accordion">
 						<div class="accordion-header">
-							<span>성인 <%=i + 1%></span> <span class="chevron">∧</span>
+							<span>승객 <%=i + 1%></span> <span class="chevron">∧</span>
 						</div>
 						<div class="accordion-body">
 

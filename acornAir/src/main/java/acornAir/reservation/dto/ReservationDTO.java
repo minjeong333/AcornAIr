@@ -28,6 +28,8 @@ public class ReservationDTO {
 	private String bookStatus;
 
 	private String backFlightId;
+
+	private String passengerNames;
 	
 
 
@@ -37,6 +39,14 @@ public class ReservationDTO {
 
 	public void setBackFlightId(String backFlightId) {
 	    this.backFlightId = backFlightId;
+	}
+
+	public String getPassengerNames() {
+	    return passengerNames;
+	}
+
+	public void setPassengerNames(String passengerNames) {
+	    this.passengerNames = passengerNames;
 	}
 	// getter setter
 
