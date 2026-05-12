@@ -76,6 +76,8 @@ int baseTotal = farePrice + fuelSurcharge + tax;
 
 	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
+	<div class="passenger-bg-bar"></div>
+
 	<!-- 메인 컨테이너 -->
 	<div class="container-b">
 
