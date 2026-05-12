@@ -158,3 +158,17 @@
 	margin-bottom: 10px;
 	color: #00256c;
 }
+.res-card a {
+    color: #2d79f3;   /* 포인트 블루 */
+    text-decoration: none;
+    font-weight: 700;
+
+    transition: all 0.2s ease;
+}
+.res-card a::before {
+    content: "› ";
+}
+.res-card a:hover {
+    color: #0056cc;
+    text-decoration: underline;
+}

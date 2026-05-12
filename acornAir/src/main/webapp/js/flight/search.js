@@ -298,23 +298,6 @@ function updateSelectionStyles() {
 // 페이지 로드 시 실행
 window.onload = initCalendar;
 
-let currentIdx = 0;
-const track = document.querySelector('.date-slider-track');
-const items = document.querySelectorAll('.date-item');
-const displayCount = 5; // 한 화면에 보여질 개수
-const maxIdx = items.length - displayCount; // 이동 가능한 최대 인덱스
-
-function moveSlider(direction) {
-  currentIdx += direction;
-
-  // 인덱스 범위 고정 (처음과 끝 제한)
-  if (currentIdx < 0) currentIdx = 0;
-  if (currentIdx > maxIdx) currentIdx = maxIdx;
-
-  // 한 칸의 너비(%)만큼 이동
-  const movePercentage = -(currentIdx * (100 / displayCount));
-  track.style.transform = `translateX(${movePercentage}%)`;
-}
 
 // price-box 부분
 
