@@ -17,6 +17,17 @@
 	String returnDate = (String) session.getAttribute("returnDate");
 	Integer passCnt = (Integer) session.getAttribute("passCnt");
 	String tripType = (String) session.getAttribute("tripType");
+
+	// 가는 편 가격 서버에서 계산 (sessionStorage 대체)
+	acornAir.flight.dto.FlightDTO goFlight = (acornAir.flight.dto.FlightDTO) session.getAttribute("goFlight");
+	String goSeatClass = (String) session.getAttribute("goSeatClass");
+	int serverGoPrice = 0;
+	String serverGoSeatLabel = "일반석";
+	if (goFlight != null && passCnt != null) {
+		serverGoPrice = "C".equals(goSeatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
+		serverGoPrice *= passCnt;
+		serverGoSeatLabel = "C".equals(goSeatClass) ? "비즈니스석" : "일반석";
+	}
 	%>
 <script>
     var contextPath = "<%=request.getContextPath()%>";
@@ -27,49 +38,13 @@
     returnDate: "<%=returnDate != null ? returnDate : ""%>",
     passCnt: "<%=passCnt != null ? passCnt : 1%>"
   	};
+    var serverGoPrice = <%=serverGoPrice%>;
+    var serverGoSeatLabel = "<%=serverGoSeatLabel%>";
 </script>
 <script src="${pageContext.request.contextPath}/js/flight/search.js" defer></script>
 </head>
 <body>
-	<header class="top-menu">
-		<div class="top-links">
-			<a href=""> 로그인/가입 </a> <a
-				href="${pageContext.request.contextPath}/air/mypage"> 마이페이지 </a>
-		</div>
-		<nav class="main-nav">
-			<div class="logo">
-				✈ <strong>ACORN AIR</strong> <span class="circle">S</span>
-			</div>
-			<ul class="nav-menu">
-				<li class="nav-item"><p>예약</p>
-					<div class="mega-menu">
-						<div class="mega-col">
-							<p>
-								<a href="/prj_2조/res">항공권 예매</a>  <!--❓ 이거 매핑이 이게 맞나요?  -->
-							</p>
-							<p>
-								<a href="/prj_2조/res">예약 조회</a>
-							</p>
-						</div>
-					</div></li>
-				<li class="nav-item"><p>부가서비스 신청</p>
-					<div class="mega-menu">
-						<div class="mega-col">
-							<p>
-								<a href="/prj_2조/res">좌석 배정</a>
-							</p>
-							<p>
-								<a href="/prj_2조/res">초과 수하물 사전 구매</a>
-							</p>
-						</div>
-					</div></li>
-			</ul>
-			<div class="search-area">
-				<input type="text" placeholder="궁금한 것을 물어보세요">
-				<button>로그인</button>
-			</div>
-		</nav>
-	</header>
+	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
 
 
@@ -270,42 +245,6 @@
 
 		</div>
 
-		<!-- 날짜별 가격 슬라이더-->
-		<div class="date-slider-wrap">
-			<button class="slider-btn prev-btn" onclick="moveSlider(-1)">❮</button>
-
-			<div class="date-slider-viewport">
-				<div class="date-slider-track">
-					<div class="date-item">
-						15(금)<br>-
-					</div>
-					<div class="date-item">
-						16(토)<br>-
-					</div>
-					<div class="date-item">
-						17(일)<br>1,046,900
-					</div>
-					<div class="date-item">
-						18(월)<br>771,900
-					</div>
-					<div class="date-item">
-						19(화)<br>896,900
-					</div>
-					<div class="date-item">
-						20(수)<br>771,900
-					</div>
-					<div class="date-item">
-						21(목)<br>771,900
-					</div>
-					<div class="date-item">
-						22(금)<br>820,000
-					</div>
-				</div>
-			</div>
-
-			<button class="slider-btn next-btn" onclick="moveSlider(1)">❯</button>
-		</div>
-
 		<%
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		%>
@@ -395,6 +334,6 @@
 		<input type="hidden" name="returnSeatClass" id="hiddenReturnSeatClass">
 		<input type="hidden" name="total" id="hiddenTotal">
 	</form>
-	<%@ include file="/WEB-INF/views/util/footer.jsp" %>
+	<jsp:include page="/WEB-INF/views/util/footer.jsp" />
 </body>
 </html>

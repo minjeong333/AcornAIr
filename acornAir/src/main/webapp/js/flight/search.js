@@ -110,11 +110,8 @@ function changeCount(type, n) {
 }
 
 function selectSeat(seatName) {
-    const seatDisplay = document.getElementById('txtSeat'); 
+    const seatDisplay = document.getElementById('txtSeat');
     seatDisplay.innerText = seatName;
-	
-	// 브라우저 세션에 좌석 선택 정보 저장
-	    sessionStorage.setItem("selectedSeat", seatName);
     
     // 선택된 버튼 스타일 강조 (옵션)
     const buttons = document.querySelectorAll('.seat-opt-btn');
@@ -340,7 +337,7 @@ function selectPrice(element, price) {
 
     // 오는편 화면이면 가는편 금액 + 오는편 금액
     if (typeof pageMode !== "undefined" && pageMode === "return") {
-        const goPrice = Number(sessionStorage.getItem("goPrice") || 0);
+        const goPrice = (typeof serverGoPrice !== "undefined") ? serverGoPrice : 0;
         totalPrice = goPrice + (price * adultCount);
     }
 
@@ -366,8 +363,6 @@ function goNext() {
     // 가는편 가격 저장
 	
 	const adultCount = passengerData.adult;
-	const totalGoPrice = selectedGoPrice * adultCount;
-    sessionStorage.setItem("goPrice", totalGoPrice);
 
     location.href =
         contextPath + "/booking?goFlightId=" +
@@ -378,25 +373,19 @@ function goNext() {
 
 // 오는편 화면 들어오자마자 가는편 가격 먼저 표시
 window.addEventListener("load", function () {
-	
-	const savedSeat = sessionStorage.getItem("selectedSeat");
-	    
-	    if (savedSeat) {
-	        const seatDisplay = document.getElementById('txtSeat');
-	        if (seatDisplay) {
-	            // 이모지를 포함한 텍스트로 복원 (디자인에 맞게 조정)
-	            const emoji = savedSeat === "비즈니스석" ? "✨ " : "💺 ";
-	            seatDisplay.innerText = emoji + savedSeat;
-	        }
-	    }
 
+    // 오는편 페이지: 서버 세션에서 가는편 정보 표시
     if (typeof pageMode !== "undefined" && pageMode === "return") {
-
-        const goPrice = Number(sessionStorage.getItem("goPrice") || 0);
-
-        if (goPrice > 0) {
+        if (typeof serverGoSeatLabel !== "undefined") {
+            const seatDisplay = document.getElementById('txtSeat');
+            if (seatDisplay) {
+                const emoji = serverGoSeatLabel === "비즈니스석" ? "✨ " : "💺 ";
+                seatDisplay.innerText = emoji + serverGoSeatLabel;
+            }
+        }
+        if (typeof serverGoPrice !== "undefined" && serverGoPrice > 0) {
             document.getElementById("totalPriceText").innerText =
-                goPrice.toLocaleString() + "원";
+                serverGoPrice.toLocaleString() + "원";
         }
     }
 });

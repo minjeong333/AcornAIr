@@ -37,14 +37,15 @@ public class ReservationListServlet extends HttpServlet {
 
         // 테스트용 아이디
         //String userId = "user01";
-
+        System.out.println("예약 저장 userId = " + loginUser.getUserId());
+      
         ArrayList<ReservationDTO> list =
-                dao.selectReservationList(userId);
+                dao.selectReservationList(loginUser.getUserId());
 
         req.setAttribute("reservationList", list);
 
         req.getRequestDispatcher(
-                "/WEB-INF/views/예약/reservationList.jsp")
+                "/WEB-INF/views/reservation/reservationList.jsp")
                 .forward(req, resp);
     }
 }

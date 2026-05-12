@@ -95,15 +95,10 @@ input, select {
 				placeholder="ICN" required> <label>도착 공항</label> <input
 				type="text" name="arrAirport" placeholder="NRT" required> <label>출발
 				시간</label> <input type="datetime-local" name="depTime" required> <label>도착
-				시간</label> <input type="datetime-local" name="arrTime" required> <label>좌석
-				등급</label> <select name="seatClass">
-				<option value="Y">일반석(Y)</option>
-				<option value="C">비즈니스(C)</option>
-			</select> <label>가격</label> <input type="number" name="price" required>
-
-			<label>전체 좌석</label> <input type="number" name="totalSeat" required>
-
-			<label>잔여 좌석</label> <input type="number" name="remainSeat" required>
+				시간</label> <input type="datetime-local" name="arrTime" required> <label>가격</label>
+			<input type="number" name="price" required> <label>일반석
+				좌석 수</label> <input type="number" name="economySeat" required> <label>비즈니스석
+				좌석 수</label> <input type="number" name="businessSeat" required>
 
 			<div class="btn-area">
 				<button type="submit" class="btn submit-btn">등록하기</button>
