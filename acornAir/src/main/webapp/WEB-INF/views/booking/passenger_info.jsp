@@ -37,9 +37,23 @@ if (backFlight != null) {
 }
 farePrice *= passCnt;
 
-// int fuelSurcharge = 114000;
-// int tax = 63000;
-int baseTotal = farePrice;
+int fuelSurcharge = 0;
+int tax = 0;
+
+if (goFlight != null) {
+	fuelSurcharge += goFlight.getFuelSurcharge();
+	tax += goFlight.getTaxPrice();
+}
+
+if (backFlight != null) {
+	fuelSurcharge += backFlight.getFuelSurcharge();
+	tax += backFlight.getTaxPrice();
+}
+
+fuelSurcharge *= passCnt;
+tax *= passCnt;
+
+int baseTotal = farePrice + fuelSurcharge + tax;
 // ※ 유류할증료·세금 복원 시 위 3줄을 아래로 교체
 // int fuelSurcharge = 114000;
 // int tax = 63000;
@@ -56,12 +70,11 @@ int baseTotal = farePrice;
 	href="${pageContext.request.contextPath}/css/util/common.css" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/booking/passenger.css" />
+<!--적용안되는중 -->
 </head>
 <body>
 
 	<jsp:include page="/WEB-INF/views/util/header.jsp" />
-
-	<div class="passenger-bg-bar"></div>
 
 	<!-- 메인 컨테이너 -->
 	<div class="container-b">
@@ -72,6 +85,7 @@ int baseTotal = farePrice;
 			<!-- 여정 정보 -->
 			<div class="section-header">
 				<h2 class="section-title">여정 정보</h2>
+				<button class="btn-share">↗ 공유</button>
 			</div>
 
 			<!-- 가는 편 -->
@@ -94,7 +108,7 @@ int baseTotal = farePrice;
 						<span>✈ <%=goFlight.getFlightNo()%></span>
 					</div>
 				</div>
-				<button class="empty-area"></button>
+				<button class="btn-detail">상세 보기</button>
 			</div>
 			<%
 			}
@@ -120,7 +134,7 @@ int baseTotal = farePrice;
 						<span>✈ <%=backFlight.getFlightNo()%></span>
 					</div>
 				</div>
-				<button class="empty-area"></button>
+				<button class="btn-detail">상세 보기</button>
 			</div>
 			<%
 			}
@@ -130,6 +144,7 @@ int baseTotal = farePrice;
 			<div class="passenger-section">
 				<div class="section-header">
 					<h2 class="section-title">승객 정보</h2>
+					<button class="btn-share">성명 입력 안내</button>
 				</div>
 				<p class="passenger-notice">
 					<span class="req">*</span>는 필수 입력 사항입니다.
@@ -314,21 +329,23 @@ int baseTotal = farePrice;
 
 				<div class="agree-box">
 					<div class="agree-box-header">
-						<span class="agree-badge" onclick="this.classList.toggle('active')">✓ 동의</span> <span class="agree-text">[필수]
+						<span class="agree-badge">✓ 동의</span> <span class="agree-text">[필수]
 							운송약관, 변경/환불 규정을 포함한 운임 규정, 수하물 규정을 확인하였으며 이에 동의합니다.</span>
+						<button class="agree-view-btn">보기</button>
 					</div>
 					<div class="agree-desc">
 						에이콘항공 항공권을 구매하시는 것은 본 항공사와 운송계약 체결에 동의하는 것으로 운임규정은 항공권 변경, 취소 등에
 						따른 수수료와 사전좌석배정, 좌석승급 등 구매하는 항공권 운임에 적용되는 세부 조건을 기재하고 있으며, 운송 약관은
-						운송 계약 체결에 따른 계약조건을 명시합니다.<br /> 에이콘항공은 '항공교통이용자 보호기준'에 따라 
-							항공교통이용자 서비스 계획을 게시합니다.
+						운송 계약 체결에 따른 계약조건을 명시합니다.<br /> 에이콘항공은 '항공교통이용자 보호기준'에 따라 <a
+							href="#" class="agree-link">항공교통이용자 서비스 계획</a>을 게시합니다.
 					</div>
 				</div>
 
 				<div class="agree-box">
 					<div class="agree-box-header">
-						<span class="agree-badge" onclick="this.classList.toggle('active')">✓ 동의</span> <span class="agree-text">[필수]
+						<span class="agree-badge">✓ 동의</span> <span class="agree-text">[필수]
 							리튬 보조배터리 및 위험품 안내를 확인하였습니다.</span>
+						<button class="agree-view-btn">보기</button>
 					</div>
 					<div class="agree-desc">고객 안전을 위해 기내 리튬 보조배터리 사용 및 충전은 금지합니다.
 						폭발성, 인화성, 유독성 물질 등 반입 금지 품목을 미리 확인해 주세요.</div>
@@ -391,12 +408,14 @@ int baseTotal = farePrice;
 				<div class="price-row">
 					<span>운임</span> <span><%=String.format("%,d", farePrice)%> 원</span>
 				</div>
-				<%-- <div class="price-row">
-					<span>유류할증료</span> <span>원</span>
+				<div class="price-row">
+					<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+						원</span>
 				</div>
 				<div class="price-row">
-					<span>세금, 수수료 및 기타 요금</span> <span>원</span>
-				</div> --%>
+					<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
+						원</span>
+				</div>
 				<div id="extraBaggageRow" class="price-row" style="display: none;">
 					<span id="extraBaggageLabel">초과 수하물</span> <span
 						id="extraBaggagePrice">0 원</span>
@@ -592,14 +611,14 @@ int baseTotal = farePrice;
 						</div>
 
 						<!-- !!!!! 세금 부분 일단 주석처리 -->
-						<%-- <div class="modal-fee-row">
+						<div class="modal-fee-row">
 							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
 								원</span>
 						</div>
 						<div class="modal-fee-row">
 							<span>세금, 수수료 및 기타 요금</span> <span><%=String.format("%,d", tax)%>
 								원</span>
-						</div> --%>
+						</div>
 
 
 						<div class="modal-fee-total">
@@ -656,12 +675,14 @@ int baseTotal = farePrice;
 							<span>항공권 운임</span> <span><%=String.format("%,d", farePrice)%>
 								원</span>
 						</div>
-						<%-- <div class="modal-fee-row">
-							<span>유류할증료</span> <span>원</span>
+						<div class="modal-fee-row">
+							<span>유류할증료</span> <span><%=String.format("%,d", fuelSurcharge)%>
+								원</span>
 						</div>
 						<div class="modal-fee-row">
-							<span>세금 및 수수료</span> <span>원</span>
-						</div> --%>
+							<span>세금 및 수수료</span> <span><%=String.format("%,d", tax)%>
+								원</span>
+						</div>
 						<div class="modal-fee-row" id="summaryBaggageRow"
 							style="display: none;">
 							<span id="summaryBaggageLabel">초과 수하물</span> <span
