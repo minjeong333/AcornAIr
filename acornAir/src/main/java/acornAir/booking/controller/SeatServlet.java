@@ -93,14 +93,22 @@ public class SeatServlet extends HttpServlet {
 		int passCnt = passengers.size();
 
 		int unitPrice = 0;
+		int fuelSurcharge = 0;
+		int taxPrice = 0;
+
 		if (goFlight != null) {
-			unitPrice += "C".equals(goSeatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
-		}
-		if (backFlight != null) {
-			unitPrice += "C".equals(backSeatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
+		    unitPrice += "C".equals(goSeatClass) ? goFlight.getBizPrice() : goFlight.getPrice();
+		    fuelSurcharge += goFlight.getFuelSurcharge();
+		    taxPrice += goFlight.getTaxPrice();
 		}
 
-		int basePrice = unitPrice * passCnt;
+		if (backFlight != null) {
+		    unitPrice += "C".equals(backSeatClass) ? backFlight.getBizPrice() : backFlight.getPrice();
+		    fuelSurcharge += backFlight.getFuelSurcharge();
+		    taxPrice += backFlight.getTaxPrice();
+		}
+
+		int basePrice = (unitPrice + fuelSurcharge + taxPrice) * passCnt;
 		int bagPrice = 40000; // 초과 수하물 1개당 고정 요금
 
 		req.setAttribute("totalPrice", basePrice);
@@ -145,6 +153,8 @@ public class SeatServlet extends HttpServlet {
 
 		bookingDTO.setBasePrice(basePrice);
 		bookingDTO.setTotalPrice(basePrice);
+		bookingDTO.setFuelSurcharge(fuelSurcharge * passCnt);
+		bookingDTO.setTaxPrice(taxPrice * passCnt);
 
 		session.setAttribute("bookingDTO", bookingDTO);
 

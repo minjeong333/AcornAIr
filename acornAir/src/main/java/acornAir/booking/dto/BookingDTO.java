@@ -38,6 +38,25 @@ public class BookingDTO {
     private String payMethod;  // CARD / TRANSFER / SIMPLE
     private String bookStatus; // Y / N
     private java.util.Date bookDate; // 예약일시
+    
+    //
+    private int fuelSurcharge;
+    private int taxPrice;
+    //
+    
+    
+	public int getFuelSurcharge() {
+		return fuelSurcharge;
+	}
+	public void setFuelSurcharge(int fuelSurcharge) {
+		this.fuelSurcharge = fuelSurcharge;
+	}
+	public int getTaxPrice() {
+		return taxPrice;
+	}
+	public void setTaxPrice(int taxPrice) {
+		this.taxPrice = taxPrice;
+	}
 	public int getBookingId() {
 		return bookingId;
 	}

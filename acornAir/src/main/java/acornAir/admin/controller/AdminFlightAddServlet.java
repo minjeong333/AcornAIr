@@ -52,7 +52,11 @@ public class AdminFlightAddServlet extends HttpServlet {
 			Date arrTime = sdf.parse(request.getParameter("arrTime"));
 
 			int price = Integer.parseInt(request.getParameter("price"));
+			int fuelSurcharge =
+			        Integer.parseInt(request.getParameter("fuelSurcharge"));
 
+			int taxPrice =
+			        Integer.parseInt(request.getParameter("taxPrice"));
 			int economySeat = Integer.parseInt(request.getParameter("economySeat"));
 			int businessSeat = Integer.parseInt(request.getParameter("businessSeat"));
 
@@ -67,6 +71,8 @@ public class AdminFlightAddServlet extends HttpServlet {
 			economy.setArrTime(arrTime);
 			economy.setSeatClass("Y");
 			economy.setPrice(price);
+			economy.setFuelSurcharge(fuelSurcharge);
+			economy.setTaxPrice(taxPrice);
 			economy.setTotalSeat(economySeat);
 			economy.setRemainSeat(economySeat);
 
@@ -81,6 +87,8 @@ public class AdminFlightAddServlet extends HttpServlet {
 			business.setArrTime(arrTime);
 			business.setSeatClass("C");
 			business.setPrice(price);
+			business.setFuelSurcharge(fuelSurcharge);
+			business.setTaxPrice(taxPrice);
 			business.setTotalSeat(businessSeat);
 			business.setRemainSeat(businessSeat);
 

@@ -115,7 +115,9 @@ th {
 				<th>가는편</th>
 				<th>오는편</th>
 				<th>연락처</th>
-				<th>기본금액</th>
+				<th>기본운임</th>
+				<th>유류할증료</th>
+				<th>세금</th>
 				<th>수하물</th>
 				<th>총금액</th>
 				<th>결제</th>
@@ -140,9 +142,15 @@ th {
 				</td>
 
 				<td><%=booking.getPhoneCountry()%> <%=booking.getContactPhone()%></td>
-				<td><%=booking.getBasePrice()%></td>
-				<td><%=booking.getBaggagePrice()%></td>
-				<td><%=booking.getTotalPrice()%></td>
+				<td><%=String.format("%,d", booking.getBasePrice())%>원</td>
+
+				<td><%=String.format("%,d", booking.getFuelSurcharge())%>원</td>
+
+				<td><%=String.format("%,d", booking.getTaxPrice())%>원</td>
+
+				<td><%=String.format("%,d", booking.getBaggagePrice())%>원</td>
+
+				<td><%=String.format("%,d", booking.getTotalPrice())%>원</td>
 				<td><%=booking.getPayMethod()%></td>
 
 				<td

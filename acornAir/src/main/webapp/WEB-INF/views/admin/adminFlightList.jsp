@@ -110,7 +110,10 @@ th {
 				<th>출발시간</th>
 				<th>도착시간</th>
 				<th>좌석등급</th>
-				<th>가격</th>
+				<th>운임</th>
+				<th>유류할증료</th>
+				<th>세금</th>
+				<th>총액</th>
 				<th>전체좌석</th>
 				<th>잔여좌석</th>
 				<th>관리</th>
@@ -128,7 +131,10 @@ th {
 				<td><%=flight.getDepTime()%></td>
 				<td><%=flight.getArrTime()%></td>
 				<td><%=flight.getSeatClass()%></td>
-				<td><%=flight.getPrice()%></td>
+				<td><%=String.format("%,d", flight.getPrice())%>원</td>
+				<td><%=String.format("%,d", flight.getFuelSurcharge())%>원</td>
+				<td><%=String.format("%,d", flight.getTaxPrice())%>원</td>
+				<td><%=String.format("%,d", flight.getPrice() + flight.getFuelSurcharge() + flight.getTaxPrice())%>원</td>
 				<td><%=flight.getTotalSeat()%></td>
 				<td><%=flight.getRemainSeat()%></td>
 				<td>
@@ -145,7 +151,7 @@ th {
 			} else {
 			%>
 			<tr>
-				<td colspan="11">항공편 정보가 없습니다.</td>
+				<td colspan="14">항공편 정보가 없습니다.</td>
 			</tr>
 			<%
 			}

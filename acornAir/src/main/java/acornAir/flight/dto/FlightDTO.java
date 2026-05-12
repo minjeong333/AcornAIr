@@ -19,6 +19,27 @@ public class FlightDTO {
 	private int totalSeat; // 총좌석
 	private int bizFlightId;
 	
+	//
+	private int fuelSurcharge;
+	private int taxPrice;
+	//
+	
+	public int getFuelSurcharge() {
+		return fuelSurcharge;
+	}
+
+	public void setFuelSurcharge(int fuelSurcharge) {
+		this.fuelSurcharge = fuelSurcharge;
+	}
+
+	public int getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(int taxPrice) {
+		this.taxPrice = taxPrice;
+	}
+
 	public int getTotalSeat() {
 		return totalSeat;
 	}

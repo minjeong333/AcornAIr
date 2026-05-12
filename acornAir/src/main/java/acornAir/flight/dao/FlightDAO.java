@@ -38,13 +38,12 @@ public class FlightDAO {
 		FlightDTO dto = null;
 
 		String sql = "SELECT Y.FLIGHT_ID, Y.FLIGHT_NO, " + "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
-				+ "A1.AIRPORT_NAME AS DEP_NAME, A2.AIRPORT_NAME AS ARR_NAME, "
-				+ "Y.DEP_TIME, Y.ARR_TIME, Y.PRICE AS Y_PRICE, C.PRICE AS C_PRICE " + "FROM TB_FLIGHT Y "
+				+ "A1.AIRPORT_NAME AS DEP_NAME, A2.AIRPORT_NAME AS ARR_NAME, " + "Y.DEP_TIME, Y.ARR_TIME, "
+				+ "Y.PRICE AS Y_PRICE, C.PRICE AS C_PRICE, " + "Y.FUEL_SURCHARGE, Y.TAX_PRICE " + "FROM TB_FLIGHT Y "
 				+ "JOIN TB_FLIGHT C ON Y.FLIGHT_NO = C.FLIGHT_NO "
 				+ "AND Y.DEP_TIME = C.DEP_TIME AND C.SEAT_CLASS = 'C' "
 				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
-				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE "
-				+ "WHERE Y.FLIGHT_ID = ?";
+				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE " + "WHERE Y.FLIGHT_ID = ?";
 
 		try {
 			con = dbcon();
@@ -64,6 +63,8 @@ public class FlightDAO {
 				dto.setArrTime(rs.getDate(8));
 				dto.setPrice(rs.getInt(9));
 				dto.setBizPrice(rs.getInt(10));
+				dto.setFuelSurcharge(rs.getInt(11));
+				dto.setTaxPrice(rs.getInt(12));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,30 +98,18 @@ public class FlightDAO {
 		ArrayList<FlightDTO> list = new ArrayList<>();
 
 		System.out.println("=== FlightDAO search 실행됨 ===");
-	    System.out.println(depAirport + " -> " + arrAirport + " / " + depDate);
-		String sql =
-		        "SELECT Y.FLIGHT_ID, NVL(C.FLIGHT_ID, 0) AS C_FLIGHT_ID, Y.FLIGHT_NO, "
-		      + "Y.DEP_AIRPORT, Y.ARR_AIRPORT, "
-		      + "A1.AIRPORT_NAME AS DEP_NAME, "
-		      + "A2.AIRPORT_NAME AS ARR_NAME, "
-		      + "Y.DEP_TIME, Y.ARR_TIME, "
-		      + "Y.PRICE AS Y_PRICE, "
-		      + "NVL(C.PRICE, 0) AS C_PRICE "
-		      + "FROM TB_FLIGHT Y "
-		      + "LEFT JOIN TB_FLIGHT C "
-		      + "ON C.SEAT_CLASS = 'C' "
-		      + "AND Y.FLIGHT_NO = C.FLIGHT_NO "
-		      + "AND Y.DEP_AIRPORT = C.DEP_AIRPORT "
-		      + "AND Y.ARR_AIRPORT = C.ARR_AIRPORT "
-		      + "AND Y.DEP_TIME = C.DEP_TIME "
-		      + "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
-		      + "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE "
-		      + "WHERE Y.SEAT_CLASS = 'Y' "
-		      + "AND Y.DEP_AIRPORT = ? "
-		      + "AND Y.ARR_AIRPORT = ? "
-		      + "AND TRUNC(Y.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD') "
-		      + "AND Y.REMAIN_SEAT >= ? "
-		      + "ORDER BY Y.DEP_TIME ASC";
+		System.out.println(depAirport + " -> " + arrAirport + " / " + depDate);
+		String sql = "SELECT Y.FLIGHT_ID, NVL(C.FLIGHT_ID, 0) AS C_FLIGHT_ID, Y.FLIGHT_NO, "
+				+ "Y.DEP_AIRPORT, Y.ARR_AIRPORT, " + "A1.AIRPORT_NAME AS DEP_NAME, " + "A2.AIRPORT_NAME AS ARR_NAME, "
+				+ "Y.DEP_TIME, Y.ARR_TIME, " + "Y.PRICE AS Y_PRICE, " + "NVL(C.PRICE, 0) AS C_PRICE, "
+				+ "Y.FUEL_SURCHARGE, Y.TAX_PRICE " + "FROM TB_FLIGHT Y " + "LEFT JOIN TB_FLIGHT C "
+				+ "ON C.SEAT_CLASS = 'C' " + "AND Y.FLIGHT_NO = C.FLIGHT_NO " + "AND Y.DEP_AIRPORT = C.DEP_AIRPORT "
+				+ "AND Y.ARR_AIRPORT = C.ARR_AIRPORT " + "AND Y.DEP_TIME = C.DEP_TIME "
+				+ "JOIN TB_AIRPORT A1 ON Y.DEP_AIRPORT = A1.AIRPORT_CODE "
+				+ "JOIN TB_AIRPORT A2 ON Y.ARR_AIRPORT = A2.AIRPORT_CODE " + "WHERE Y.SEAT_CLASS = 'Y' "
+				+ "AND Y.DEP_AIRPORT = ? " + "AND Y.ARR_AIRPORT = ? "
+				+ "AND TRUNC(Y.DEP_TIME) = TO_DATE(?, 'YYYY-MM-DD') " + "AND Y.REMAIN_SEAT >= ? "
+				+ "ORDER BY Y.DEP_TIME ASC";
 
 		try {
 			con = dbcon();
@@ -147,7 +136,9 @@ public class FlightDAO {
 				dto.setArrTime(rs.getDate(9));
 				dto.setPrice(rs.getInt(10));
 				dto.setBizPrice(rs.getInt(11));
-
+				dto.setFuelSurcharge(rs.getInt(12));
+				dto.setTaxPrice(rs.getInt(13));
+				
 				list.add(dto);
 			}
 
@@ -179,7 +170,8 @@ public class FlightDAO {
 		ArrayList<FlightDTO> list = new ArrayList<>();
 
 		String sql = "SELECT FLIGHT_ID, FLIGHT_NO, DEP_AIRPORT, ARR_AIRPORT, "
-				+ "DEP_TIME, ARR_TIME, SEAT_CLASS, PRICE, TOTAL_SEAT, REMAIN_SEAT " + "FROM TB_FLIGHT "
+				+ "DEP_TIME, ARR_TIME, SEAT_CLASS, PRICE, TOTAL_SEAT, REMAIN_SEAT, "
+				+ "FUEL_SURCHARGE, TAX_PRICE " + "FROM TB_FLIGHT "
 				+ "ORDER BY DEP_TIME DESC";
 
 		Connection con = null;
@@ -204,6 +196,8 @@ public class FlightDAO {
 				dto.setPrice(rs.getInt("PRICE"));
 				dto.setTotalSeat(rs.getInt("TOTAL_SEAT"));
 				dto.setRemainSeat(rs.getInt("REMAIN_SEAT"));
+				dto.setFuelSurcharge(rs.getInt("FUEL_SURCHARGE"));
+				dto.setTaxPrice(rs.getInt("TAX_PRICE"));
 
 				list.add(dto);
 			}
@@ -268,8 +262,9 @@ public class FlightDAO {
 	public int insertFlight(FlightDTO flight) {
 
 		String sql = "INSERT INTO TB_FLIGHT " + "(FLIGHT_ID, FLIGHT_NO, DEP_AIRPORT, ARR_AIRPORT, "
-				+ "DEP_TIME, ARR_TIME, SEAT_CLASS, PRICE, TOTAL_SEAT, REMAIN_SEAT) "
-				+ "VALUES (SEQ_FLIGHT.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "DEP_TIME, ARR_TIME, SEAT_CLASS, PRICE, TOTAL_SEAT, REMAIN_SEAT, "
+				+ "FUEL_SURCHARGE, TAX_PRICE) "
+				+ "VALUES (SEQ_FLIGHT.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -292,7 +287,9 @@ public class FlightDAO {
 			pst.setInt(7, flight.getPrice());
 			pst.setInt(8, flight.getTotalSeat());
 			pst.setInt(9, flight.getRemainSeat());
-
+			pst.setInt(10, flight.getFuelSurcharge());
+			pst.setInt(11, flight.getTaxPrice());
+			
 			result = pst.executeUpdate();
 
 		} catch (Exception e) {
@@ -312,48 +309,59 @@ public class FlightDAO {
 
 		return result;
 	}
-	
+
 	public int getRoundTripLowestPrice(String arrAirport) {
 
-	    Connection con = null;
-	    PreparedStatement pst = null;
-	    ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
 
-	    int price = 0;
+		int price = 0;
 
-	    String sql = """
-	        SELECT MIN(GO.PRICE + BACK.PRICE) AS ROUND_PRICE
-	        FROM TB_FLIGHT GO
-	        JOIN TB_FLIGHT BACK
-	        ON GO.DEP_AIRPORT = BACK.ARR_AIRPORT
-	        AND GO.ARR_AIRPORT = BACK.DEP_AIRPORT
-	        WHERE GO.DEP_AIRPORT = 'ICN'
-	        AND GO.ARR_AIRPORT = ?
-	        AND GO.SEAT_CLASS = 'Y'
-	        AND BACK.SEAT_CLASS = 'Y'
-	    """;
+		String sql = """
+				    SELECT MIN(GO.PRICE + BACK.PRICE) AS ROUND_PRICE
+				    FROM TB_FLIGHT GO
+				    JOIN TB_FLIGHT BACK
+				    ON GO.DEP_AIRPORT = BACK.ARR_AIRPORT
+				    AND GO.ARR_AIRPORT = BACK.DEP_AIRPORT
+				    WHERE GO.DEP_AIRPORT = 'ICN'
+				    AND GO.ARR_AIRPORT = ?
+				    AND GO.SEAT_CLASS = 'Y'
+				    AND BACK.SEAT_CLASS = 'Y'
+				""";
 
-	    try {
-	        con = dbcon();
-	        pst = con.prepareStatement(sql);
-	        pst.setString(1, arrAirport);
+		try {
+			con = dbcon();
+			pst = con.prepareStatement(sql);
+			pst.setString(1, arrAirport);
 
-	        rs = pst.executeQuery();
+			rs = pst.executeQuery();
 
-	        if (rs.next()) {
-	            price = rs.getInt("ROUND_PRICE");
-	        }
+			if (rs.next()) {
+				price = rs.getInt("ROUND_PRICE");
+			}
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        try { if (rs != null) rs.close(); } catch (Exception e) {}
-	        try { if (pst != null) pst.close(); } catch (Exception e) {}
-	        try { if (con != null) con.close(); } catch (Exception e) {}
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-	    return price;
+		return price;
 	}
 
-	
 }

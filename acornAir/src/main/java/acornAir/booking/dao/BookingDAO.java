@@ -16,9 +16,9 @@ public class BookingDAO {
 	// 1. 예약 등록 후 BOOKING_ID 반환
 	public int insertBooking(BookingDTO dto, Connection con) throws SQLException {
 		String sql = "INSERT INTO TB_BOOKING ( " + "BOOKING_ID, USER_ID, GO_FLIGHT_ID, BACK_FLIGHT_ID, "
-				+ "TRIP_TYPE, CONTACT_PHONE, PHONE_COUNTRY, " + "BASE_PRICE, BAGGAGE_PRICE, TOTAL_PRICE, "
-				+ "PAY_METHOD, BOOK_STATUS, BOOK_DATE " + ") VALUES ( "
-				+ "SEQ_BOOKING.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Y', SYSDATE " + ")";
+				+ "TRIP_TYPE, CONTACT_PHONE, PHONE_COUNTRY, " + "BASE_PRICE, FUEL_SURCHARGE, TAX_PRICE, "
+				+ "BAGGAGE_PRICE, TOTAL_PRICE, " + "PAY_METHOD, BOOK_STATUS, BOOK_DATE " + ") VALUES ( "
+				+ "SEQ_BOOKING.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Y', SYSDATE " + ")";
 
 		int bookingId = 0;
 
@@ -36,10 +36,15 @@ public class BookingDAO {
 			pstmt.setString(4, dto.getTripType());
 			pstmt.setString(5, dto.getContactPhone());
 			pstmt.setString(6, dto.getPhoneCountry());
+
 			pstmt.setInt(7, dto.getBasePrice());
-			pstmt.setInt(8, dto.getBaggagePrice());
-			pstmt.setInt(9, dto.getTotalPrice());
-			pstmt.setString(10, dto.getPayMethod());
+			pstmt.setInt(8, dto.getFuelSurcharge());
+			pstmt.setInt(9, dto.getTaxPrice());
+
+			pstmt.setInt(10, dto.getBaggagePrice());
+			pstmt.setInt(11, dto.getTotalPrice());
+
+			pstmt.setString(12, dto.getPayMethod());
 
 			pstmt.executeUpdate();
 
@@ -169,9 +174,9 @@ public class BookingDAO {
 		java.util.ArrayList<BookingDTO> list = new java.util.ArrayList<>();
 
 		String sql = "SELECT b.BOOKING_ID, b.USER_ID, b.GO_FLIGHT_ID, b.BACK_FLIGHT_ID, "
-				+ "b.TRIP_TYPE, b.CONTACT_PHONE, b.PHONE_COUNTRY, " + "b.BASE_PRICE, b.BAGGAGE_PRICE, b.TOTAL_PRICE, "
-				+ "b.PAY_METHOD, b.BOOK_STATUS, b.BOOK_DATE, " + "gf.FLIGHT_NO AS GO_FLIGHT_NO, "
-				+ "bf.FLIGHT_NO AS BACK_FLIGHT_NO " + "FROM TB_BOOKING b "
+				+ "b.TRIP_TYPE, b.CONTACT_PHONE, b.PHONE_COUNTRY, " + "b.BASE_PRICE, b.FUEL_SURCHARGE, b.TAX_PRICE, "
+				+ "b.BAGGAGE_PRICE, b.TOTAL_PRICE, " + "b.PAY_METHOD, b.BOOK_STATUS, b.BOOK_DATE, "
+				+ "gf.FLIGHT_NO AS GO_FLIGHT_NO, " + "bf.FLIGHT_NO AS BACK_FLIGHT_NO " + "FROM TB_BOOKING b "
 				+ "JOIN TB_FLIGHT gf ON b.GO_FLIGHT_ID = gf.FLIGHT_ID "
 				+ "LEFT JOIN TB_FLIGHT bf ON b.BACK_FLIGHT_ID = bf.FLIGHT_ID " + "ORDER BY b.BOOK_DATE DESC";
 
@@ -195,6 +200,8 @@ public class BookingDAO {
 				booking.setContactPhone(rs.getString("CONTACT_PHONE"));
 				booking.setPhoneCountry(rs.getString("PHONE_COUNTRY"));
 				booking.setBasePrice(rs.getInt("BASE_PRICE"));
+				booking.setFuelSurcharge(rs.getInt("FUEL_SURCHARGE"));
+				booking.setTaxPrice(rs.getInt("TAX_PRICE"));
 				booking.setBaggagePrice(rs.getInt("BAGGAGE_PRICE"));
 				booking.setTotalPrice(rs.getInt("TOTAL_PRICE"));
 				booking.setPayMethod(rs.getString("PAY_METHOD"));

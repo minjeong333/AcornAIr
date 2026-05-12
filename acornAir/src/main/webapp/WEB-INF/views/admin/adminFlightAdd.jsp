@@ -96,7 +96,9 @@ input, select {
 				type="text" name="arrAirport" placeholder="NRT" required> <label>출발
 				시간</label> <input type="datetime-local" name="depTime" required> <label>도착
 				시간</label> <input type="datetime-local" name="arrTime" required> <label>가격</label>
-			<input type="number" name="price" required> <label>일반석
+			<input type="number" name="price" required> <label>유류할증료</label>
+			<input type="number" name="fuelSurcharge" required> <label>세금</label>
+			<input type="number" name="taxPrice" required> <label>일반석
 				좌석 수</label> <input type="number" name="economySeat" required> <label>비즈니스석
 				좌석 수</label> <input type="number" name="businessSeat" required>
 
