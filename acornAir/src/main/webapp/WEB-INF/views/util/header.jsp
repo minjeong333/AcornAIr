@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/util/common.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/util/header.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage/mypage.css?v=2">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/chat/chat.css">
+<script>var contextPath = '${pageContext.request.contextPath}';</script>
+<script src="${pageContext.request.contextPath}/js/chat/chat.js" defer></script>
 <%
 UserDTO loginUser =
     (UserDTO) session.getAttribute("loginUser");
@@ -56,6 +59,8 @@ UserDTO loginUser =
 </header>
 
 <div id="mypage-container"></div>
+
+<jsp:include page="/WEB-INF/views/chat/chat.jsp" />
 
 <script>
 function loadMyPage() {

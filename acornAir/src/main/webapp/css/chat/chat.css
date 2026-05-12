@@ -144,6 +144,7 @@
   align-items: center;
   padding: 40px 20px;
   text-align: center;
+  overflow-y: auto;
 }
 .symbol {
   width: 50px;
@@ -285,12 +286,12 @@
   transform: scale(1.05);
 }
 
-.chat-trigger-btn .icon {
+.chat-trigger-btn .chat-icon {
   margin-right: 8px;
   font-size: 1.1rem;
 }
 
-.chat-trigger-btn .text {
+.chat-trigger-btn .chat-text {
   font-weight: 600;
   font-size: 15px;
 }

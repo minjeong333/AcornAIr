@@ -245,42 +245,6 @@
 
 		</div>
 
-		<!-- 날짜별 가격 슬라이더-->
-		<div class="date-slider-wrap">
-			<button class="slider-btn prev-btn" onclick="moveSlider(-1)">❮</button>
-
-			<div class="date-slider-viewport">
-				<div class="date-slider-track">
-					<div class="date-item">
-						15(금)<br>-
-					</div>
-					<div class="date-item">
-						16(토)<br>-
-					</div>
-					<div class="date-item">
-						17(일)<br>1,046,900
-					</div>
-					<div class="date-item">
-						18(월)<br>771,900
-					</div>
-					<div class="date-item">
-						19(화)<br>896,900
-					</div>
-					<div class="date-item">
-						20(수)<br>771,900
-					</div>
-					<div class="date-item">
-						21(목)<br>771,900
-					</div>
-					<div class="date-item">
-						22(금)<br>820,000
-					</div>
-				</div>
-			</div>
-
-			<button class="slider-btn next-btn" onclick="moveSlider(1)">❯</button>
-		</div>
-
 		<%
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		%>
