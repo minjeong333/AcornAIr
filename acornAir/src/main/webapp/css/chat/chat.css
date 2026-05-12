@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  right: 30px;
+  right: 60px;
   bottom: 30px;
   overflow: hidden;
   font-family: sans-serif;
@@ -192,8 +192,8 @@
 }
 .chat-trigger-btn {
   position: fixed;
-  right: 30px;
-  bottom: 90px;
+  right: 40px;
+  bottom: 100px;
   display: flex;
   align-items: center;
   gap: 8px;

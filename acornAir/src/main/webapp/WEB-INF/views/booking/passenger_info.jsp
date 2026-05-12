@@ -55,11 +55,13 @@ int baseTotal = farePrice;
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/util/common.css" />
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/booking/passenger.css" />  <!--적용안되는중 -->
+	href="${pageContext.request.contextPath}/css/booking/passenger.css" />
 </head>
 <body>
 
 	<jsp:include page="/WEB-INF/views/util/header.jsp" />
+
+	<div class="passenger-bg-bar"></div>
 
 	<!-- 메인 컨테이너 -->
 	<div class="container-b">
@@ -70,7 +72,6 @@ int baseTotal = farePrice;
 			<!-- 여정 정보 -->
 			<div class="section-header">
 				<h2 class="section-title">여정 정보</h2>
-				<button class="btn-share">↗ 공유</button>
 			</div>
 
 			<!-- 가는 편 -->
@@ -93,7 +94,7 @@ int baseTotal = farePrice;
 						<span>✈ <%=goFlight.getFlightNo()%></span>
 					</div>
 				</div>
-				<button class="btn-detail">상세 보기</button>
+				<button class="empty-area"></button>
 			</div>
 			<%
 			}
@@ -119,7 +120,7 @@ int baseTotal = farePrice;
 						<span>✈ <%=backFlight.getFlightNo()%></span>
 					</div>
 				</div>
-				<button class="btn-detail">상세 보기</button>
+				<button class="empty-area"></button>
 			</div>
 			<%
 			}
@@ -129,7 +130,6 @@ int baseTotal = farePrice;
 			<div class="passenger-section">
 				<div class="section-header">
 					<h2 class="section-title">승객 정보</h2>
-					<button class="btn-share">성명 입력 안내</button>
 				</div>
 				<p class="passenger-notice">
 					<span class="req">*</span>는 필수 입력 사항입니다.
@@ -314,23 +314,21 @@ int baseTotal = farePrice;
 
 				<div class="agree-box">
 					<div class="agree-box-header">
-						<span class="agree-badge">✓ 동의</span> <span class="agree-text">[필수]
+						<span class="agree-badge" onclick="this.classList.toggle('active')">✓ 동의</span> <span class="agree-text">[필수]
 							운송약관, 변경/환불 규정을 포함한 운임 규정, 수하물 규정을 확인하였으며 이에 동의합니다.</span>
-						<button class="agree-view-btn">보기</button>
 					</div>
 					<div class="agree-desc">
 						에이콘항공 항공권을 구매하시는 것은 본 항공사와 운송계약 체결에 동의하는 것으로 운임규정은 항공권 변경, 취소 등에
 						따른 수수료와 사전좌석배정, 좌석승급 등 구매하는 항공권 운임에 적용되는 세부 조건을 기재하고 있으며, 운송 약관은
-						운송 계약 체결에 따른 계약조건을 명시합니다.<br /> 에이콘항공은 '항공교통이용자 보호기준'에 따라 <a
-							href="#" class="agree-link">항공교통이용자 서비스 계획</a>을 게시합니다.
+						운송 계약 체결에 따른 계약조건을 명시합니다.<br /> 에이콘항공은 '항공교통이용자 보호기준'에 따라 
+							항공교통이용자 서비스 계획을 게시합니다.
 					</div>
 				</div>
 
 				<div class="agree-box">
 					<div class="agree-box-header">
-						<span class="agree-badge">✓ 동의</span> <span class="agree-text">[필수]
+						<span class="agree-badge" onclick="this.classList.toggle('active')">✓ 동의</span> <span class="agree-text">[필수]
 							리튬 보조배터리 및 위험품 안내를 확인하였습니다.</span>
-						<button class="agree-view-btn">보기</button>
 					</div>
 					<div class="agree-desc">고객 안전을 위해 기내 리튬 보조배터리 사용 및 충전은 금지합니다.
 						폭발성, 인화성, 유독성 물질 등 반입 금지 품목을 미리 확인해 주세요.</div>
