@@ -139,6 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // 동의 배지 토글
+    document.querySelectorAll('.agree-badge').forEach(function(badge) {
+        badge.style.cursor = 'pointer';
+        badge.addEventListener('click', function() {
+            badge.classList.toggle('active');
+        });
+    });
+
     // 수하물 정보 아코디언 토글
     if (baggageHeader && baggageBody) {
         baggageHeader.style.cursor = 'pointer';

@@ -80,6 +80,7 @@ body {
   margin-top: 6px;
 }
 .flight-card .flight-detail span { margin-right: 12px; }
+
 .empty-area {
   white-space: nowrap;
 }
@@ -321,6 +322,7 @@ body {
   align-items: center;
   gap: 4px;
 }
+
 .link-refund:hover { text-decoration: underline; }
 
 /* 챗봇 버튼을 결제 바 위로 올림 */
@@ -424,6 +426,7 @@ body {
 .agree-badge.active {
   border: 2px solid #0064de;
   color: #0064de;
+  background: #e6f0ff;
 }
 .agree-text {
   font-size: 14px;
