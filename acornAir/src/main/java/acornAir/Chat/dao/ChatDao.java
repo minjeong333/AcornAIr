@@ -17,8 +17,8 @@ public class ChatDao {
 		    String url = "jdbc:oracle:thin:@localhost:1521:testdb";
 			//String url = "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SID=xe)))";
 			conn = DriverManager.getConnection(url, "scott", "tiger");
-			// 2. 쿼리 실행
-			String sql = "SELECT answer FROM chatbot_data WHERE keyword = ?";
+			// 2. 쿼리 실행 : 수정
+			String sql = "SELECT answer FROM chatbot_data WHERE ? LIKE '%' || keyword || '%'";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, keyword);
 			rs = pstmt.executeQuery();
