@@ -111,9 +111,16 @@ function appendMessage(sender, text) {
     const chatContent = document.querySelector('.chat-content');
 
     if (!chatContent) return;
-
+	
     const msgDiv = document.createElement('div');
-    msgDiv.innerText = text;
+
+	// innertxt -> innerHTML contextPath추가	
+	if (sender === 'bot') {
+	        const fixedText = text.replace(/href="\//g, 'href="' + contextPath + '/');
+	        msgDiv.innerHTML = fixedText; 
+	    } else {
+	        msgDiv.innerText = text;
+	    }
 
     msgDiv.style.padding = "10px";
     msgDiv.style.margin = "5px";

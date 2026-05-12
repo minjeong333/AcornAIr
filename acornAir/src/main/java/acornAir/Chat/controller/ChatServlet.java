@@ -28,39 +28,33 @@ public class ChatServlet extends HttpServlet {
         resp.setContentType("text/plain; charset=UTF-8");
 
         String keyword = req.getParameter("keyword");
-
+        
+        //입력값 검증
         if (keyword == null || keyword.trim().isEmpty()) {
             resp.getWriter().write("질문을 입력해 주세요.");
             return;
         }
 
         keyword = keyword.trim();
-
         String answer = "";
 
-        if ("회원가입안내".equals(keyword)) {
-            answer = "회원가입은 홈페이지 우측 상단 버튼을 통해 진행하실 수 있습니다.";
-        } else if ("항공권 구매".equals(keyword)) {
-            answer = "항공권 구매는 [예약] 메뉴에서 실시간으로 가능합니다.";
-        } else if ("예약조회".equals(keyword)) {
-            answer = "로그인 후 마이페이지에서 예약 내역 확인이 가능합니다.";
-        } else if ("수하물규정".equals(keyword)) {
-            answer = "기내 수하물은 1인당 10kg까지 허용됩니다.";
-        } else {
             try {
+            	//DB연동
                 ChatDao dao = new ChatDao();
                 answer = dao.getAnswer(keyword);
-
+                
+                //DB에 결과가 없을 경우
                 if (answer == null || answer.trim().isEmpty()) {
-                    answer = "죄송합니다. '" + keyword + "'에 대한 답변을 찾지 못했습니다.";
+                    //answer = "죄송합니다. '" + keyword + "'에 대한 답변을 찾지 못했습니다.";
+                	answer = "'" + keyword + " '에 대한 답변을 찾지 못했습니다. 예약, 수하물, 공항 등의 키워드로 질문해 주세요.";
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                answer = "챗봇 답변을 불러오는 중 오류가 발생했습니다.";
+                answer = "챗봇 답변을 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
             }
-        }
 
+    	//답변 전송
         resp.getWriter().write(answer);
-    }
+}
 }
