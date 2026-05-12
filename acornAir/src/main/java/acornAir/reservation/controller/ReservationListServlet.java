@@ -33,15 +33,27 @@ public class ReservationListServlet extends HttpServlet {
     	}
 
     	String userId = loginUser.getUserId();
+    	String bookingId = req.getParameter("bookingId");
+    	
         ReservationDAO dao = new ReservationDAO();
 
         // 테스트용 아이디
         //String userId = "user01";
         System.out.println("예약 저장 userId = " + loginUser.getUserId());
       
-        ArrayList<ReservationDTO> list =
-                dao.selectReservationList(loginUser.getUserId());
+        ArrayList<ReservationDTO> list;
 
+        if (bookingId != null && !bookingId.trim().isEmpty()) {
+
+            list = dao.selectReservationList(
+                    loginUser.getUserId(),
+                    bookingId);
+
+        } else {
+
+            list = dao.selectReservationList(
+                    loginUser.getUserId());
+        }
         req.setAttribute("reservationList", list);
 
         req.getRequestDispatcher(

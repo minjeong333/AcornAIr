@@ -81,8 +81,8 @@
 <div class="mytrip-content" id="myTripContent">
 
 <form id="myTripForm"
-      action="${pageContext.request.contextPath}/home"
-      method="post">
+     action="${pageContext.request.contextPath}/reservation/list"
+method="get">
 
 <input type="hidden" name="mode" value="mytrip">
 
@@ -263,7 +263,6 @@
 </div>
 
 
-
 <!-- 인기여행지 -->
 <section class="popular-section">
   <h2>인기 여행지</h2>
@@ -271,69 +270,84 @@
 
   <div class="trip-card-wrap">
 
-    <div class="trip-card">
+    <a href="<%=request.getContextPath()%>/home?depAirport=ICN&arrAirport=JFK&tripType=RT&depDate=2026-06-10&returnDate=2026-06-20&passCnt=1"
+   class="trip-card">
       <div class="trip-img img-newyork">
         <div>
           <h3>뉴욕</h3>
           <span>미국</span>
         </div>
       </div>
+
       <div class="trip-info">
         <span>왕복 항공권</span>
         <div>
           <small>부터</small>
-          <strong>₩950,000</strong>
+          <strong>₩<%=String.format("%,d", (Integer)request.getAttribute("nyPrice"))%></strong>
         </div>
       </div>
-    </div>
 
-    <div class="trip-card">
+    </a>
+
+    <a href="<%=request.getContextPath()%>/home?depAirport=ICN&arrAirport=SFO&tripType=RT&depDate=2026-06-12&returnDate=2026-06-22&passCnt=1"
+   class="trip-card">
+
       <div class="trip-img img-sf">
         <div>
           <h3>샌프란시스코</h3>
           <span>미국</span>
         </div>
       </div>
+
       <div class="trip-info">
         <span>왕복 항공권</span>
         <div>
           <small>부터</small>
-          <strong>₩880,000</strong>
+          <strong>₩<%=String.format("%,d", (Integer)request.getAttribute("sfPrice"))%></strong>
         </div>
       </div>
-    </div>
 
-    <div class="trip-card">
+    </a>
+
+    <a href="<%=request.getContextPath()%>/home?depAirport=ICN&arrAirport=LHR&tripType=RT&depDate=2026-06-15&returnDate=2026-06-25&passCnt=1"
+   class="trip-card">
+
       <div class="trip-img img-london">
         <div>
           <h3>런던</h3>
           <span>영국</span>
         </div>
       </div>
+
       <div class="trip-info">
         <span>왕복 항공권</span>
         <div>
           <small>부터</small>
-          <strong>₩1,150,000</strong>
+          <strong>₩<%=String.format("%,d", (Integer)request.getAttribute("londonPrice"))%></strong>
         </div>
       </div>
-    </div>
 
-    <div class="trip-card">
+    </a>
+
+    <a href="<%=request.getContextPath()%>/home?depAirport=ICN&arrAirport=CDG&tripType=RT&depDate=2026-06-18&returnDate=2026-06-28&passCnt=1"
+   class="trip-card">
+
       <div class="trip-img img-paris">
         <div>
           <h3>파리</h3>
           <span>프랑스</span>
         </div>
       </div>
+
       <div class="trip-info">
         <span>왕복 항공권</span>
         <div>
           <small>부터</small>
-          <strong>₩1,080,000</strong>
+          <strong>₩<%=String.format("%,d", (Integer)request.getAttribute("parisPrice"))%></strong>
         </div>
       </div>
-    </div>
+
+    </a>
 
   </div>
 </section>
