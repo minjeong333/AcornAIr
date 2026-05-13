@@ -57,8 +57,10 @@ public class AdminFlightAddServlet extends HttpServlet {
 
 			int taxPrice =
 			        Integer.parseInt(request.getParameter("taxPrice"));
-			int economySeat = Integer.parseInt(request.getParameter("economySeat"));
-			int businessSeat = Integer.parseInt(request.getParameter("businessSeat"));
+//			int economySeat = Integer.parseInt(request.getParameter("economySeat"));
+//			int businessSeat = Integer.parseInt(request.getParameter("businessSeat"));
+			int economySeat = 198;
+			int businessSeat = 20;
 
 			FlightDAO dao = new FlightDAO();
 

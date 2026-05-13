@@ -99,8 +99,9 @@ input, select {
 			<input type="number" name="price" required> <label>유류할증료</label>
 			<input type="number" name="fuelSurcharge" required> <label>세금</label>
 			<input type="number" name="taxPrice" required> <label>일반석
-				좌석 수</label> <input type="number" name="economySeat" required> <label>비즈니스석
-				좌석 수</label> <input type="number" name="businessSeat" required>
+				좌석 수</label> <input type="number" name="economySeat" value="198" readonly>
+			<label>비즈니스석 좌석 수</label> <input type="number" name="businessSeat"
+				value="20" readonly>
 
 			<div class="btn-area">
 				<button type="submit" class="btn submit-btn">등록하기</button>
