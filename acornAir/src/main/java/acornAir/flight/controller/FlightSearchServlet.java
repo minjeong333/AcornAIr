@@ -37,6 +37,21 @@ public class FlightSearchServlet extends HttpServlet {
 			passCnt = Integer.parseInt(passCntStr);
 		}
 
+		HttpSession session = req.getSession(false);
+
+		if (depAirport != null) {
+			if (session == null || session.getAttribute("loginUser") == null) {
+				resp.setContentType("text/html;charset=UTF-8");
+				resp.getWriter().println(
+					"<script>" +
+					"alert('로그인 후 항공권 검색이 가능합니다.');" +
+					"location.href='" + req.getContextPath() + "/air/login';" +
+					"</script>"
+				);
+				return;
+			}
+		}
+
 		if (depAirport == null) {
 
 			FlightDAO dao = new FlightDAO();
@@ -61,7 +76,7 @@ public class FlightSearchServlet extends HttpServlet {
 			req.setAttribute("backFlightList", backList);
 		}
 
-		HttpSession session = req.getSession();
+		if (session == null) session = req.getSession();
 
 		session.removeAttribute("goFlight");
 		session.removeAttribute("backFlight");
