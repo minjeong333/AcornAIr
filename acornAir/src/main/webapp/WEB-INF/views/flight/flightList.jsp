@@ -21,6 +21,15 @@ String returnDate = (String) session.getAttribute("returnDate");
 Integer passCnt = (Integer) session.getAttribute("passCnt");
 String tripType = (String) session.getAttribute("tripType");
 
+//
+String seatClass = (String) session.getAttribute("seatClass");
+
+if(seatClass == null || seatClass.isEmpty()){
+    seatClass = "일반석";
+}
+//
+
+
 // 가는 편 가격 서버에서 계산 (sessionStorage 대체)
 acornAir.flight.dto.FlightDTO goFlight = (acornAir.flight.dto.FlightDTO) session.getAttribute("goFlight");
 String goSeatClass = (String) session.getAttribute("goSeatClass");
@@ -39,7 +48,9 @@ if (goFlight != null && passCnt != null) {
     arrAirport: "<%=arrAirport != null ? arrAirport : ""%>",
     depDate: "<%=depDate != null ? depDate : ""%>",
     returnDate: "<%=returnDate != null ? returnDate : ""%>",
-    passCnt: "<%=passCnt != null ? passCnt : 1%>"
+    passCnt: "<%=passCnt != null ? passCnt : 1%>",
+    
+   	tripType: "<%=tripType != null ? tripType : "RT"%>"
   	};
     var serverGoPrice = <%=serverGoPrice%>;
     var serverGoSeatLabel = "<%=serverGoSeatLabel%>";
@@ -68,7 +79,18 @@ if (goFlight != null && passCnt != null) {
 					<small>도착지</small>
 				</div>
 				<div class="input-group" id="btnDate">
-					<strong id="txtDate"><%=depDate != null ? depDate : "출발일"%></strong>
+					<!--<strong id="txtDate"><%=depDate != null ? depDate : "출발일"%></strong>-->
+					<strong id="txtDate">
+					<%
+					if(depDate != null && returnDate != null && !returnDate.isEmpty()){
+						out.print(depDate + " ~ " + returnDate);
+					}else if(depDate != null){
+						out.print(depDate);
+					}else{
+						out.print("출발일");
+					}
+					%>
+					</strong>
 					<small>날짜선택</small>
 				</div>
 				<div class="input-group" id="btnPassenger">
@@ -76,18 +98,23 @@ if (goFlight != null && passCnt != null) {
 					<small>탑승객</small>
 				</div>
 				<div class="input-group" id="btnSeat">
-					<strong id="txtSeat">💺 일반석</strong> <small>좌석등급</small>
+					<!-- <strong id="txtSeat">💺 일반석</strong>  -->
+					<strong id="txtSeat">
+					<%= "C".equals(seatClass) ? "✨ 비즈니스석" : "💺 일반석" %>
+					</strong>					
+					<small>좌석등급</small>
 				</div>
 				<button type="submit" class="search-btn">항공검색</button>
 
 				<input type="hidden" name="depAirport" id="depAirportInput">
 				<input type="hidden" name="arrAirport" id="arrAirportInput">
 
-				<input type="hidden" name="depDate" id="depDateInput"> <input
-					type="hidden" name="returnDate" id="returnDateInput"> <input
-					type="hidden" name="passCnt" id="passCntInput"> <input
-					type="hidden" name="tripType" id="tripTypeInput"> <input
-					type="hidden" name="seatClass" id="seatClassInput" value="일반석">
+				<input type="hidden" name="depDate" id="depDateInput"> 
+				<input type="hidden" name="returnDate" id="returnDateInput"> 
+				<input type="hidden" name="passCnt" id="passCntInput"> 
+				<input type="hidden" name="tripType" id="tripTypeInput"> 
+				<!-- <input type="hidden" name="seatClass" id="seatClassInput" value="일반석"> -->
+				<input type="hidden" name="seatClass" id="seatClassInput" value="<%=seatClass%>">
 			</div>
 
 		</form>
