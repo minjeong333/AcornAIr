@@ -270,6 +270,7 @@ public class UserDAO {
 	            user.setGender(rs.getString("GENDER"));
 	            user.setCountry(rs.getString("COUNTRY"));
 	            user.setUserRole(rs.getString("USER_ROLE"));
+	            user.setReservationCount(rs.getInt("RES_COUNT"));
 
 	            list.add(user);
 	        }
