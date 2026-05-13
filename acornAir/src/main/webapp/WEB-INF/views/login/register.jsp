@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+
 <body>
 
 <% if (request.getAttribute("errorMsg") != null) { %>
@@ -25,7 +25,7 @@
 </script>
 <% } %>
 
-	<div class="wrapper">
+	
 	<div class="wrapper">
 		<div class="sidebar">
 			<div class="step-item active">
@@ -205,14 +205,19 @@
 
 						<input type="email" name="userEmail" placeholder="이메일 주소">
 
-						<input type="email" placeholder="이메일 주소 재입력">
+						<input type="email" id="emailConfirm" placeholder="이메일 주소 재입력">
 
 					</div>
 
 					<!-- 버튼 -->
 					<div class="button-area">
 
-						<button type="button" class="prev">이전</button>
+						<button type="button" class="prev"
+    onclick="prevStep()"
+    style="border-radius: 50px; padding: 12px 40px; background: #fff; border: 1px solid #333;">
+
+    이전
+</button>
 
 						<button type="button" class="blue-btn" onclick="checkStep2()">다음</button>
 
@@ -321,17 +326,21 @@
 						style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px;">
 
 						<button type="button" class="prev"
-							style="border-radius: 50px; padding: 12px 40px; background: #fff; border: 1px solid #333;">
+    onclick="prevStep()"
+    style="border-radius: 50px; padding: 12px 40px; background: #fff; border: 1px solid #333;">
 
-							이전</button>
+								이전</button>
 
 						<button type="button" class="blue-btn"
-	onclick="goStep(3)"
-	style="border-radius: 50px; padding: 12px 40px;">다음</button>
+    onclick="goStep(3)"
+    style="border-radius: 50px; padding: 12px 40px;">
 
-					</div>
+    다음
+</button>
 
 				</div>
+				</div>
+				
 
 				<!-- STEP 4 -->
 				<div class="step">
@@ -466,9 +475,11 @@
 							style="margin-top: 30px; display: flex; justify-content: flex-end; gap: 10px;">
 
 							<button type="button" class="prev"
-								style="border-radius: 50px; padding: 12px 40px; background: #fff; border: 1px solid #333;">
+    onclick="prevStep()"
+    style="border-radius: 50px; padding: 12px 40px; background: #fff; border: 1px solid #333;">
 
-								이전</button>
+    이전
+</button>
 
 							<!-- 중요 -->
 							<button type="submit" id="finishBtn" class="blue-btn"
@@ -503,6 +514,8 @@
 			}
 		}
 
+		let currentStep = 0;
+
 		function goStep(index) {
 		    const steps = document.querySelectorAll(".step");
 		    const stepItems = document.querySelectorAll(".step-item");
@@ -512,6 +525,17 @@
 
 		    steps[index].classList.add("active");
 		    stepItems[index].classList.add("active");
+
+		    currentStep = index;
+		}
+
+		goStep(0);
+		
+		function prevStep() {
+		    if (currentStep > 0) {
+		        goStep(currentStep - 1);
+		    }
+		    
 		}
 
 		function checkStep1() {
@@ -543,13 +567,15 @@
 		    const pwConfirm = document.querySelector("#pwConfirm").value.trim();
 		    const userPhone = document.querySelector("[name='userPhone']").value.trim();
 		    const userEmail = document.querySelector("[name='userEmail']").value.trim();
-
+		    const emailConfirm = document.querySelector("#emailConfirm").value.trim();
+		    
 		    if (
 		        userId === "" ||
 		        userPw === "" ||
 		        pwConfirm === "" ||
 		        userPhone === "" ||
-		        userEmail === ""
+		        userEmail === "" ||
+		        emailConfirm === ""
 		    ) {
 		        alert("계정 및 연락처 정보를 모두 입력해 주세요.");
 		        return;
@@ -560,6 +586,37 @@
 		        return;
 		    }
 
+		    const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+		    if (!emailReg.test(userEmail)) {
+		        alert("이메일 형식이 올바르지 않습니다.");
+		        return;
+		    }
+		    if (emailConfirm === "") {
+		        alert("이메일 주소 재입력란을 입력해 주세요.");
+		        return;
+		    }
+		    if (userEmail !== emailConfirm) {
+		        alert("이메일 주소가 일치하지 않습니다.");
+		        return;
+		    }
+		    
+		    const rule1 = document.getElementById("rule1");
+		    const rule2 = document.getElementById("rule2");
+		    const rule3 = document.getElementById("rule3");
+		    const rule4 = document.getElementById("rule4");
+		    const rule5 = document.getElementById("rule5");
+
+		    if (
+		        !rule1.classList.contains("is-valid") ||
+		        !rule2.classList.contains("is-valid") ||
+		        !rule3.classList.contains("is-valid") ||
+		        !rule4.classList.contains("is-valid") ||
+		        !rule5.classList.contains("is-valid")
+		    ) {
+		        alert("비밀번호 조건을 모두 만족해야 합니다.");
+		        return;
+		    }
 		    goStep(2);
 		}
 		
