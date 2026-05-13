@@ -92,6 +92,23 @@ public class SeatServlet extends HttpServlet {
 		}
 		int passCnt = passengers.size();
 
+		//
+		List<String> goSeatList = parseSeatList(goSeats);
+		List<String> backSeatList = parseSeatList(backSeats);
+
+		if (goSeatList.size() != passCnt) {
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.getWriter().write("<script>alert('가는편 좌석은 승객 수와 동일하게 " + passCnt + "개 선택해야 합니다.'); history.back();</script>");
+			return;
+		}
+
+		if (backFlight != null && backSeatList.size() != passCnt) {
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.getWriter().write("<script>alert('오는편 좌석은 승객 수와 동일하게 " + passCnt + "개 선택해야 합니다.'); history.back();</script>");
+			return;
+		}
+		//
+		
 		int unitPrice = 0;
 		int fuelSurcharge = 0;
 		int taxPrice = 0;
@@ -143,12 +160,10 @@ public class SeatServlet extends HttpServlet {
 
 		bookingDTO.setPassengers(passengers);
 
-		if (goSeats != null && !goSeats.isEmpty()) {
-			bookingDTO.setGoSeats(java.util.Arrays.asList(goSeats.split(",")));
-		}
+		bookingDTO.setGoSeats(goSeatList);
 
-		if (backSeats != null && !backSeats.isEmpty()) {
-			bookingDTO.setBackSeats(java.util.Arrays.asList(backSeats.split(",")));
+		if (backFlight != null) {
+			bookingDTO.setBackSeats(backSeatList);
 		}
 
 		bookingDTO.setBasePrice(basePrice);
@@ -161,5 +176,21 @@ public class SeatServlet extends HttpServlet {
 //		resp.sendRedirect(req.getContextPath() + "/air/booking/payment");
 		resp.setContentType("text/html; charset=UTF-8");
 		resp.getWriter().write("<script>" + "window.parent.postMessage({type:'seatDone'}, '*');" + "</script>");
+	}
+	
+	private List<String> parseSeatList(String seats) {
+		List<String> list = new ArrayList<>();
+
+		if (seats == null || seats.trim().isEmpty()) {
+			return list;
+		}
+
+		for (String seat : seats.split(",")) {
+			if (seat != null && !seat.trim().isEmpty()) {
+				list.add(seat.trim());
+			}
+		}
+
+		return list;
 	}
 }
