@@ -2,7 +2,7 @@
 
 <div id="chat-trigger-btn" class="chat-trigger-btn" onclick="toggleChat()">
     <span>✨</span>
-    <span>AI 챗봇</span>
+    <span>챗봇</span>
 </div>
 
 <div id="chat-window" class="chat-popup hidden">
