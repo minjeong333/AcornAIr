@@ -1,240 +1,276 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+	pageEncoding="UTF-8"%>
+<%@ page import="java.util.List"%>
+<%@ page import="acornAir.airport.dto.AirportDTO"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>ACORN AIRRES</title>
 
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/flight/res.css">
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/css/flight/res.css">
 </head>
 
 <body>
 
-<jsp:include page="/WEB-INF/views/util/header.jsp" />
+	<jsp:include page="/WEB-INF/views/util/header.jsp" />
 
-<div class="container">
-<h1>항공권 예매</h1>
-  <div class="card">
+	<div class="container">
+		<h1>항공권 예매</h1>
+		<div class="card">
 
-    <div class="tabs">
-  		<span class="active" id="ticketTab">항공권 예매</span>
-  		<span id="myTripTab"></span>
+			<div class="tabs">
+				<span class="active" id="ticketTab">항공권 예매</span> <span
+					id="myTripTab"></span>
+			</div>
+
+			<div id="ticketContent">
+
+				<form action="<%=request.getContextPath()%>/home" method="get"
+					id="flightSearchForm">
+
+					<input type="hidden" name="tripType" id="tripTypeInput" value="RT">
+					<input type="hidden" name="depAirport" id="depAirportInput"
+						value="ICN"> <input type="hidden" name="arrAirport"
+						id="arrAirportInput"> <input type="hidden" name="depDate"
+						id="depDateInput"> <input type="hidden" name="passCnt"
+						id="passCntInput" value="1"> <input type="hidden"
+						name="seatClass" id="seatClassInput" value="Y"> <input
+						type="hidden" name="returnDate" id="returnDateInput">
+					<div class="trip-type">
+						<button type="button" class="active">왕복</button>
+						<button type="button">편도</button>
+					</div>
+
+					<div class="form-row">
+
+						<div class="input-box" id="fromBox">
+							<strong>ICN</strong> <small>서울/모든 공항</small>
+						</div>
+
+						<div class="swap">↔</div>
+
+						<div class="input-box" id="toBox">
+							<strong>To</strong> <small>도착지</small>
+						</div>
+
+						<div class="input-box" id="dateBox">
+							<strong>출발일</strong> <small id="dateText">날짜 선택</small>
+						</div>
+
+						<div class="input-box" id="passengerBox">
+							<strong>탑승객</strong> <small id="passengerText">🚶 1 🚶 0
+								👶 0</small>
+						</div>
+
+						<div class="input-box" id="seatBox">
+							<strong>좌석 등급</strong> <small id="seatText">💺 일반석</small>
+						</div>
+
+						<button class="search-btn">항공 검색</button>
+					</div>
+				</form>
+			</div>
+			<!-- 나의 여행 -->
+			<div class="mytrip-content" id="myTripContent">
+				<div class="mytrip-row">
+
+
+
+					<div class="mytrip-field">
+
+						<div class="mytrip-date" id="myTripDateBox">
+							<span id="myTripDateText">날짜 선택</span>
+						</div>
+					</div>
+
+					<div class="mytrip-field small">
+						<label>성</label> <input type="text">
+					</div>
+
+					<div class="mytrip-field small">
+						<label>이름</label> <input type="text">
+					</div>
+
+					<button class="mytrip-btn">조회</button>
+
+				</div>
+			</div>
+
+			<!-- 출발지/도착지 검색 -->
+			<div class="airport-search" id="airportSearch">
+
+				<div class="airport-header">
+					<strong id="airportTitle">출발지 검색</strong>
+					<button id="closeAirport">×</button>
+				</div>
+
+				<div class="airport-select-wrap">
+
+					<div class="airport-select-box">
+						<input type="text" id="airportInput" placeholder="도시, 공항"
+							autocomplete="off"> <span id="airportToggle">⌄</span>
+					</div>
+
+					<div class="airport-dropdown" id="airportDropdown">
+
+						<%
+						List<AirportDTO> airportList = (List<AirportDTO>) request.getAttribute("airportList");
+
+						if (airportList != null) {
+							for (AirportDTO airport : airportList) {
+						%>
+
+						<div class="airport-item"
+							data-code="<%=airport.getAirportCode()%>"
+							data-city="<%=airport.getCityName()%>"
+							data-name="<%=airport.getAirportName()%>">
+
+							<strong> <%=airport.getCityName()%> (<%=airport.getAirportCode()%>)
+							</strong> <small> <%=airport.getAirportName()%> · <%=airport.getCountry()%>
+							</small>
+
+						</div>
+
+						<%
+						}
+						}
+						%>
+
+					</div>
+
+				</div>
+
+				<div class="all-area">
+					<span>⌖</span> <u>모든 지역 보기</u>
+				</div>
+
+			</div>
+
+			<!-- 캘린더 -->
+			<div class="calendar" id="calendar">
+				<div class="calendar-header">
+					<strong>출발일</strong>
+					<button id="closeCal">×</button>
+				</div>
+
+				<div class="calendar-option-row">
+					<div class="calendar-trip">
+						<button class="active">왕복</button>
+						<button>편도</button>
+					</div>
+
+
+				</div>
+
+				<div class="month-wrap">
+					<button class="month-arrow" id="prevMonth">‹</button>
+
+					<div class="month">
+						<h3 id="monthTitle1"></h3>
+						<div class="week">
+							<span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+						</div>
+						<div class="days" id="days1"></div>
+					</div>
+
+					<div class="month">
+						<h3 id="monthTitle2"></h3>
+						<div class="week">
+							<span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+						</div>
+						<div class="days" id="days2"></div>
+					</div>
+
+					<button class="month-arrow" id="nextMonth">›</button>
+				</div>
+
+				<div class="calendar-footer">* 키보드 사용 : 화살표 키로 날짜를 이동하고, Enter
+					키를 눌러 선택할 수 있습니다.</div>
+			</div>
+
+			<!-- 탑승객 -->
+			<div class="passenger-panel" id="passengerPanel">
+				<div class="passenger-header">
+					<strong>승객 선택</strong>
+					<button id="closePassenger">×</button>
+				</div>
+
+				<div class="passenger-counts">
+					<div class="passenger-item">
+						<p>
+							성인 <span>?</span>
+						</p>
+						<div class="count-control">
+							<button id="adultMinus">−</button>
+							<strong id="adultCount">1</strong>
+							<button id="adultPlus">＋</button>
+						</div>
+					</div>
+
+					<div class="passenger-item">
+						<p>
+							소아 <span>?</span>
+						</p>
+						<div class="count-control">
+							<button id="childMinus">−</button>
+							<strong id="childCount">0</strong>
+							<button id="childPlus">＋</button>
+						</div>
+					</div>
+
+					<div class="passenger-item">
+						<p>
+							유아 <span>?</span>
+						</p>
+						<div class="count-control">
+							<button id="babyMinus">−</button>
+							<strong id="babyCount">0</strong>
+							<button id="babyPlus">＋</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="age-select">나이계산기 ˅</div>
+
+				<div class="passenger-info">
+					<h3>소아/유아 및 만 14세 미만 승객 안내</h3>
+					<p>• 소아는 첫번째 항공편 출발일 기준 나이입니다. 유아는 각 항공편별 탑승일 기준 나이입니다.</p>
+					<p>• 유아는 생후 7일부터 탑승 가능하며, 좌석을 점유하지 않습니다. 또한 탑승일 기준 만 18세 이상의
+						보호자가 동반해야 합니다.</p>
+					<p>• 유아 좌석 점유를 원하시는 경우, 소아로 예매를 진행하시기 바랍니다.</p>
+					<p>• 만 14세 미만 승객은 예매 시 법정대리인의 동의 및 인증이 필요합니다.</p>
+
+					<h3>구매와 동시승급 진행 시 유의사항</h3>
+					<p>• 마일리지 공제를 위해 등록된 가족 기준으로 승객선택을 해주시기 바랍니다.</p>
+					<p>• 가족 마일리지 합산은 로그인 회원 본인 1인 예매 시에만 가능합니다.</p>
+				</div>
+			</div>
+
+
+			<!-- 좌석등급 -->
+			<div class="seat-panel" id="seatPanel">
+				<div class="seat-header">
+					<strong>좌석 등급 선택</strong>
+					<button id="closeSeat">×</button>
+				</div>
+
+				<div class="seat-options">
+					<button class="seat-option active" data-seat="일반석">💺 일반석</button>
+					<button class="seat-option" data-seat="일등석">💺 일등석</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
-    <div id="ticketContent">
-
-  <form action="<%=request.getContextPath()%>/home" method="get" id="flightSearchForm">
-
-    <input type="hidden" name="tripType" id="tripTypeInput" value="RT">
-    <input type="hidden" name="depAirport" id="depAirportInput" value="ICN">
-    <input type="hidden" name="arrAirport" id="arrAirportInput">
-    <input type="hidden" name="depDate" id="depDateInput">
-    <input type="hidden" name="passCnt" id="passCntInput" value="1">
-    <input type="hidden" name="seatClass" id="seatClassInput" value="Y">
-	<input type="hidden" name="returnDate" id="returnDateInput">
-    <div class="trip-type">
-      <button type="button" class="active">왕복</button>
-      <button type="button">편도</button>
-    </div>
-
-    <div class="form-row">
-
-      <div class="input-box" id="fromBox">
-        <strong>ICN</strong>
-        <small>서울/모든 공항</small>
-      </div>
-
-      <div class="swap">↔</div>
-
-      <div class="input-box" id="toBox">
-        <strong>To</strong>
-        <small>도착지</small>
-      </div>
-
-      <div class="input-box" id="dateBox">
-        <strong>출발일</strong>
-        <small id="dateText">날짜 선택</small>
-      </div>
-
-      <div class="input-box" id="passengerBox">
-  		<strong>탑승객</strong>
-  		<small id="passengerText">🚶 1  🚶 0  👶 0</small>
-	  </div>
-
-      <div class="input-box" id="seatBox">
-  		<strong>좌석 등급</strong>
-  		<small id="seatText">💺 일반석</small>
-	  </div>
-
-      <button class="search-btn">항공 검색</button>
-    </div>
-</form>
-</div>
-	<!-- 나의 여행 -->
-	<div class="mytrip-content" id="myTripContent">
-  <div class="mytrip-row">
-
-    
-
-    <div class="mytrip-field">
-     
-      <div class="mytrip-date" id="myTripDateBox">
- 		 <span id="myTripDateText">날짜 선택</span>
-	  </div>
-    </div>
-
-    <div class="mytrip-field small">
-      <label>성</label>
-      <input type="text">
-    </div>
-
-    <div class="mytrip-field small">
-      <label>이름</label>
-      <input type="text">
-    </div>
-
-    <button class="mytrip-btn">조회</button>
-
-  </div>
-</div>
-
-    <!-- 출발지/도착지 검색 -->
-    <div class="airport-search" id="airportSearch">
-      <div class="airport-header">
-        <strong id="airportTitle">출발지 검색</strong>
-        <button id="closeAirport">×</button>
-      </div>
-
-      <div class="airport-select-box">
-        <input type="text" id="airportInput" placeholder="도시, 공항">
-        <span>⌄</span>
-      </div>
-
-      <div class="all-area">
-        <span>⌖</span>
-        <u>모든 지역 보기</u>
-      </div>
-    </div>
-
-    <!-- 캘린더 -->
-    <div class="calendar" id="calendar">
-      <div class="calendar-header">
-        <strong>출발일</strong>
-        <button id="closeCal">×</button>
-      </div>
-
-      <div class="calendar-option-row">
-        <div class="calendar-trip">
-          <button class="active">왕복</button>
-          <button>편도</button>
-        </div>
-
-        
-      </div>
-
-      <div class="month-wrap">
-        <button class="month-arrow" id="prevMonth">‹</button>
-
-        <div class="month">
-          <h3 id="monthTitle1"></h3>
-          <div class="week">
-            <span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-          </div>
-          <div class="days" id="days1"></div>
-        </div>
-
-        <div class="month">
-          <h3 id="monthTitle2"></h3>
-          <div class="week">
-            <span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-          </div>
-          <div class="days" id="days2"></div>
-        </div>
-
-        <button class="month-arrow" id="nextMonth">›</button>
-      </div>
-
-      <div class="calendar-footer">
-        * 키보드 사용 : 화살표 키로 날짜를 이동하고, Enter 키를 눌러 선택할 수 있습니다.
-      </div>
-    </div>
-    
-    <!-- 탑승객 -->
-    <div class="passenger-panel" id="passengerPanel">
-  <div class="passenger-header">
-    <strong>승객 선택</strong>
-    <button id="closePassenger">×</button>
-  </div>
-
-  <div class="passenger-counts">
-    <div class="passenger-item">
-      <p>성인 <span>?</span></p>
-      <div class="count-control">
-        <button id="adultMinus">−</button>
-        <strong id="adultCount">1</strong>
-        <button id="adultPlus">＋</button>
-      </div>
-    </div>
-
-    <div class="passenger-item">
-      <p>소아 <span>?</span></p>
-      <div class="count-control">
-        <button id="childMinus">−</button>
-        <strong id="childCount">0</strong>
-        <button id="childPlus">＋</button>
-      </div>
-    </div>
-
-    <div class="passenger-item">
-      <p>유아 <span>?</span></p>
-      <div class="count-control">
-        <button id="babyMinus">−</button>
-        <strong id="babyCount">0</strong>
-        <button id="babyPlus">＋</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="age-select">나이계산기 ˅</div>
-
-  <div class="passenger-info">
-    <h3>소아/유아 및 만 14세 미만 승객 안내</h3>
-    <p>• 소아는 첫번째 항공편 출발일 기준 나이입니다. 유아는 각 항공편별 탑승일 기준 나이입니다.</p>
-    <p>• 유아는 생후 7일부터 탑승 가능하며, 좌석을 점유하지 않습니다. 또한 탑승일 기준 만 18세 이상의 보호자가 동반해야 합니다.</p>
-    <p>• 유아 좌석 점유를 원하시는 경우, 소아로 예매를 진행하시기 바랍니다.</p>
-    <p>• 만 14세 미만 승객은 예매 시 법정대리인의 동의 및 인증이 필요합니다.</p>
-
-    <h3>구매와 동시승급 진행 시 유의사항</h3>
-    <p>• 마일리지 공제를 위해 등록된 가족 기준으로 승객선택을 해주시기 바랍니다.</p>
-    <p>• 가족 마일리지 합산은 로그인 회원 본인 1인 예매 시에만 가능합니다.</p>
-  </div>
-</div>
 
 
-		<!-- 좌석등급 -->
-		<div class="seat-panel" id="seatPanel">
-  			<div class="seat-header">
-    			<strong>좌석 등급 선택</strong>
-    			<button id="closeSeat">×</button>
-  			</div>
+	</section>
 
-  			<div class="seat-options">
-   				 <button class="seat-option active" data-seat="일반석">💺 일반석</button>
-    			 <button class="seat-option" data-seat="일등석">💺 일등석</button>
-  			</div>
-		</div>
-  </div>
-</div>
+	<jsp:include page="/WEB-INF/views/util/footer.jsp" />
 
-
-
-</section>
-
-<jsp:include page="/WEB-INF/views/util/footer.jsp" />
-
-<script>
+	<script>
 const fromBox = document.getElementById("fromBox");
 const toBox = document.getElementById("toBox");
 
@@ -296,11 +332,21 @@ let startDate = null;
 let endDate = null;
 
 function closeAllPanels() {
-  airportSearch.style.display = "none";
-  calendar.style.display = "none";
-  passengerPanel.style.display = "none";
-  seatPanel.style.display = "none";
-}
+	  airportSearch.style.display = "none";
+	  calendar.style.display = "none";
+	  passengerPanel.style.display = "none";
+	  seatPanel.style.display = "none";
+
+	  const airportDropdown = document.getElementById("airportDropdown");
+	  if (airportDropdown) {
+	    airportDropdown.classList.remove("show");
+	  }
+
+	  const airportSelectBox = document.querySelector(".airport-select-box");
+	  if (airportSelectBox) {
+	    airportSelectBox.classList.remove("open");
+	  }
+	}
 
 function updateTripButtons(type) {
   tripType = type;
@@ -338,6 +384,14 @@ function openSearch(target, title) {
   airportSearch.style.display = "block";
   airportInput.value = "";
   airportInput.focus();
+  
+  const airportDropdown = document.getElementById("airportDropdown");
+  if (airportDropdown) {
+    airportDropdown.classList.remove("show");
+  }
+
+  document.querySelector(".airport-select-box")
+          .classList.remove("open");
 
   currentTarget = target;
   airportTitle.innerText = title;
@@ -363,17 +417,59 @@ closeAirport.addEventListener("click", function(e) {
   airportSearch.style.display = "none";
 });
 
-airportInput.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    const value = airportInput.value.trim();
+const airportToggle = document.getElementById("airportToggle");
+const airportDropdown = document.getElementById("airportDropdown");
+const airportItems = document.querySelectorAll(".airport-item");
 
-    if (value !== "" && currentTarget !== null) {
-      currentTarget.querySelector("strong").innerText = value.toUpperCase();
-      currentTarget.querySelector("small").innerText = "선택됨";
+airportToggle.addEventListener("click", function(e) {
+  e.stopPropagation();
 
-      airportSearch.style.display = "none";
+  airportDropdown.classList.toggle("show");
+
+  document.querySelector(".airport-select-box")
+          .classList.toggle("open");
+});
+
+airportInput.addEventListener("click", function(e) {
+  e.stopPropagation();
+});
+
+airportInput.addEventListener("keyup", function() {
+  const keyword = airportInput.value.trim().toLowerCase();
+
+  airportItems.forEach(function(item) {
+    const text = item.innerText.toLowerCase();
+    item.style.display = text.includes(keyword) ? "block" : "none";
+  });
+
+  airportDropdown.classList.add("show");
+
+  document.querySelector(".airport-select-box")
+          .classList.add("open");
+});
+
+airportItems.forEach(function(item) {
+  item.addEventListener("click", function(e) {
+    e.stopPropagation();
+
+    const code = item.dataset.code;
+    const city = item.dataset.city;
+    const name = item.dataset.name;
+
+    if (currentTarget !== null) {
+      currentTarget.querySelector("strong").innerText = code;
+      currentTarget.querySelector("small").innerText = city + " / " + name;
     }
-  }
+
+    airportInput.value = "";
+
+    airportDropdown.classList.remove("show");
+
+    document.querySelector(".airport-select-box")
+            .classList.remove("open");
+
+    airportSearch.style.display = "none";
+  });
 });
 
 dateBox.addEventListener("click", function(e) {
