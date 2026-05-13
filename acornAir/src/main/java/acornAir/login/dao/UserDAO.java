@@ -232,6 +232,7 @@ public class UserDAO {
 		        + "NVL(COUNT(b.BOOKING_ID), 0) AS RES_COUNT "
 		        + "FROM TB_USER u "
 		        + "LEFT JOIN TB_BOOKING b ON u.USER_ID = b.USER_ID "
+		        + "AND b.BOOK_STATUS = 'Y' "
 		        + "GROUP BY u.USER_ID, u.ENG_LAST_NAME, u.ENG_FIRST_NAME, "
 		        + "u.KOR_LAST_NAME, u.KOR_FIRST_NAME, u.USER_EMAIL, "
 		        + "u.PHONE_COUNTRY, u.USER_PHONE, u.BIRTH_DATE, u.GENDER, "
