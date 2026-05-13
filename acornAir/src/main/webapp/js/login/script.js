@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
                    alert("비밀번호가 일치하지 않습니다.");
                    return;
                }
+			   
            }
 
            if (current < steps.length - 1) {
@@ -70,14 +71,6 @@ document.addEventListener("DOMContentLoaded", function() {
        };
    });
 
-    document.querySelectorAll(".prev").forEach(btn => {
-        btn.onclick = () => {
-            if (current > 0) {
-                current--;
-                showStep(current);
-            }
-        };
-    });
 
     // --- [1.5] 비밀번호 실시간 유효성 검사 ---
     const userPw = document.getElementById("userPw");
