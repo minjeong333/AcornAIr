@@ -12,11 +12,20 @@
 <script>
 	const contextPath = "${pageContext.request.contextPath}";
 </script>
-<script src="${pageContext.request.contextPath}/js/login/script.js"></script>
+
 
 </head>
 
 <body>
+<body>
+
+<% if (request.getAttribute("errorMsg") != null) { %>
+<script>
+    alert("<%= request.getAttribute("errorMsg") %>");
+</script>
+<% } %>
+
+	<div class="wrapper">
 	<div class="wrapper">
 		<div class="sidebar">
 			<div class="step-item active">
@@ -95,7 +104,7 @@
 					</div>
 
 					<div class="button-area">
-						<button type="button" class="next blue-btn">다음</button>
+						<button type="button" class="blue-btn" onclick="checkStep1()">다음</button>
 					</div>
 
 				</div>
@@ -205,7 +214,7 @@
 
 						<button type="button" class="prev">이전</button>
 
-						<button type="button" class="next blue-btn">다음</button>
+						<button type="button" class="blue-btn" onclick="checkStep2()">다음</button>
 
 					</div>
 
@@ -316,8 +325,9 @@
 
 							이전</button>
 
-						<button type="button" class="next blue-btn"
-							style="border-radius: 50px; padding: 12px 40px;">다음</button>
+						<button type="button" class="blue-btn"
+	onclick="goStep(3)"
+	style="border-radius: 50px; padding: 12px 40px;">다음</button>
 
 					</div>
 
@@ -492,9 +502,73 @@
 				}
 			}
 		}
+
+		function goStep(index) {
+		    const steps = document.querySelectorAll(".step");
+		    const stepItems = document.querySelectorAll(".step-item");
+
+		    steps.forEach(s => s.classList.remove("active"));
+		    stepItems.forEach(s => s.classList.remove("active"));
+
+		    steps[index].classList.add("active");
+		    stepItems[index].classList.add("active");
+		}
+
+		function checkStep1() {
+		    const engLastName = document.querySelector("[name='engLastName']").value.trim();
+		    const engFirstName = document.querySelector("[name='engFirstName']").value.trim();
+		    const korLastName = document.querySelector("[name='korLastName']").value.trim();
+		    const korFirstName = document.querySelector("[name='korFirstName']").value.trim();
+		    const birthDate = document.querySelector("[name='birthDate']").value.trim();
+		    const gender = document.querySelector("[name='gender']:checked");
+
+		    if (
+		        engLastName === "" ||
+		        engFirstName === "" ||
+		        korLastName === "" ||
+		        korFirstName === "" ||
+		        birthDate === "" ||
+		        gender === null
+		    ) {
+		        alert("기본 정보를 모두 입력해 주세요.");
+		        return;
+		    }
+
+		    goStep(1);
+		}
+
+		function checkStep2() {
+		    const userId = document.querySelector("[name='userId']").value.trim();
+		    const userPw = document.querySelector("[name='userPw']").value.trim();
+		    const pwConfirm = document.querySelector("#pwConfirm").value.trim();
+		    const userPhone = document.querySelector("[name='userPhone']").value.trim();
+		    const userEmail = document.querySelector("[name='userEmail']").value.trim();
+
+		    if (
+		        userId === "" ||
+		        userPw === "" ||
+		        pwConfirm === "" ||
+		        userPhone === "" ||
+		        userEmail === ""
+		    ) {
+		        alert("계정 및 연락처 정보를 모두 입력해 주세요.");
+		        return;
+		    }
+
+		    if (userPw !== pwConfirm) {
+		        alert("비밀번호가 일치하지 않습니다.");
+		        return;
+		    }
+
+		    goStep(2);
+		}
+		
+		
+		
 	</script>
 
 	<!-- script.js는 모든 HTML 요소가 로드된 후인 </body> 직전에 위치해야 합니다. -->
-	<script src="${pageContext.request.contextPath}/js/login/script.js"></script>
+	<script src="${pageContext.request.contextPath}/js/login/script.js?v=2"></script>
+	
 </body>
 </html>
