@@ -286,7 +286,7 @@ a {
       <div class="reservation-card">
 
          <div class="reservation-top">
-            <strong>예약번호 : R<%=r.getBookingId()%></strong> <span class="status">
+            <strong>예약번호 : <%=r.getBookingId()%></strong> <span class="status">
                <%="Y".equals(r.getBookStatus()) ? "예약완료" : "예약취소"%>
             </span>
          </div>
