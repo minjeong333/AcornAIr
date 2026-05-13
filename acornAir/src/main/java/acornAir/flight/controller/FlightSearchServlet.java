@@ -99,7 +99,7 @@ public class FlightSearchServlet extends HttpServlet {
 		session.setAttribute("passCnt", passCnt);
 		session.setAttribute("tripType", tripType);
 		session.setAttribute("returnDate", returnDate);
-		session.setAttribute("seatClass", seatClass);
+//		session.setAttribute("seatClass", seatClass);
 
 		req.getRequestDispatcher("/WEB-INF/views/flight/flightList.jsp").forward(req, resp);
 	}
