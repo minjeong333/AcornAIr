@@ -1,5 +1,12 @@
 let currentTarget = ""; // 출발지인지 도착지인지 구분
 
+// 캘린더 제어 변수
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let startDate = null;
+let endDate =  null;
+let tripType = "왕복"; 
+
 // 모든 패널 닫기
 function closeAll() {
     document.querySelectorAll('.airport-search, .calendar, .passenger-panel, .seat-panel').forEach(el => {
@@ -46,10 +53,10 @@ document.getElementById('btnSeat').addEventListener('click', function(e) {
 
 });
 
-// 도시 입력 처리 (엔터)
+// 도시 입력
 document.getElementById('airportInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
-        const value = this.value;
+        const value = this.value.trim().toUpperCase();
         if (currentTarget === "from") {
             document.getElementById('txtFrom').innerText = value;
         } else {
@@ -74,6 +81,17 @@ let depDate = serverData.depDate;
 let returnDate = serverData.returnDate;
 let passCnt = serverData.passCnt;
 
+//
+if(depDate){
+    startDate = depDate;
+}
+
+if(returnDate){
+    endDate = returnDate;
+}
+//
+
+
 if(depAirport){
   document.getElementById("txtFrom").innerText = depAirport;
 }
@@ -85,7 +103,11 @@ if(arrAirport){
 if(depDate && returnDate){
   document.getElementById("txtDate").innerText =
     depDate + " ~ " + returnDate;
-}
+}	else if(depDate){
+
+	    document.getElementById("txtDate").innerText =
+	        depDate;
+	}
 
 if(passCnt){
   passengerData.adult = Number(passCnt);
@@ -111,9 +133,13 @@ function changeCount(type, n) {
 
 function selectSeat(seatName) {
     const seatDisplay = document.getElementById('txtSeat');
-    seatDisplay.innerText = seatName;
+
+	seatDisplay.innerText =
+	    seatName === "비즈니스석"
+	    ? "✨ 비즈니스석"
+	    : "💺 일반석";
     
-    // 선택된 버튼 스타일 강조 (옵션)
+    // 선택된 버튼 스타일 강조
     const buttons = document.querySelectorAll('.seat-opt-btn');
     buttons.forEach(btn => {
         if(btn.innerText.includes(seatName)) {
@@ -144,50 +170,62 @@ document.getElementById('panelCalendar').addEventListener('click', function(e) {
     e.stopPropagation();
 });
 
-// 캘린더 제어 변수
-let currentYear = new Date().getFullYear();
-let currentMonth = new Date().getMonth();
-let tripType = "왕복"; // 기본값
-let startDate = depDate;
-let endDate =  returnDate;
+
+
 
 // 캘린더 초기화 함수 (페이지 로드 시 호출)
 function initCalendar() {
-    renderCalendar();
-	
-	if(startDate){
+		// serverData.tripType이 "RT"면 '왕복', "OW"면 '편도'로 설정
+	    if (serverData.tripType === "OW") {
+	        tripType = "편도";
+	    } else {
+	        tripType = "왕복"; // 기본값
+	    }
+
+	    // 현재 tripType 상태에 따라 버튼의 active 클래스
+	    const tripBtns = document.querySelectorAll('.trip-type-btn');
+	    tripBtns.forEach(btn => {
+	        btn.classList.remove('active');
+	        if (btn.getAttribute('data-type') === tripType) {
+	            btn.classList.add('active');
+	        }
+	    });
+
+	    // 렌더링 로직
+	    renderCalendar();
+		
+	    if(startDate){
 	        document.getElementById("depDateInput").value = startDate;
 	    }
 	    if(endDate){
 	        document.getElementById("returnDateInput").value = endDate;
 	    }
 
-    // 왕복/편도 버튼 이벤트 바인딩
-    const tripBtns = document.querySelectorAll('.trip-type-btn');
-    tripBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            tripBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            tripType = btn.getAttribute('data-type');
-            
-            // 타입 변경 시 선택 초기화
-            startDate = null;
-            endDate = null;
-            renderCalendar();
-        });
-    });
+	    // 왕복/편도 버튼 클릭 이벤트 바인딩
+	    tripBtns.forEach(btn => {
+	        btn.addEventListener('click', (e) => {
+	            tripBtns.forEach(b => b.classList.remove('active'));
+	            btn.classList.add('active');
+	            tripType = btn.getAttribute('data-type');
+	            
+	            // 타입 변경 시 선택 초기화
+	            startDate = null;
+	            endDate = null;
+	            renderCalendar();
+	        });
+	    });
 
-    // 화살표 이벤트
-    document.getElementById("prevMonth").onclick = (e) => {
-        e.stopPropagation();
-        currentMonth--;
-        renderCalendar();
-    };
-    document.getElementById("nextMonth").onclick = (e) => {
-        e.stopPropagation();
-        currentMonth++;
-        renderCalendar();
-    };
+	    // 달력 화살표 이벤트
+	    document.getElementById("prevMonth").onclick = (e) => {
+	        e.stopPropagation();
+	        currentMonth--;
+	        renderCalendar();
+	    };
+	    document.getElementById("nextMonth").onclick = (e) => {
+	        e.stopPropagation();
+	        currentMonth++;
+	        renderCalendar();
+	    };
 }
 
 // 렌더링 함수
@@ -256,29 +294,27 @@ function handleDateClick(dateStr) {
 
     renderCalendar();
 }
-//새로 들어감 
+
 function finishSelection() {
-    const displayTarget = document.getElementById("txtDate");
+	const displayTarget = document.getElementById("txtDate");
+	    if (!displayTarget) return;
 
-    if (tripType === "편도") {
-        displayTarget.innerText = startDate;
+	    if (tripType === "편도") {
+	        if (startDate) {
+	            displayTarget.innerText = startDate;
+	            document.getElementById("depDateInput").value = startDate;
+	            document.getElementById("returnDateInput").value = "";
+	            closeAll();
+	        }
+	    } else {
+	        if (startDate && endDate) {
+	            displayTarget.innerText = startDate + " ~ " + endDate;
+	            document.getElementById("depDateInput").value = startDate;
+	            document.getElementById("returnDateInput").value = endDate;
+	            closeAll();
+	        }
+	    }
 
-        document.getElementById("depDateInput").value = startDate;
-        document.getElementById("returnDateInput").value = "";
-
-        closeAll();
-        return;
-    }
-
-    // 왕복
-    if (endDate) {
-        displayTarget.innerText = `${startDate} ~ ${endDate}`;
-
-        document.getElementById("depDateInput").value = startDate;
-        document.getElementById("returnDateInput").value = endDate;
-
-        closeAll();
-    }
 }
 
 // 스타일 업데이트 (선택된 날짜 표시)
@@ -289,20 +325,26 @@ function updateSelectionStyles() {
         
         if (d === startDate) span.classList.add("start");
         if (d === endDate) span.classList.add("end");
-		if (new Date(d) > new Date(startDate) && new Date(d) < new Date(endDate)) {
-		            span.classList.add("range");
-					}
+		
+							
+		if (
+		    startDate &&
+		    endDate &&
+		    new Date(d) > new Date(startDate) &&
+		    new Date(d) < new Date(endDate)
+		) {
+		    span.classList.add("range");
+		}			
+					
     });
 }
 
-// 페이지 로드 시 실행
-window.onload = initCalendar;
+document.addEventListener("DOMContentLoaded", function() {
+    initCalendar();
+});
 
 
-// price-box 부분
-
-
- 
+// price-box 부분 
 let selectedGoFlight = null;
 let selectedSeatClass = null;
 let selectedGoPrice = 0;
@@ -343,9 +385,8 @@ function goNext() {
         return;
     }
 
-    // 가는편 가격 저장
-	
-	const adultCount = passengerData.adult;
+    // 가는편 가격 저장	
+	//const adultCount = passengerData.adult;
 
     location.href =
         contextPath + "/booking?goFlightId=" +
@@ -385,7 +426,8 @@ window.addEventListener("DOMContentLoaded", function () {
     const arr = document.getElementById("txtTo").innerText.trim();
     const date = document.getElementById("txtDate").innerText.trim();
 	const seat = document.getElementById("txtSeat").innerText.replace('💺 ', '').replace('✨ ', '').trim();
-
+	const seatCode = seat.includes("비즈니스") ? "C" : "Y";
+	
     if(dep === "출발지" || dep === ""){
       alert("출발지를 입력하세요");
       e.preventDefault();
@@ -410,12 +452,14 @@ window.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("depDateInput").value = startDate || "";
 	document.getElementById("returnDateInput").value = endDate || "";
 	
+	/*
 	if(startDate){
 	    document.getElementById("depDateInput").value = startDate;
 	}
 	if(endDate){
 	    document.getElementById("returnDateInput").value = endDate;
 	}
+	*/
 	
 		
     document.getElementById("passCntInput").value =
@@ -424,7 +468,7 @@ window.addEventListener("DOMContentLoaded", function () {
     document.getElementById("tripTypeInput").value =
       tripType === "왕복" ? "RT" : "OW";
 	
-	document.getElementById("seatClassInput").value = seat;  
+	document.getElementById("seatClassInput").value = seatCode;  
 
   });
 

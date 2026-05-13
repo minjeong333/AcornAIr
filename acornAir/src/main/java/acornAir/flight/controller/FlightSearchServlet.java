@@ -27,6 +27,9 @@ public class FlightSearchServlet extends HttpServlet {
 		String depDate = req.getParameter("depDate");
 		String passCntStr = req.getParameter("passCnt");
 		String tripType = req.getParameter("tripType");
+			if (tripType == null || tripType.isEmpty()) {
+			    tripType = "RT"; // 기본값을 왕복(RT)으로 설정
+			}
 		String returnDate = req.getParameter("returnDate");
 		String seatClass = req.getParameter("seatClass");
 		
@@ -87,6 +90,7 @@ public class FlightSearchServlet extends HttpServlet {
 		session.setAttribute("passCnt", passCnt);
 		session.setAttribute("tripType", tripType);
 		session.setAttribute("returnDate", returnDate);
+		session.setAttribute("seatClass", seatClass);
 
 		// 결과 페이지 이동
 		req.getRequestDispatcher("/WEB-INF/views/flight/flightList.jsp").forward(req, resp);
