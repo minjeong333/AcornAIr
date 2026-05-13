@@ -66,6 +66,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
+                var birthInput = acc.querySelector('input[name^="birthDate_"]');
+                if (!birthInput || birthInput.value.trim() === '') {
+                    alert('승객 ' + (i + 1) + '의 생년월일을 입력해주세요.');
+                    if (birthInput) birthInput.focus();
+                    return;
+                }
+
                 collected.push({ acc: acc, name: last + ' ' + first });
             }
 
