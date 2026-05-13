@@ -126,44 +126,36 @@ public class UserDAO {
 	}
 
 	public int checkId(String userId) {
-		String sql = "SELECT COUNT(*) FROM TB_USER WHERE USER_ID = ?";
+	    String sql = "SELECT COUNT(*) FROM TB_USER WHERE TRIM(USER_ID) = TRIM(?)";
 
-		Connection con = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		int count = 0;
+	    Connection con = null;
+	    PreparedStatement pst = null;
+	    ResultSet rs = null;
+	    int count = 0;
 
-		try {
-			con = db.dbcon();
-			pst = con.prepareStatement(sql);
-			pst.setString(1, userId);
-			rs = pst.executeQuery();
+	    try {
+	        con = db.dbcon();
+	        pst = con.prepareStatement(sql);
+	        pst.setString(1, userId);
 
-			if (rs.next()) {
-				count = rs.getInt(1);
-			}
+	        rs = pst.executeQuery();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-			} catch (Exception e) {
-			}
-			try {
-				if (pst != null)
-					pst.close();
-			} catch (Exception e) {
-			}
-			try {
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-			}
-		}
+	        if (rs.next()) {
+	            count = rs.getInt(1);
+	        }
 
-		return count;
+	        System.out.println("DAO userId = [" + userId + "]");
+	        System.out.println("DAO count = " + count);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (pst != null) pst.close(); } catch (Exception e) {}
+	        try { if (con != null) con.close(); } catch (Exception e) {}
+	    }
+
+	    return count;
 	}
 
 	public int deleteUser(String userId) {

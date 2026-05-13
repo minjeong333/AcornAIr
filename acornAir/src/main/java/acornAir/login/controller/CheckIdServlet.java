@@ -4,9 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import acornAir.login.dao.UserDAO;
 
@@ -17,16 +15,21 @@ public class CheckIdServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/plain;charset=UTF-8");
+
         String userId = req.getParameter("userId");
 
         UserDAO dao = new UserDAO();
         int count = dao.checkId(userId);
 
-        resp.setContentType("application/json; charset=UTF-8");
-        if (count == 0) {
-            resp.getWriter().write("{\"available\": true}");
+        System.out.println("중복확인 userId = " + userId);
+        System.out.println("중복확인 count = " + count);
+
+        if (count > 0) {
+            resp.getWriter().write("duplicate");
         } else {
-            resp.getWriter().write("{\"available\": false}");
+            resp.getWriter().write("available");
         }
     }
 }
