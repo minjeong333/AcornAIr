@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import acornAir.airport.dao.AirportDAO;
 import acornAir.flight.dao.FlightDAO;
 import acornAir.flight.dto.FlightDTO;
 
@@ -19,7 +20,8 @@ public class AirportResServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
+		AirportDAO airportDAO = new AirportDAO();
+		req.setAttribute("airportList", airportDAO.selectAllAirports());
 		// 검색 조건 받기
 		String depAirport = req.getParameter("depAirport");
 		String arrAirport = req.getParameter("arrAirport");
