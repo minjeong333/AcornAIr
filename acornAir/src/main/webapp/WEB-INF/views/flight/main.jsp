@@ -485,6 +485,11 @@ function openSearch(target, title) {
 
 	  airportSearch.style.display = "block";
 	  airportInput.value = "";
+
+	  airportItems.forEach(function(item) {
+		  item.classList.remove("airport-hide");
+		});
+
 	  airportInput.focus();
 
 	  airportDropdown.classList.remove("show");
@@ -533,16 +538,34 @@ airportInput.addEventListener("click", function(e) {
   e.stopPropagation();
 });
 
-airportInput.addEventListener("keyup", function() {
-  const keyword = airportInput.value.trim().toLowerCase();
+function filterAirportList() {
+	  const keyword = airportInput.value.trim().toLowerCase();
 
-  airportItems.forEach(function(item) {
-    const text = item.innerText.toLowerCase();
-    item.style.display = text.includes(keyword) ? "block" : "none";
-  });
+	  airportItems.forEach(function(item) {
+	    const code = item.dataset.code.toLowerCase();
+	    const city = item.dataset.city.toLowerCase();
+	    const name = item.dataset.name.toLowerCase();
+	    const text = item.innerText.toLowerCase();
 
-  airportDropdown.classList.add("show");
-});
+	    const matched =
+	      keyword === "" ||
+	      code.includes(keyword) ||
+	      city.includes(keyword) ||
+	      name.includes(keyword) ||
+	      text.includes(keyword);
+
+	    item.classList.toggle("airport-hide", !matched);
+	  });
+
+	  airportDropdown.classList.add("show");
+
+	  document.querySelector(".airport-select-box")
+	          .classList.add("open");
+	}
+
+	airportInput.addEventListener("input", filterAirportList);
+	airportInput.addEventListener("keyup", filterAirportList);
+	airportInput.addEventListener("compositionend", filterAirportList);
 
 airportItems.forEach(function(item) {
   item.addEventListener("click", function(e) {
